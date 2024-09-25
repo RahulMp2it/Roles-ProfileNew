@@ -101,7 +101,7 @@ function App() {
       {/* <LoginPage /> */}
       <Sidebar />
       <Navbar />
-      <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
+      {/* <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
         <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
             {isSubPage ? (
@@ -130,37 +130,26 @@ function App() {
               </div>
             )}
           </div>
-          {/* <Department /> */}
-          <Routes>
-            <Route path="/" element={<Department />} />
-            <Route path="/Employees" element={<Employees />} />
-            <Route path="/department" element={<Department />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/Designation" element={<Designation />} />
-            <Route path="/ProfileAssign" element={<ProfileAssign />} />
-            <Route path="/SubDepartment" element={<SubDepartment />} />
-            <Route path="/RDPosition" element={<RDposition />} />
-            <Route path="/RDprofile" element={<RDprofile />} />
-            <Route path="/RDemployee" element={<RDemployee />} />
-            <Route
-              path="/designationRDdepart"
-              element={<DesignationRDdepart />}
-            />
-            <Route
-              path="/designationPosition"
-              element={<DesignationPosition />}
-            />
-            <Route
-              path="/designationProfile"
-              element={<DesignationProfile />}
-            />
-            <Route
-              path="/designationEmployee"
-              element={<DesignationEmployee />}
-            />
-          </Routes>
+
         </div>
-      </div>
+      </div> */}
+      <Routes>
+        <Route path="/" element={<Department />} />
+        <Route path="/Employees" element={<Employees />} />
+        <Route path="/department" element={<Department />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/Designation" element={<Designation />} />
+        <Route path="/ProfileAssign" element={<ProfileAssign />} />
+        <Route path="/SubDepartment" element={<SubDepartment />} />
+        <Route path="/RDPosition" element={<RDposition />} />
+        <Route path="/RDprofile" element={<RDprofile />} />
+        <Route path="/RDemployee" element={<RDemployee />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/designationRDdepart" element={<DesignationRDdepart />} />
+        <Route path="/designationPosition" element={<DesignationPosition />} />
+        <Route path="/designationProfile" element={<DesignationProfile />} />
+        <Route path="/designationEmployee" element={<DesignationEmployee />} />
+      </Routes>
     </>
   );
 }
