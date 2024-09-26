@@ -28,17 +28,17 @@ function Navbar() {
       <div className="col-span-2 ">
         <div className="relative w-full inline-block text-left group ">
           {/* Dropdown button with arrow  */}
-          <button class="bg-white text-black text-[14px] font-nunito px-4 py-[9px] rounded-md focus:outline-none flex items-center w-full">
+          <button className="bg-white text-black text-[14px] font-nunito px-4 py-[9px] rounded-md focus:outline-none flex items-center w-full">
             {/* image */}
-            <div class="avatar">
-              <div class="w-6 mr-2 rounded-full">
+            <div className="avatar">
+              <div className="w-6 mr-2 rounded-full">
                 <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
               </div>
             </div>
             Rahul Singh
             {/* Down arrow icon */}
             <svg
-              class="ml-4 w-8 pl-[15px] h-4 fill-current text-black"
+              className="ml-4 w-8 pl-[15px] h-4 fill-current text-black"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
             >
@@ -47,22 +47,22 @@ function Navbar() {
           </button>
 
           {/* Dropdown menu  */}
-          <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 group-hover:pointer-events-auto">
+          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 group-hover:pointer-events-auto">
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Option 1
             </a>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Option 2
             </a>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               Option 3
             </a>

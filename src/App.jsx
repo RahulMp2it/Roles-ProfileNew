@@ -1,4 +1,10 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Department from "./components/Pages/Department/Department";
@@ -12,18 +18,37 @@ import RDposition from "./components/Pages/Department/RDposition";
 import RDprofile from "./components/Pages/Department/RDprofile";
 import RDemployee from "./components/Pages/Department/RDemployee";
 import DesignationRDdepart from "./components/Pages/Designation/DesignationRDdepart";
-import { FaArrowLeftLong } from "react-icons/fa6";
 import DesignationEmployee from "./components/Pages/Designation/DesignationEmployee";
 import DesignationPosition from "./components/Pages/Designation/DesignationPosition";
 import DesignationProfile from "./components/Pages/Designation/DesignationProfile";
 import LoginPage from "./components/LoginPage";
+import SignUp from "./components/SignUp";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
   const [heading, setHeading] = useState("Department");
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [isSubPage, setIsSubPage] = useState(false); // Track if it's a subpage
+
+  const handleRegister = () => {
+    setIsRegistered(true);
+    setIsLoggedIn(true);
+    navigate("/");
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -91,65 +116,97 @@ function App() {
     }
   }, [location.pathname]);
 
-  // Function to handle going back to the previous page
   const handleBackClick = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1);
   };
 
   return (
     <>
-      {/* <LoginPage /> */}
-      <Sidebar />
-      <Navbar />
-      {/* <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
-        <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
-          <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
-            {isSubPage ? (
-              <span
-                onClick={handleBackClick}
-                className="cursor-pointer text-[#3F8CFF] inline-flex items-center gap-2"
-              >
-                <FaArrowLeftLong />
-                {"Back to Dashboard"}
-              </span>
-            ) : (
-              "Welcome back, Rahul singh"
-            )}
-          </p>
-          <div className="grid grid-cols-4 place-content-between gap-4">
-            <div className="col-span-3 ">
-              <h1 className="text-[34px] font-nunito font-semibold">
-                {heading}
-              </h1>
-            </div>
-            {!isSubPage && (
-              <div className=" text-end">
-                <button className=" text-white font-nunito w-[200px] px-2 py-3 bg-[#3F8CFF] rounded-xl">
-                  {"+ Add  " + heading}
-                </button>
-              </div>
-            )}
-          </div>
+      {/* {isLoggedIn && (
+        <>
+          <Sidebar />
+          <Navbar />
+        </>
+      )} */}
 
-        </div>
-      </div> */}
       <Routes>
-        <Route path="/" element={<Department />} />
-        <Route path="/Employees" element={<Employees />} />
-        <Route path="/department" element={<Department />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/Designation" element={<Designation />} />
-        <Route path="/ProfileAssign" element={<ProfileAssign />} />
-        <Route path="/SubDepartment" element={<SubDepartment />} />
-        <Route path="/RDPosition" element={<RDposition />} />
-        <Route path="/RDprofile" element={<RDprofile />} />
-        <Route path="/RDemployee" element={<RDemployee />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/designationRDdepart" element={<DesignationRDdepart />} />
-        <Route path="/designationPosition" element={<DesignationPosition />} />
-        <Route path="/designationProfile" element={<DesignationProfile />} />
-        <Route path="/designationEmployee" element={<DesignationEmployee />} />
+        <Route
+          path="/register"
+          element={<SignUp onRegister={handleRegister} />}
+        />
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+
+        <Route path="" element={<ProtectedRoutes />}>
+          <Route path="/" element={<Department />} />
+          <Route path="/Employees" element={<Employees />} />
+          <Route path="/department" element={<Department />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/Designation" element={<Designation />} />
+          <Route path="/ProfileAssign" element={<ProfileAssign />} />
+          <Route path="/SubDepartment" element={<SubDepartment />} />
+          <Route path="/RDPosition" element={<RDposition />} />
+          <Route path="/RDprofile" element={<RDprofile />} />
+          <Route path="/RDemployee" element={<RDemployee />} />
+          <Route
+            path="/designationRDdepart"
+            element={<DesignationRDdepart />}
+          />
+          <Route
+            path="/designationPosition"
+            element={<DesignationPosition />}
+          />
+          <Route path="/designationProfile" element={<DesignationProfile />} />
+          <Route
+            path="/designationEmployee"
+            element={<DesignationEmployee />}
+          />
+        </Route>
       </Routes>
+
+      {/* <Routes>
+        {!isRegistered && (
+          <Route
+            path="/register"
+            element={<SignUp onRegister={handleRegister} />}
+          />
+        )}
+
+        {!isLoggedIn && (
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        )}
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Department />} />
+            <Route path="/Employees" element={<Employees />} />
+            <Route path="/department" element={<Department />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/Designation" element={<Designation />} />
+            <Route path="/ProfileAssign" element={<ProfileAssign />} />
+            <Route path="/SubDepartment" element={<SubDepartment />} />
+            <Route path="/RDPosition" element={<RDposition />} />
+            <Route path="/RDprofile" element={<RDprofile />} />
+            <Route path="/RDemployee" element={<RDemployee />} />
+            <Route
+              path="/designationRDdepart"
+              element={<DesignationRDdepart />}
+            />
+            <Route
+              path="/designationPosition"
+              element={<DesignationPosition />}
+            />
+            <Route
+              path="/designationProfile"
+              element={<DesignationProfile />}
+            />
+            <Route
+              path="/designationEmployee"
+              element={<DesignationEmployee />}
+            />
+          </>
+        ) : (
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        )}
+      </Routes> */}
     </>
   );
 }

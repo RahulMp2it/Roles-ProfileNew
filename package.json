@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/inika": "^5.1.0",
     "@fontsource/nunito-sans": "^5.0.15",
+    "axios": "^1.7.7",
     "flowbite": "^2.5.1",
     "preline": "^2.4.1",
     "react": "^18.3.1",

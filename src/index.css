@@ -14,4 +14,24 @@ body{
     margin: 0;
 }
 
+@layer base {
+ 
+    ::-webkit-scrollbar {
+        width: 2px;
+    }
+ 
+    ::-webkit-scrollbar-track {
+        background: #111;
+    }
+ 
+    ::-webkit-scrollbar-thumb {
+        background: #171717;
+        border-radius: 10px;
+    }
+ 
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+ 
+}
   

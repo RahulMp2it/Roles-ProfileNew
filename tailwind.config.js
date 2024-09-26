@@ -9,13 +9,16 @@ export default {
     extend: {
       fontFamily: {
         nunito: [' "Nunito Sans", sans-serif'],
+        inika: ['"Inika", sans-serif']
       },
       backgroundImage: {
         'progress-img': 'url("progress.png")',
         'login-p-img' : 'url("Login-Page-img.png")',
       },
       boxShadow: {
-        'custom-blue': '0px 4px 14px 0px #3F8CFF63', 
+        'custom-blue': '0px 4px 14px 0px #3F8CFF63',
+        'logo-shadow': '0px 4px 60px 0px #FFFFFF',  
+
       },
       
     },
