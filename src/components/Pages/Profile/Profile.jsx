@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ProfileCard from "../../../utils/ProfileCard";
 import { Link, useNavigate } from "react-router-dom";
 import { ImAttachment } from "react-icons/im";
@@ -12,6 +12,7 @@ const profiles = [
     image: "image.png",
     depart: "Marketing Department",
     position: "Executive",
+    url: "/profileDoc",
   },
   {
     id: 2,
@@ -81,6 +82,14 @@ const profiles = [
 function Profile() {
   const navigate = useNavigate();
   const addProfile = useRef();
+  const [activeCardId, setActiveCardId] = useState(null);
+
+  const handleClick = (id, url) => {
+    setActiveCardId(id);
+    if (url) {
+      navigate(url);
+    }
+  };
 
   const handleBackClick = () => {
     navigate(-1); // Go back to the previous page
@@ -212,6 +221,8 @@ function Profile() {
                 depart={profile.depart}
                 position={profile.position}
                 buttonText="1 Member"
+                onClick={handleClick}
+                url={profile?.url}
               />
             ))}
           </div>

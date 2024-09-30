@@ -24,6 +24,7 @@ import DesignationProfile from "./components/Pages/Designation/DesignationProfil
 import LoginPage from "./components/LoginPage";
 import SignUp from "./components/SignUp";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProfileDoc from "./components/Pages/Profile/ProfileDoc";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -141,6 +142,7 @@ function App() {
           <Route path="/Employees" element={<Employees />} />
           <Route path="/department" element={<Department />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profileDoc" element={<ProfileDoc />} />
           <Route path="/Designation" element={<Designation />} />
           <Route path="/ProfileAssign" element={<ProfileAssign />} />
           <Route path="/SubDepartment" element={<SubDepartment />} />

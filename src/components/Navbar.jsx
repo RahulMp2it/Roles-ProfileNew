@@ -4,7 +4,7 @@ import { FiSearch } from "react-icons/fi";
 
 function Navbar() {
   return (
-    <nav className="navbar fixed top-0 grid grid-cols-12 gap-x-5 me-3 ms-[215px] w-[85%] ">
+    <nav className="navbar fixed top-0 grid grid-cols-12 gap-x-5 me-3 ms-[215px] w-[85%] z-10 ">
       {/* Search Bar */}
       <div className="search-bar justify-center col-span-9 relative ">
         {/* <FiSearch /> */}

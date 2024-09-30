@@ -3,18 +3,38 @@ import { IoPencil } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { TbDotsCircleHorizontal } from "react-icons/tb";
+import { useEffect, useRef, useState } from "react";
 
 function EmployeesCard({
   id,
   image,
   depart,
   position,
-  title,
-  fname,
-  isDropdownOpen,
-  toggleDropdown,
+  profile,
+  name,
+  updateEmployee,
 }) {
+  const updateEmployee = useRef();
+
+  // Delete employee From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/employee/${id}`) // Delete the employee
+      .then((response) => {
+        alert("Employee deleted successfully");
+        console.log("Employee deleted successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the employee:", error);
+      });
+  };
+
+  // Handle edit function
+  const handleEdit = (id) => {};
+
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-5 relative">
       {/* Checkbox - Top Left Corner */}
@@ -27,56 +47,48 @@ function EmployeesCard({
 
       {/* Dropdown Icon */}
       <div className="absolute top-2 right-3 z-10">
-        <button
-          onClick={() => toggleDropdown(id)} // Toggle dropdown based on this card's ID
-          className="focus:outline-none text-gray-600"
-        >
-          <img
-            src="dropicone.png" // Use any image passed as a prop for the dropdown icon
-            alt="dropdown"
-            className="w-7 h-7"
-          />
-        </button>
-
-        {/* Dropdown Menu */}
-        {isDropdownOpen && (
-          <div className="absolute right-0 mt-[1px] w-36 rounded-[18px] shadow-lg bg-[#3F8CFF] ring-1 ring-black ring-opacity-5">
-            <div className="py-1" role="menu">
-              <Link
-                to="/edit" // Link to the edit page
-                className="flex items-center px-4 py-3 text-[14px] h-5 text-white"
-                role="menuitem"
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} role="button" className="m-1">
+            <TbDotsCircleHorizontal className="text-3xl text-gray-500" />
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu z-[1] p-2 w-36 rounded-[18px] shadow-lg bg-[#3F8CFF] ring-1 ring-black ring-opacity-5"
+          >
+            <li>
+              <button
+                className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
+                onClick={() => {
+                  updateEmployee.current.showModal();
+                }}
               >
                 <IoPencil />
-                <span className="ml-2">Edit</span>
-              </Link>
-              <Link
-                to="/view" // Link to the view page
-                className="flex items-center px-4 py-3 text-[14px] h-5 text-white"
-                role="menuitem"
-              >
+                <span className="ml-1">Edit</span>
+              </button>
+            </li>
+            <li>
+              <button className="flex items-center px-1 py-3 text-[14px] h-5 text-white">
                 <IoEyeOutline />
-                <span className="ml-2">View</span>
-              </Link>
-              <Link
-                to="/add" // Link to the add page
-                className="flex items-center px-4 py-3 text-[14px] h-5 text-white"
-                role="menuitem"
-              >
+                <span className="ml-1">View</span>
+              </button>
+            </li>
+            <li>
+              <button className="flex items-center px-1 py-3 text-[14px] h-5 text-white">
                 <GoPlus />
-                <span className="ml-2">Add</span>
-              </Link>
-              <Link
-                to="/delete" // Link to the delete page
-                className="flex items-center px-4 py-3 text-[14px] h-7 text-white"
-                role="menuitem"
+                <span className="ml-1">Add</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
+                onClick={() => handleDelete(id)}
               >
                 <MdDelete />
-                <span className="ml-2">Delete</span>
-              </Link>
-            </div>
-          </div>
-        )}
+                <span className="ml-1">Delete</span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Profile Image */}
@@ -85,13 +97,13 @@ function EmployeesCard({
         <img
           className="absolute top-[6px] left-[6px] h-[63px] w-[63px] object-cover rounded-full"
           src={image}
-          alt={title}
+          alt={profile}
         />
       </div>
 
       {/* Full name */}
       <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
-        {fname}
+        {name}
       </p>
 
       {/* Position */}
@@ -104,9 +116,9 @@ function EmployeesCard({
         {depart}
       </p>
 
-      {/* Title */}
+      {/* profile */}
       <h2 className="mb-1 text-[15px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
-        {title}
+        {profile}
       </h2>
     </div>
   );

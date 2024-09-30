@@ -12,7 +12,7 @@ function Sidebar() {
   return (
     <div className="flex min-h-screen ">
       {/* sideBar */}
-      <div className="bg-white text-white w-[175px] space-y-2 py-3 px-3 my-3 mx-6 rounded-2xl grid grid-rows-2 place-content-between ">
+      <div className="bg-white text-white w-[175px] space-y-2 py-3 px-3 my-3 mx-6 rounded-2xl grid grid-rows-2 place-content-between z-10">
         <div>
           <div className="bg-[#3F8CFF] w-11 rounded-[8px] ">
             <Link to={"/"}>
@@ -20,7 +20,7 @@ function Sidebar() {
             </Link>
           </div>
 
-          <div className="text-[#7D8592] text-[14px] tracking-[0.5px] font-nunito m-0 pt-2">
+          <div className="text-[#7D8592] text-[14px] tracking-[0.5px] font-nunito m-0 pt-2 ">
             <NavLink
               to={"/Employees"}
               className={({ isActive }) =>
