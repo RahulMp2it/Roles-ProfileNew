@@ -386,6 +386,7 @@ import Layout from "../../Layout";
 import { VscFilter } from "react-icons/vsc";
 import { FiFilter } from "react-icons/fi";
 import axios from "axios";
+import EditEmployeeModal from "./EditEmployeeModal";
 
 const employees = [
   // existing employees array
@@ -395,8 +396,31 @@ function Employees() {
   const navigate = useNavigate();
   const addEmployee = useRef();
   const ProfileAssign = useRef();
-  const [toggle, setToggle] = useState(false);
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState([]); // Employee list from API
+  const [selectedEmployee, setSelectedEmployee] = useState(null); // Employee to edit
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(selectedEmployee);
+
+  const updateEmployee = useRef(); // Ref for the modal
+
+  const openEditModal = (employee) => {
+    setSelectedEmployee(employee);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleUpdate = (updatedEmployee) => {
+    // Update the employees state after editing
+    setEmployees((prevEmployees) =>
+      prevEmployees.map((emp) =>
+        emp.id === updatedEmployee.id ? updatedEmployee : emp
+      )
+    );
+  };
 
   const [form, setForm] = useState({
     name: "",
@@ -423,7 +447,7 @@ function Employees() {
     axios
       .post("http://localhost:8080/api/employee", form)
       .then((response) => {
-        alert("Employee added successfully");
+        // alert("Employee added successfully");
         console.log("Employee added successfully:", response.data);
         setForm({
           name: "",
@@ -432,63 +456,34 @@ function Employees() {
           designation: "",
         });
         addEmployee.current.close();
+        fetchEmployees();
       })
       .catch((error) => {
         console.error("There was an error adding the employee:", error);
       });
   };
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/employee");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setEmployees(data.data);
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-        setError(error.message);
-      } finally {
-        // setLoading(false);
+  const fetchEmployees = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/employee");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
+      const data = await response.json();
+      setEmployees(data.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+      setError(error.message);
+    } finally {
+      // setLoading(false);
+    }
+  };
 
-    fetchEmployees();
-  }, []);
-
-  //Edit Employee
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/employee");
-        setEmployees(response.data.data);
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      }
-    };
-
     fetchEmployees();
   }, []);
 
   return (
     <>
-      {/* <div
-        className="blue-overlay w-full h-full fixed duration-500"
-        onClick={hideSideMenu}
-        style={{
-          opacity: toggle ? 1 : 0,
-          visibility: toggle ? "visible" : "hidden",
-        }}
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="w-[500px] bg-white h-full absolute duration-[400ms]"
-          style={{
-            left: toggle ? "0%" : "-100%",
-          }}
-        ></div>
-      </div> */}
       <Layout>
         <div className="fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
           <div className="overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
@@ -544,7 +539,7 @@ function Employees() {
                             name="profile"
                             value={form.profile}
                             onChange={handleChange}
-                            placeholder="Head"
+                            placeholder="UI/UX Designer"
                             className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           />
                         </div>
@@ -570,7 +565,7 @@ function Employees() {
                             name="designation"
                             value={form.designation}
                             onChange={handleChange}
-                            placeholder="R & D"
+                            placeholder="Head"
                             className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           />
                         </div>
@@ -676,7 +671,7 @@ function Employees() {
                     </form>
                   </div>
                 </dialog>
-                {/* filter */}
+                {/* filter button */}
                 <div
                   className="w-12 h-12 py-1  bg-[white] flex items-center justify-center rounded-[15px] cursor-pointer z-20"
                   // onClick={showSideMenu}
@@ -696,10 +691,21 @@ function Employees() {
                   profile={employee.profile}
                   depart={employee.department}
                   position={employee.designation}
-                  handleEdit={handleEdit} // Pass the edit handler
                   updateEmployee={updateEmployee}
+                  openEditModal={() => openEditModal(employee)} // Pass function to open modal
                 />
               ))}
+
+              {/* Edit Employee Modal */}
+              {selectedEmployee && (
+                <EditEmployeeModal
+                  employee={selectedEmployee}
+                  isOpen={isModalOpen}
+                  onClose={closeEditModal}
+                  onUpdate={handleUpdate}
+                  update={fetchEmployees}
+                />
+              )}
             </div>
           </div>
         </div>

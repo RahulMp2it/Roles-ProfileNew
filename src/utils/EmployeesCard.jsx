@@ -15,25 +15,22 @@ function EmployeesCard({
   position,
   profile,
   name,
-  updateEmployee,
+  openEditModal,
+  update,
 }) {
-  const updateEmployee = useRef();
-
   // Delete employee From database
   const handleDelete = (id) => {
     axios
       .delete(`http://localhost:8080/api/employee/${id}`) // Delete the employee
       .then((response) => {
-        alert("Employee deleted successfully");
+        // alert("Employee deleted successfully");
         console.log("Employee deleted successfully:", response.data);
+        update();
       })
       .catch((error) => {
         console.error("There was an error deleting the employee:", error);
       });
   };
-
-  // Handle edit function
-  const handleEdit = (id) => {};
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-5 relative">
@@ -58,9 +55,7 @@ function EmployeesCard({
             <li>
               <button
                 className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
-                onClick={() => {
-                  updateEmployee.current.showModal();
-                }}
+                onClick={openEditModal} // Call the function to open modal
               >
                 <IoPencil />
                 <span className="ml-1">Edit</span>
@@ -105,21 +100,20 @@ function EmployeesCard({
       <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
         {name}
       </p>
-
-      {/* Position */}
-      <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#3F8CFF] dark:text-white h-[18px]">
-        {position}
-      </p>
+      {/* profile */}
+      <h2 className="mb-1 text-[15px] leading-4 py-2 flex justify-center text-center font-nunito text-[#3F8CFF] dark:text-white h-[18px]">
+        {profile}
+      </h2>
 
       {/* Department */}
       <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629D6] dark:text-white h-[18px]">
         {depart}
       </p>
 
-      {/* profile */}
-      <h2 className="mb-1 text-[15px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
-        {profile}
-      </h2>
+      {/* Designation */}
+      <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
+        {position}
+      </p>
     </div>
   );
 }
