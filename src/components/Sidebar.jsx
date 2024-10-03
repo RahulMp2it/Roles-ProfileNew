@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BsCalendar2Fill } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";
@@ -9,6 +9,13 @@ import { MdLogout } from "react-icons/md";
 import "@fontsource/nunito-sans/500.css";
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  const userLogout = () => {
+    localStorage.removeItem("token");
+    // navigate("/login");
+    window.location.href = "/login";
+  };
   return (
     <div className="flex min-h-screen ">
       {/* sideBar */}
@@ -62,11 +69,11 @@ function Sidebar() {
           </div>
         </div>
 
-        <div className="text-[#7D8592] text-[14px] absolute bottom-20">
+        <div className="text-[#7D8592] text-[14px] w-[150px]  absolute bottom-20">
           <Link to={"/"}>
-            <div className="flex py-2 px-2 rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
+            <div className="flex py-3 px-2  rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
               <MdLogout className="size-[20px]" />
-              <span>Logout</span>
+              <button onClick={userLogout}>Logout</button>
             </div>
           </Link>
         </div>

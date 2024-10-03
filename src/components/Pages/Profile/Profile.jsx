@@ -1,88 +1,62 @@
 import React, { useRef, useState } from "react";
 import ProfileCard from "../../../utils/ProfileCard";
 import { Link, useNavigate } from "react-router-dom";
-import { ImAttachment } from "react-icons/im";
-import { LuLink } from "react-icons/lu";
 import Layout from "../../Layout";
+import axios from "axios";
 
-const profiles = [
-  {
-    id: 1,
-    name: "UI/UX Designer",
-    image: "image.png",
-    depart: "Marketing Department",
-    position: "Executive",
-    url: "/profileDoc",
-  },
-  {
-    id: 2,
-    name: "UI/UX Designer",
-    image: "image1.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 3,
-    name: "UI/UX Designer",
-    image: "image7.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 4,
-    name: "UI/UX Designer",
-    image: "image3.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 5,
-    name: "UI/UX Designer",
-    image: "image4.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 6,
-    name: "UI/UX Designer",
-    image: "image5.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 7,
-    name: "UI/UX Designer",
-    image: "image.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 8,
-    name: "UI/UX Designer",
-    image: "image8.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 9,
-    name: "UI/UX Designer",
-    image: "image1.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-  {
-    id: 10,
-    name: "UI/UX Designer",
-    image: "image4.png",
-    depart: "Marketing Department",
-    position: "Executive",
-  },
-];
+const profiles = [];
 
 function Profile() {
   const navigate = useNavigate();
   const addProfile = useRef();
   const [activeCardId, setActiveCardId] = useState(null);
+  const [form, setForm] = useState({
+    Profile: "",
+    designation: "",
+    Department: "",
+  });
+
+  const departments = [
+    { id: 1, name: "Human Resources Department" },
+    { id: 2, name: "Engineering Department" },
+    { id: 3, name: "Marketing Department" },
+    { id: 4, name: "R&D Department" },
+    // we can add more departments as needed
+  ];
+
+  const designations = [
+    { id: 1, name: "Team Leder" },
+    { id: 2, name: "Head" },
+    { id: 3, name: "Executive" },
+    { id: 4, name: "CEO" },
+    // we can add more departments as needed
+  ];
+
+  // Handle form field changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/profile", {
+        Profile: form.Profile,
+        designation: form.designation,
+        Department: form.Department,
+      });
+      console.log("Profile added successfully", response.data);
+      addProfile.current.close();
+    } catch (error) {
+      console.error("Error adding profile", error);
+    }
+  };
 
   const handleClick = (id, url) => {
     setActiveCardId(id);
@@ -94,6 +68,7 @@ function Profile() {
   const handleBackClick = () => {
     navigate(-1); // Go back to the previous page
   };
+
   return (
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
@@ -115,10 +90,13 @@ function Profile() {
               </button>
               <dialog ref={addProfile} className="modal h-auto ">
                 <div className=" modal-box overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
-                  <form method="dialog modal-action">
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                      ✕
-                    </button>
+                  <button
+                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    onClick={() => addProfile.current.close()}
+                  >
+                    ✕
+                  </button>
+                  <form method="dialog modal-action" onSubmit={handleSubmit}>
                     <div className="text-[20px] text-start px-4 py-4 font-bold">
                       Add Profile
                     </div>
@@ -127,84 +105,81 @@ function Profile() {
                         <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
                           Type of Department
                         </label>
-                        <select className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none">
-                          <option disabled selected>
-                            Type of Department
+                        <select
+                          name="Department"
+                          value={form.Department}
+                          onChange={handleChange}
+                          className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
+                          required
+                        >
+                          <option value="" disabled>
+                            Select Department
                           </option>
-                          <option>Han Solo</option>
-                          <option>Greedo</option>
+                          {departments.map((department) => (
+                            <option key={department.id} value={department.name}>
+                              {department.name}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="mb-4 py-2">
                         <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
                           Designation Type
                         </label>
-                        <select className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none">
-                          <option disabled selected>
-                            Designation Type
+                        <select
+                          name="designation"
+                          value={form.designation}
+                          onChange={handleChange}
+                          className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
+                          required
+                        >
+                          <option value="" disabled>
+                            Select designation
                           </option>
-                          <option>Han Solo</option>
-                          <option>Greedo</option>
+                          {designations.map((designation) => (
+                            <option
+                              key={designation.id}
+                              value={designation.name}
+                            >
+                              {designation.name}
+                            </option>
+                          ))}
                         </select>
                       </div>
+
                       <div className="mb-4 py-2">
                         <label className="block text-[12px] text-start pb-1 font-medium text-[#7D8592]">
                           Profile Name
                         </label>
                         <input
                           type="text"
-                          name="code"
-                          // value={form.code}
-                          // onChange={handleChange}
-                          placeholder="Profile Name"
+                          name="Profile"
+                          value={form.Profile}
+                          onChange={handleChange}
+                          placeholder="Designation Name"
                           className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
+                          required
                         />
                       </div>
-                      <div className="mb-4 py-2">
-                        <label className="block text-[12px] text-start pb-1 font-medium text-[#7D8592]">
-                          Profile Code
-                        </label>
-                        <input
-                          type="text"
-                          name="code"
-                          // value={form.code}
-                          // onChange={handleChange}
-                          placeholder="Profile Code"
-                          className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
-                        />
-                      </div>
+
                       <div className="mb-6 py-2">
                         <label className="block text-start text-[12px] pb-1 font-medium text-[#7D8592]">
                           Description
                         </label>
                         <textarea
                           name="description"
-                          // value={form.description}
-                          // onChange={handleChange}
+                          value={form.description}
+                          onChange={handleChange}
                           placeholder=" Add some Descriptionof the Designtion"
                           className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px] min-h-[100px]"
                         />
                       </div>
-                      {/* Links  */}
-                      <div className="flex gap-3">
-                        <Link
-                          to="#"
-                          // onClick={handleReset}
-                          className="bg-[#6D5DD319] text-[#6D5DD3] px-4 py-2 rounded-md flex items-center"
-                        >
-                          <ImAttachment />
-                        </Link>
-                        <Link
-                          to="#"
-                          // onClick={handleReset}
-                          className="bg-[#15C0E61A] text-[#15C0E6] px-4 py-2 rounded-md flex items-center"
-                        >
-                          <LuLink />
-                        </Link>
-                      </div>
                     </div>
-                    <button className="btn text-white font-nunito w-[150px] px-2 py-3 bg-[#3F8CFF] rounded-xl">
-                      Save Designation
+                    <button
+                      type="submit"
+                      className="btn text-white font-nunito w-[150px] px-2 py-3 bg-[#3F8CFF] rounded-xl"
+                    >
+                      Save Profile
                     </button>
                   </form>
                 </div>
@@ -215,14 +190,14 @@ function Profile() {
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
             {profiles.map((profile) => (
               <ProfileCard
-                key={profile.id}
-                image={profile.image}
-                title={profile.name}
-                depart={profile.depart}
-                position={profile.position}
+                key={profile._id}
+                image={profile.image || "/image2.png"}
+                title={profile.Profile}
+                depart={profile.Department}
+                position={profile.designation}
                 buttonText="1 Member"
-                onClick={handleClick}
-                url={profile?.url}
+                // onClick={handleClick}
+                // url={profile?.url}
               />
             ))}
           </div>

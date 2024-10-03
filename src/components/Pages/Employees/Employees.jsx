@@ -447,7 +447,6 @@ function Employees() {
     axios
       .post("http://localhost:8080/api/employee", form)
       .then((response) => {
-        // alert("Employee added successfully");
         console.log("Employee added successfully:", response.data);
         setForm({
           name: "",
@@ -646,23 +645,6 @@ function Employees() {
                             placeholder=" Add some Descriptionof"
                             className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px] min-h-[100px]"
                           />
-                        </div>
-                        {/* Links  */}
-                        <div className="flex gap-3">
-                          <Link
-                            to="#"
-                            // onClick={handleReset}
-                            className="bg-[#6D5DD319] text-[#6D5DD3] px-4 py-2 rounded-md flex items-center"
-                          >
-                            <ImAttachment />
-                          </Link>
-                          <Link
-                            to="#"
-                            // onClick={handleReset}
-                            className="bg-[#15C0E61A] text-[#15C0E6] px-4 py-2 rounded-md flex items-center"
-                          >
-                            <LuLink />
-                          </Link>
                         </div>
                       </div>
                       <button className="btn text-white font-nunito w-[150px] px-2 py-3 bg-[#3F8CFF] rounded-xl">
