@@ -1,14 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProfileCard from "../../../utils/ProfileCard";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
 
-const profiles = [];
-
 function Profile() {
   const navigate = useNavigate();
   const addProfile = useRef();
+  const [profiles, setProfiles] = useState([]);
   const [activeCardId, setActiveCardId] = useState(null);
   const [form, setForm] = useState({
     Profile: "",
@@ -21,6 +20,7 @@ function Profile() {
     { id: 2, name: "Engineering Department" },
     { id: 3, name: "Marketing Department" },
     { id: 4, name: "R&D Department" },
+    { id: 5, name: "HR Department" },
     // we can add more departments as needed
   ];
 
@@ -32,7 +32,19 @@ function Profile() {
     // we can add more departments as needed
   ];
 
-  // Handle form field changes
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
+  const fetchProfiles = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/profile");
+      setProfiles(response.data.data);
+    } catch (error) {
+      console.error("Error fetching profiles", error);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({
@@ -41,7 +53,6 @@ function Profile() {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -53,6 +64,8 @@ function Profile() {
       });
       console.log("Profile added successfully", response.data);
       addProfile.current.close();
+      fetchProfiles();
+      setForm({ Profile: "", designation: "", Department: "" });
     } catch (error) {
       console.error("Error adding profile", error);
     }
@@ -66,7 +79,7 @@ function Profile() {
   };
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1);
   };
 
   return (

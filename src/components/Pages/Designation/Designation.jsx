@@ -160,7 +160,7 @@
 
 // export default Designation;
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DesignationCard from "../../../utils/DesignationCard";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
@@ -182,6 +182,21 @@ function Designation() {
     { id: 4, name: "R&D Department" },
     // we can add more departments as needed
   ];
+
+  useEffect(() => {
+    const fetchDesignations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/designation"
+        );
+        setDesignations(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch designations:", error);
+      }
+    };
+
+    fetchDesignations();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
