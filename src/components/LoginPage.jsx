@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "@fontsource/inika";
 import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form";
 
 function LoginPage() {
   const [currentImage, setCurrentImage] = useState("logo1.png");
@@ -10,31 +11,42 @@ function LoginPage() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prevImage) =>
-        prevImage === "logo1.png" ? "logo2.png" : "logo1.png"
-      );
-    }, 3000); // Change every 3 seconds (you can adjust this time)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentImage((prevImage) =>
+  //       prevImage === "logo1.png" ? "logo2.png" : "logo1.png"
+  //     );
+  //   }, 3000);
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: {},
+  } = useForm();
+
+  const handleSignIn = (data) => {
+    console.log(data);
+
     axios
-      .post("http://localhost:8080/api/user/login", {
-        email,
-        password,
-      })
+      .post("http://localhost:8080/api/user/login", data)
       .then((result) => {
         console.log(result);
-        localStorage.setItem("token", result.data.token);
-        navigate("/");
+        if (result.data.success) {
+          localStorage.setItem("token", result.data.token);
+          navigate("/");
+        } else {
+          setLoginError("Email not registered. Please sign up first.");
+        }
       })
 
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoginError("Error Occured, Please try again.=>", err);
+      });
   };
 
   return (
@@ -54,11 +66,14 @@ function LoginPage() {
                 Login
               </h1>
 
-              <form action="" onSubmit={handleSubmit}>
+              <form action="" onSubmit={handleSubmit(handleSignIn)}>
                 <div className="relative my-4 text-[13px]">
                   <label htmlFor="">Email</label>
                   <br />
                   <input
+                    {...register("email", {
+                      required: "Email is required",
+                    })}
                     type="email"
                     placeholder="admin@123.com"
                     className="w-full rounded-[5px] text-black mt-1 py-1 text-[14px] pl-2"
@@ -69,6 +84,9 @@ function LoginPage() {
                   <label htmlFor="">Password</label>
                   <br />
                   <input
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
                     type="password"
                     placeholder="*********"
                     className="w-full rounded-[5px] py-1 mt-1 text-black text-[14px] pl-2"
@@ -81,6 +99,7 @@ function LoginPage() {
                 <div className="bg-[#003465] py-[6px] rounded-[8px] text-center text-[15px]">
                   <button type="submit">Sign In</button>
                 </div>
+                <p className="text-red-600">{loginError}</p>
                 <p className=" text-[13px] text-center py-3">
                   or continue with
                 </p>

@@ -2,40 +2,48 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "@fontsource/inika";
+import { useForm } from "react-hook-form";
 
 function SignUp() {
   const [logoBgColor, setLogoBgColor] = useState("white");
   const [logoColor, setLogoColor] = useState("default");
   const [currentImage, setCurrentImage] = useState("logo1.png");
 
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [passwordConfirmation, setPasswordConfirmation] = useState();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const handleSignUp = (data) => {
+    console.log(data);
+
     axios
-      .post("http://localhost:8080/api/user/register", {
-        name,
-        email,
-        password,
-        passwordConfirmation,
+      .post("http://localhost:8080/api/user/register", data)
+      .then((result) => {
+        console.log(result);
+        if (result.status == 201) {
+          navigate("/login");
+        }
       })
-      .then((result) => console.log(result))
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prevImage) =>
-        prevImage === "logo1.png" ? "logo2.png" : "logo1.png"
-      );
-    }, 3000);
+  // Watch the password field for matching confirmation
+  const password = watch("password");
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentImage((prevImage) =>
+  //       prevImage === "logo1.png" ? "logo2.png" : "logo1.png"
+  //     );
+  //   }, 3000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div
@@ -53,46 +61,86 @@ function SignUp() {
               <h1 className="relative  my-3 text-[22px] text-white mb-3">
                 Register
               </h1>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(handleSignUp)}>
                 <div className="relative my-4 text-[13px]">
                   <label htmlFor="">Name</label>
-                  {/* <br /> */}
                   <input
-                    type="name"
+                    {...register("name", {
+                      required: true,
+                      minLength: { value: 3, message: "min length 3" },
+                      maxLength: { value: 20, message: "max length 20" },
+                      pattern: {
+                        value: /^[A-Za-z]+$/i,
+                        message: "it is not valid",
+                      },
+                    })}
+                    type="text"
                     placeholder="Full Name"
-                    className="w-full rounded-[5px] text-black py-1 text-[14px] pl-3  "
-                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded-[5px] text-black py-1 text-[14px] pl-3"
                   />
+                  {errors.name && (
+                    <p className="text-[red]">{errors.name.message}</p>
+                  )}
                 </div>
                 <div className="relative  my-4 text-[13px]">
                   <label htmlFor="">Email</label>
                   <br />
                   <input
+                    {...register("email", {
+                      required: true,
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message: "Invalid email address",
+                      },
+                    })}
                     type="email"
                     placeholder="admin@123.com"
                     className="w-full rounded-[5px] text-black py-1 text-[14px] pl-3  "
-                    onChange={(e) => setEmail(e.target.value)}
                   />
+                  {errors.email && (
+                    <p className="text-[red]">{errors.email.message}</p>
+                  )}
                 </div>
                 <div className="relative  my-4 text-[13px]">
                   <label htmlFor="">Password</label>
                   <br />
                   <input
+                    {...register("password", {
+                      required: true,
+                      pattern: {
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+                        message:
+                          "Password must contain at least 8 characters,including uppercase, lowercase, number, and special character",
+                      },
+                    })}
                     type="password"
                     placeholder="*********"
                     className="w-full rounded-[5px] py-1 text-black text-[14px] pl-2"
-                    onChange={(e) => setPassword(e.target.value)}
                   />
+                  {errors.password && (
+                    <p className="text-[red]">{errors.password.message}</p>
+                  )}
                 </div>
                 <div className="relative  my-4 text-[13px]">
                   <label htmlFor="">Confirm Password</label>
                   <br />
                   <input
+                    {...register("passwordConfirmation", {
+                      required: true,
+                      validate: (value) =>
+                        value === password || "Passwords do not match",
+                    })}
                     type="password"
                     placeholder="*********"
                     className="w-full rounded-[5px] py-1 text-black text-[14px] pl-2"
-                    onChange={(e) => setPasswordConfirmation(e.target.value)}
                   />
+                  {errors.passwordConfirmation && (
+                    <p className="text-[red]">
+                      {errors.passwordConfirmation.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="bg-[#003465] py-[6px] rounded-[8px] text-center text-[15px]">
