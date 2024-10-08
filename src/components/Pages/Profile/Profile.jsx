@@ -3,6 +3,7 @@ import ProfileCard from "../../../utils/ProfileCard";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 
 function Profile() {
   const navigate = useNavigate();
@@ -32,6 +33,13 @@ function Profile() {
     // we can add more departments as needed
   ];
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   useEffect(() => {
     fetchProfiles();
   }, []);
@@ -53,14 +61,12 @@ function Profile() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
       const response = await axios.post("http://localhost:8080/api/profile", {
-        Profile: form.Profile,
-        designation: form.designation,
-        Department: form.Department,
+        Profile: data.Profile,
+        designation: data.designation,
+        Department: data.Department,
       });
       console.log("Profile added successfully", response.data);
       addProfile.current.close();
@@ -109,7 +115,10 @@ function Profile() {
                   >
                     ✕
                   </button>
-                  <form method="dialog modal-action" onSubmit={handleSubmit}>
+                  <form
+                    method="dialog modal-action"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
                     <div className="text-[20px] text-start px-4 py-4 font-bold">
                       Add Profile
                     </div>
@@ -119,6 +128,9 @@ function Profile() {
                           Type of Department
                         </label>
                         <select
+                          {...register("Department", {
+                            required: "Department name is required",
+                          })}
                           name="Department"
                           value={form.Department}
                           onChange={handleChange}
@@ -134,12 +146,20 @@ function Profile() {
                             </option>
                           ))}
                         </select>
+                        {errors.Department && (
+                          <p className="text-red-600">
+                            {errors.Department.message}
+                          </p>
+                        )}
                       </div>
                       <div className="mb-4 py-2">
                         <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
                           Designation Type
                         </label>
                         <select
+                          {...register("designation", {
+                            required: "Designation type is required",
+                          })}
                           name="designation"
                           value={form.designation}
                           onChange={handleChange}
@@ -158,6 +178,11 @@ function Profile() {
                             </option>
                           ))}
                         </select>
+                        {errors.designation && (
+                          <p className="text-red-600">
+                            {errors.designation.message}
+                          </p>
+                        )}
                       </div>
 
                       <div className="mb-4 py-2">
@@ -165,6 +190,23 @@ function Profile() {
                           Profile Name
                         </label>
                         <input
+                          {...register("Profile", {
+                            required: "Profile name is required",
+                            minLength: {
+                              value: 3,
+                              message:
+                                "Profile name must be at least 3 characters",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message:
+                                "Profile name can't exceed 50 characters",
+                            },
+                            pattern: {
+                              value: /^[A-Za-z]+$/i,
+                              message: "not valid number not allowed",
+                            },
+                          })}
                           type="text"
                           name="Profile"
                           value={form.Profile}
@@ -173,6 +215,11 @@ function Profile() {
                           className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           required
                         />
+                        {errors.Profile && (
+                          <p className="text-red-600">
+                            {errors.Profile.message}
+                          </p>
+                        )}
                       </div>
 
                       <div className="mb-6 py-2">
@@ -180,6 +227,7 @@ function Profile() {
                           Description
                         </label>
                         <textarea
+                          {...register("description")}
                           name="description"
                           value={form.description}
                           onChange={handleChange}

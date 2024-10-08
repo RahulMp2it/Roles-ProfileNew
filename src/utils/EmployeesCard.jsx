@@ -11,9 +11,8 @@ import { useEffect, useRef, useState } from "react";
 function EmployeesCard({
   id,
   image,
-  depart,
-  position,
-  profile,
+  phone,
+  email,
   name,
   openEditModal,
   update,
@@ -92,7 +91,7 @@ function EmployeesCard({
         <img
           className="absolute top-[6px] left-[6px] h-[63px] w-[63px] object-cover rounded-full"
           src={image}
-          alt={profile}
+          // alt={}
         />
       </div>
 
@@ -100,19 +99,13 @@ function EmployeesCard({
       <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
         {name}
       </p>
-      {/* profile */}
+      {/* email */}
       <h2 className="mb-1 text-[15px] leading-4 py-2 flex justify-center text-center font-nunito text-[#3F8CFF] dark:text-white h-[18px]">
-        {profile}
+        {email}
       </h2>
-
       {/* Department */}
       <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629D6] dark:text-white h-[18px]">
-        {depart}
-      </p>
-
-      {/* Designation */}
-      <p className="mb-1 text-[16px] leading-4 py-2 flex justify-center text-center font-nunito text-[#0A1629] dark:text-white h-[18px]">
-        {position}
+        {phone}
       </p>
     </div>
   );

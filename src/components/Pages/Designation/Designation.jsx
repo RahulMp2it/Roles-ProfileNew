@@ -3,6 +3,7 @@ import DesignationCard from "../../../utils/DesignationCard";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 
 function Designation() {
   const navigate = useNavigate();
@@ -20,6 +21,13 @@ function Designation() {
     { id: 4, name: "R&D Department" },
     // we can add more departments as needed
   ];
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   useEffect(() => {
     const fetchDesignations = async () => {
@@ -41,16 +49,16 @@ function Designation() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/designation",
-        form
+        data
       );
       if (response.data.status === "success") {
         setDesignations([...designations, response.data.data]);
         addDesignation.current.close();
+        reset();
         setForm({ DesignationName: "", DepartmentName: "" });
       } else {
         console.error(response.data.message);
@@ -92,7 +100,7 @@ function Designation() {
                   >
                     ✕
                   </button>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="text-[20px] text-start px-4 py-4 font-bold">
                       Add Designation
                     </div>
@@ -102,6 +110,9 @@ function Designation() {
                           Type of Department
                         </label>
                         <select
+                          {...register("DepartmentName", {
+                            required: "Department name is required",
+                          })}
                           name="DepartmentName"
                           value={form.DepartmentName}
                           onChange={handleChange}
@@ -117,12 +128,32 @@ function Designation() {
                             </option>
                           ))}
                         </select>
+                        {errors.DepartmentName && (
+                          <p className="text-red-600">
+                            {errors.DepartmentName.message}
+                          </p>
+                        )}
                       </div>
                       <div className="mb-4 py-2">
                         <label className="block text-[12px] text-start pb-1 font-medium text-[#7D8592]">
                           Designation Name
                         </label>
                         <input
+                          {...register("DesignationName", {
+                            required: "Designation name is required",
+                            minLength: {
+                              value: 3,
+                              message: "Min length is 3 characters",
+                            },
+                            maxLength: {
+                              value: 50,
+                              message: "Max length is 50 characters",
+                            },
+                            pattern: {
+                              value: /^[A-Za-z]+$/i,
+                              message: "not valid number not allowed",
+                            },
+                          })}
                           type="text"
                           name="DesignationName"
                           value={form.DesignationName}
@@ -131,6 +162,11 @@ function Designation() {
                           className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           required
                         />
+                        {errors.DesignationName && (
+                          <p className="text-red-600">
+                            {errors.DesignationName.message}
+                          </p>
+                        )}
                       </div>
                       <div className="mb-6 py-2">
                         <label className="block text-start text-[12px] pb-1 font-medium text-[#7D8592]">
