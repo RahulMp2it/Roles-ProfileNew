@@ -1,9 +1,59 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../../Layout";
+import { PiArrowRightFill } from "react-icons/pi";
 
 function ProfileDoc() {
   const UploadSkills = useRef();
+  const [activeTab, setActiveTab] = useState(0);
+
+  const getData = [
+    {
+      tabName: "skills",
+      tabContent: [
+        "Knowledge About Graphic Designing",
+        "Knowledge About After Effect/Premium Pro",
+        "Knowledge About 3D Animation",
+        "Knowledge About Photoshop/Adobe/Illustration",
+        "Knowledge About Figma/AdobeXD",
+      ],
+    },
+    {
+      tabName: "interview",
+      tabContent: [
+        "Stage 1 25 minutes",
+        "Stage 2 25 minutes",
+        "Stage 3 25 minutes",
+        "Stage 4 25 minutes",
+        "Stage 5 25 minutes",
+      ],
+    },
+    {
+      tabName: "Training Material",
+      tabContent: [
+        "vedio",
+        "vedio",
+        "vedio",
+        "vedio",
+        "vedio",
+      ],
+    },
+    {
+      tabName: "Role",
+      tabContent: [
+        "Knowledge About Graphic Designing",
+        "Knowledge About After Effect/Premium Pro",
+        "Knowledge About 3D Animation",
+        "Knowledge About Photoshop/Adobe/Illustration",
+        "Knowledge About Figma/AdobeXD",
+      ],
+    },
+  ];
+
+  const handleClick = (index) => {
+    setActiveTab(index);
+  };
+
   return (
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
@@ -43,49 +93,101 @@ function ProfileDoc() {
                 <img src="image2.png" className="w-5 h-5 " alt="" />
               </div>
             </div>
+            <div>
             <div className="w-[1250px] h-14 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
               <div className="flex items-center">
-                <p className="text-[#91929E] text-[15px] px-6"> Skills</p>
-                <p className="text-[#91929E] text-[15px] px-28">Interview</p>
-                <p className="text-[#91929E] text-[15px] px-14">
-                  Training Material
-                </p>
-                <p className="text-[#91929E] text-[15px] px-6">Role</p>
+                {getData.map((data, i) => (
+                  
+                    <div
+                      key={i}
+                      className={`text-[#91929E] text-[15px] px-6 cursor-pointer transition-all duration-1000 ease ${
+                        activeTab === i ? "bg-blue-500 text-white font-bold rounded-[100px] py-4" : ""
+                      }`}
+                      onClick={() => handleClick(i)}
+                    >
+                      {data.tabName}
+                    </div>
+                ))}
               </div>
             </div>
 
-            <div>
-              <button
-                className="btn text-black font-nunito w-[125px] px-2 bg-[#D9D9D9] rounded-xl"
-                onClick={() => UploadSkills.current.showModal()}
-              >
-                + Upload Skills
-              </button>
-              <dialog ref={UploadSkills} className="modal h-auto shadow-xl">
-                <div className="modal-box">
-                  <h3 className="font-bold text-lg">Upload Skills</h3>
-                  <div className="rounded-[8px]">
-                    <input
-                      type="text"
-                      className="w-10 h-3 bg-white text-black "
-                      placeholder="Write Your Skills Here"
-                    />
-                  </div>
-                  <p className="text-white ">+ Add one more </p>
-                  <div className="modal-action">
-                    <form method="dialog">
-                      {/* if there is a button in form, it will close the modal */}
-                      <button
-                        className="btn w-[200px] h-4 bg-white text-[#3F8CFF]"
-                        type="submit"
-                      >
-                        Save
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </dialog>
+            {/* content */}
+             <div className="content-area p-4 bg-white rounded-md shadow-md">
+             <h3 className="text-lg font-bold mb-3">  {getData[activeTab].tabName} Content</h3>
+             <div className=" border-l-[10px] border-[#3F8CFF]">
+            <ul>
+             {getData[activeTab].tabContent.map((content, idx) => (
+               <li key={idx} className="mb-2 py-4 font-bold text-sm">
+                 <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />{content}
+               </li>
+             ))}
+            </ul>
             </div>
+            </div>
+          </div>
+          </div>
+          {/* <div>
+              <div className="w-[1250px] h-14 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
+                <div className="flex items-center">
+                  <p
+                    className=" text-[15px] px-6 cursor-pointer"
+                    onClick={() => setActiveTab("skills")}
+                  >
+                    Skills
+                  </p>
+                  <p
+                    className="text-[15px] px-28 cursor-pointer "
+                    onClick={() => setActiveTab("interview")}
+                  >
+                    Interview
+                  </p>
+                  <p
+                    className="text-[15px] px-14 cursor-pointer"
+                    onClick={() => setActiveTab("training")}
+                  >
+                    Training Material
+                  </p>
+                  <p
+                    className="text-[15px] px-6 cursor-pointer "
+                    onClick={() => setActiveTab("role")}
+                  >
+                    Role
+                  </p>
+                </div>
+              </div>
+            </div> */}
+
+          <div>
+            <button
+              className="btn text-black font-nunito w-[125px] px-2 bg-[#D9D9D9] rounded-xl"
+              onClick={() => UploadSkills.current.showModal()}
+            >
+              + Upload Skills
+            </button>
+            <dialog ref={UploadSkills} className="modal h-auto shadow-xl">
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">Upload Skills</h3>
+                <div className="rounded-[8px]">
+                  <input
+                    type="text"
+                    className="w-10 h-3 bg-white text-black "
+                    placeholder="Write Your Skills Here"
+                  />
+                </div>
+                <p className="text-white ">+ Add one more </p>
+                <div className="modal-action">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button
+                      className="btn w-[200px] h-4 bg-white text-[#3F8CFF]"
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
           </div>
         </div>
       </div>
@@ -138,3 +240,48 @@ export default ProfileDoc;
 // };
 
 // export default ProfileDoc;
+
+// <div role="tablist" className="tabs tabs-lifted">
+//               <input
+//                 type="radio"
+//                 name="my_tabs_2"
+//                 role="tab"
+//                 className="tab"
+//                 aria-label="Skills"
+//               />
+//               <div
+//                 role="tabpanel"
+//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+//               >
+//                 Tab content 1
+//               </div>
+
+//               <input
+//                 type="radio"
+//                 name="my_tabs_2"
+//                 role="tab"
+//                 className="tab"
+//                 aria-label="Tab 2"
+//                 defaultChecked
+//               />
+//               <div
+//                 role="tabpanel"
+//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+//               >
+//                 Tab content 2
+//               </div>
+
+//               <input
+//                 type="radio"
+//                 name="my_tabs_2"
+//                 role="tab"
+//                 className="tab"
+//                 aria-label="Tab 3"
+//               />
+//               <div
+//                 role="tabpanel"
+//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+//               >
+//                 Tab content 3
+//               </div>
+//             </div>
