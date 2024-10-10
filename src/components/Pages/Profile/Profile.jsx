@@ -257,8 +257,8 @@ function Profile() {
                 depart={profile.Department}
                 position={profile.designation}
                 buttonText="1 Member"
-                // onClick={handleClick}
-                // url={profile?.url}
+              // onClick={handleClick}
+              // url={profile?.url}
               />
             ))}
           </div>

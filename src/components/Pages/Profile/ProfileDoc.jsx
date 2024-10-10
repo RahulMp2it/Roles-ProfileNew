@@ -6,6 +6,8 @@ import { PiArrowRightFill } from "react-icons/pi";
 function ProfileDoc() {
   const UploadSkills = useRef();
   const [activeTab, setActiveTab] = useState(0);
+  const [selectedStage, setSelectedStage] = useState(null);
+  const [showForum, setShowForum] = useState(false); // New state for showing the Forum
 
   const getData = [
     {
@@ -21,11 +23,11 @@ function ProfileDoc() {
     {
       tabName: "interview",
       tabContent: [
-        "Stage 1 25 minutes",
-        "Stage 2 25 minutes",
-        "Stage 3 25 minutes",
-        "Stage 4 25 minutes",
-        "Stage 5 25 minutes",
+        { stage: "Stage 1 25 Minutes", questions: ["What do you mean by UI/UX Designer", "What do you mean by UI/UX Designer", "What do you mean by UI/UX Designer", "What do you mean by UI/UX Designer", "What do you mean by UI/UX Designer"] },
+        { stage: "Stage 2 25 Minutes", questions: ["Q1", "Q2"] },
+        { stage: "Stage 3 25 Minutes", questions: ["Q1"] },
+        { stage: "Stage 4 25 Minutes", questions: ["Q1", "Q2"] },
+        { stage: "Stage 5 25 Minutes", questions: ["Q1", "Q2", "Q3", "Q4"] },
       ],
     },
     {
@@ -52,6 +54,17 @@ function ProfileDoc() {
 
   const handleClick = (index) => {
     setActiveTab(index);
+    setSelectedStage(null); // Reset selected stage when switching tabs
+    setShowForum(false); // Reset forum when switching tabs
+  };
+
+  const handleStageClick = (stage) => {
+    setSelectedStage(stage); // Update state when a specific stage is clicked
+    setShowForum(false); // Close forum when stage is clicked
+  };
+
+  const handleForumClick = () => {
+    setShowForum(true); // Show forum when clicked
   };
 
   return (
@@ -94,76 +107,117 @@ function ProfileDoc() {
               </div>
             </div>
             <div>
-            <div className="w-[1250px] h-14 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
-              <div className="flex items-center">
-                {getData.map((data, i) => (
-                  
+              <div className="w-[1250px] h-14 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
+                <div className="flex items-center">
+                  {getData.map((data, i) => (
+
                     <div
                       key={i}
-                      className={`text-[#91929E] text-[15px] px-6 cursor-pointer transition-all duration-1000 ease ${
-                        activeTab === i ? "bg-blue-500 text-white font-bold rounded-[100px] py-4" : ""
-                      }`}
+                      className={`text-[#91929E] text-[15px] px-6 ml-10 cursor-pointer transition-all duration-1000 ease ${activeTab === i ? "bg-blue-500 text-white font-bold rounded-[100px] py-4" : ""
+                        }`}
                       onClick={() => handleClick(i)}
                     >
                       {data.tabName}
                     </div>
-                ))}
-              </div>
-            </div>
-
-            {/* content */}
-             <div className="content-area p-4 bg-white rounded-md shadow-md">
-             <h3 className="text-lg font-bold mb-3">  {getData[activeTab].tabName} Content</h3>
-             <div className=" border-l-[10px] border-[#3F8CFF]">
-            <ul>
-             {getData[activeTab].tabContent.map((content, idx) => (
-               <li key={idx} className="mb-2 py-4 font-bold text-sm">
-                 <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />{content}
-               </li>
-             ))}
-            </ul>
-            </div>
-            </div>
-          </div>
-          </div>
-          {/* <div>
-              <div className="w-[1250px] h-14 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
-                <div className="flex items-center">
-                  <p
-                    className=" text-[15px] px-6 cursor-pointer"
-                    onClick={() => setActiveTab("skills")}
-                  >
-                    Skills
-                  </p>
-                  <p
-                    className="text-[15px] px-28 cursor-pointer "
-                    onClick={() => setActiveTab("interview")}
-                  >
-                    Interview
-                  </p>
-                  <p
-                    className="text-[15px] px-14 cursor-pointer"
-                    onClick={() => setActiveTab("training")}
-                  >
-                    Training Material
-                  </p>
-                  <p
-                    className="text-[15px] px-6 cursor-pointer "
-                    onClick={() => setActiveTab("role")}
-                  >
-                    Role
-                  </p>
+                  ))}
                 </div>
               </div>
-            </div> */}
+              <button
+                className="btn text-black font-nunito w-[125px] px-2 bg-[#D9D9D9] rounded-xl"
+                onClick={() => UploadSkills.current.showModal()}
+              >
+                + Upload Skills
+              </button>
+              {/* content */}
+              <div className="content-area p-4 bg-white rounded-md shadow-md">
+                {activeTab === 1 && (
+                  <p className="w-[423px] bg-[#3F8CFf] text-center text-white py-1">Stage & Time</p>
+                )}
+                {activeTab === 3 && (
+                  <p className="w-[423px] bg-[#3F8CFf] text-center text-white py-1">Role</p>
+                )}
+                <div className=" border-l-[10px] border-[#3F8CFF] flex">
+                  <div >
+                    <ul>
+                      {getData[activeTab].tabContent.map((content, idx) => (
+                        <li
+                          key={idx}
+                          className="mb-2 py-4 font-bold text-sm cursor-pointer "
+                          onClick={() =>
+                            activeTab === 1 ? handleStageClick(content) : null
+                          } // Enable click only for the "Interview" tab
+                        >
+                          <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />{activeTab === 1 ? content.stage : content}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className=" ml-64 -mt-8 flex ">
+                    {selectedStage && (
+                      <div className="w-[400px] border-l-[6px] border-[#3F8CFF] h-full">
+                        <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Stage Description</p>
+                        <h3 className="text-lg font-bold mb-3"><PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />
+                          <button className="hover:bg-[#3F8CFF] mt-2 hover:rounded-md hover:p-.5 px-2"
+                            onClick={handleForumClick}>Forum</button></h3>
+                        <div className="h-[400px] top-0 overflow-y-auto text-white">
+                          <ul >
+                            {selectedStage.questions.map((question, idx) => (
+                              <li key={idx} className="py-4 font-bold text-[11px]  bg-[#3F8CFF] mx-3 ml-3">
+                                <div className="ml-3">{question}</div>
+
+                                <div className="mt-2">
+                                  <label className="block mb-1"></label>
+                                  <input
+                                    className="w-[300px] p-2 border rounded-md ml-3 "
+                                    rows="3"
+                                    placeholder="Type your answer here..."
+                                  />
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Forum Panel */}
+
+                    {showForum && (
+                      <div className="w-[400px] border-l-[6px] border-[#3F8CFF] h-[500px] sticky top-0 overflow-y-auto">
+                        <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Question & answer</p>
+                        <h3 className="text-lg font-bold mb-3 "></h3>
+                        <div >
+                          <ul className="p-3">
+                            {selectedStage.questions.map((question, idx) => (
+                              <li key={idx} className=" py-4 font-bold text-[11px]  bg-[#3F8CFF]">
+                                <div className="ml-3">{question}</div>
+
+                                <div className="mt-2">
+                                  <label className="block mb-1"></label>
+                                  <input
+                                    className="w-[300px] p-2 rounded-md ml-4 "
+                                    rows="3"
+                                    placeholder="Type your answer here..."
+                                  />
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                      </div>
+                    )}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
 
           <div>
-            <button
-              className="btn text-black font-nunito w-[125px] px-2 bg-[#D9D9D9] rounded-xl"
-              onClick={() => UploadSkills.current.showModal()}
-            >
-              + Upload Skills
-            </button>
+
             <dialog ref={UploadSkills} className="modal h-auto shadow-xl">
               <div className="modal-box">
                 <h3 className="font-bold text-lg">Upload Skills</h3>
@@ -197,91 +251,3 @@ function ProfileDoc() {
 
 export default ProfileDoc;
 
-// import React from "react";
-
-// const ProfileDoc = () => {
-//   return (
-//     <div className="bg-white shadow-md rounded-lg p-4">
-//       <div className="flex justify-between items-center mb-4">
-//         <h3 className="text-lg font-bold">Profile Name</h3>
-//         <div className="flex items-center">
-//           <p className="text-gray-500 mr-2">Department</p>
-//           <p className="text-gray-500">Research & Development</p>
-//         </div>
-//       </div>
-//       <div className="flex justify-between items-center mb-4">
-//         <p className="text-gray-500">Position</p>
-//         <div className="flex items-center">
-//           <p className="text-gray-500 mr-2">Assignee</p>
-//           {/* Add your assignee image or avatar here */}
-//         </div>
-//       </div>
-//       <div className="mb-4">
-//         <h4 className="text-lg font-bold">Skills</h4>
-//       </div>
-//       <ul className="list-disc pl-4">
-//         <li className="text-gray-500">Knowledge About Graphic Designing</li>
-//         <li className="text-gray-500">
-//           Knowledge About After Effect/Premium Pro
-//         </li>
-//         <li className="text-gray-500">Knowledge About 3d Animation</li>
-//         <li className="text-gray-500">
-//           Knowledge About Photoshop/adobe/illustration
-//         </li>
-//         <li className="text-gray-500">Knowledge About Figma/Adobexd</li>
-//       </ul>
-//       <div className="flex justify-center">
-//         <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
-//           Upload Skills
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProfileDoc;
-
-// <div role="tablist" className="tabs tabs-lifted">
-//               <input
-//                 type="radio"
-//                 name="my_tabs_2"
-//                 role="tab"
-//                 className="tab"
-//                 aria-label="Skills"
-//               />
-//               <div
-//                 role="tabpanel"
-//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-//               >
-//                 Tab content 1
-//               </div>
-
-//               <input
-//                 type="radio"
-//                 name="my_tabs_2"
-//                 role="tab"
-//                 className="tab"
-//                 aria-label="Tab 2"
-//                 defaultChecked
-//               />
-//               <div
-//                 role="tabpanel"
-//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-//               >
-//                 Tab content 2
-//               </div>
-
-//               <input
-//                 type="radio"
-//                 name="my_tabs_2"
-//                 role="tab"
-//                 className="tab"
-//                 aria-label="Tab 3"
-//               />
-//               <div
-//                 role="tabpanel"
-//                 className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-//               >
-//                 Tab content 3
-//               </div>
-//             </div>
