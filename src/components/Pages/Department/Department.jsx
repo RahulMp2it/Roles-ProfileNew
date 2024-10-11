@@ -4,6 +4,7 @@ import Card from "../../../utils/Card";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import { useForm } from "react-hook-form";
+import EditDepartmentModal from "./EditDepartmentModal";
 
 const Department = () => {
   const navigate = useNavigate();
@@ -11,6 +12,30 @@ const Department = () => {
   const [form, setForm] = useState({ DepartmentName: "" });
   const [loading, setLoading] = useState(false);
   const [departments, setDepartments] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(selectedDepartment);
+
+  const updateDepartment = useRef();
+
+  const openEditModal = (department) => {
+    setSelectedDepartment(department);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedDepartment(null);
+  };
+
+  const handleUpdate = (updatedDepartment) => {
+    // Update the departments state after editing
+    setDepartments((prevDepartments) =>
+      prevDepartments.map((depart) =>
+        depart.id === updatedDepartment.id ? updatedDepartment : depart
+      )
+    );
+  };
 
   const {
     register,
@@ -30,7 +55,6 @@ const Department = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-
     try {
       const response = await axios.post(
         "http://localhost:8080/api/department",
@@ -64,7 +88,7 @@ const Department = () => {
 
   return (
     <Layout>
-      <div className="fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
+      <div className="fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
         <div className="overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
             "Welcome back, Rahul Singh"
@@ -147,14 +171,28 @@ const Department = () => {
           </div>
 
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
-            {departments.map((department) => (
+            {departments.map((department, key) => (
               <Card
-                key={department._id}
+                key={key}
+                id={department._id} // unique ID
                 image={department.image || "/image1.png"}
                 title={department.DepartmentName}
                 buttonText="1 Member"
+                updateDepartment={updateDepartment}
+                openEditModal={() => openEditModal(department)} // Pass function to open modal
               />
             ))}
+
+            {/* Edit Employee Modal */}
+            {selectedDepartment && (
+              <EditDepartmentModal
+                department={selectedDepartment}
+                isOpen={isModalOpen}
+                onClose={closeEditModal}
+                onUpdate={handleUpdate}
+                update={fetchDepartments}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -4,11 +4,37 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import EditDesignationModal from "./EditDesignationModal";
 
 function Designation() {
   const navigate = useNavigate();
   const addDesignation = useRef();
   const [designations, setDesignations] = useState([]);
+  const [selectedDesignation, setSelectedDesignation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(selectedDesignation);
+
+  const updateDesignation = useRef();
+
+  const openEditModal = (designation) => {
+    setSelectedDesignation(designation);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedDesignation(null);
+  };
+
+  const handleUpdate = (updatedDesignation) => {
+    // Update the Designation state after editing
+    setDesignations((prevDesignations) =>
+      prevDesignations.map((desig) =>
+        desig.id === updatedDesignation.id ? updatedDesignation : desig
+      )
+    );
+  };
+
   const [form, setForm] = useState({
     DesignationName: "",
     DepartmentName: "",
@@ -29,18 +55,18 @@ function Designation() {
     reset,
   } = useForm();
 
-  useEffect(() => {
-    const fetchDesignations = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/designation"
-        );
-        setDesignations(response.data.data);
-      } catch (error) {
-        console.error("Failed to fetch designations:", error);
-      }
-    };
+  const fetchDesignations = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/designation"
+      );
+      setDesignations(response.data.data);
+    } catch (error) {
+      console.error("Failed to fetch designations:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchDesignations();
   }, []);
 
@@ -74,7 +100,7 @@ function Designation() {
 
   return (
     <Layout>
-      <div className="fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2">
+      <div className="fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
         <div className="overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
             "Welcome back, Rahul Singh"
@@ -194,14 +220,29 @@ function Designation() {
           </div>
 
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
-            {designations.map((designation) => (
+            {designations.map((designation, key) => (
               <DesignationCard
-                key={designation._id}
+                key={key}
+                id={designation._id} // unique ID
                 image={designation.image || "/image2.png"}
                 title={designation.DesignationName}
                 buttonText="1 Member"
+                updateDesignation={updateDesignation}
+                openEditModal={() => openEditModal(designation)} // Pass function to open modal
               />
             ))}
+
+            {/* Edit Designation Modal */}
+            {selectedDesignation && (
+              <EditDesignationModal
+                designation={selectedDesignation}
+                isOpen={isModalOpen}
+                onClose={closeEditModal}
+                onUpdate={handleUpdate}
+                update={fetchDesignations}
+              />
+            )}
+
           </div>
         </div>
       </div>

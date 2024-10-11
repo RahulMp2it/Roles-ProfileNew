@@ -136,8 +136,8 @@ function ProfileDoc() {
                 {activeTab === 3 && (
                   <p className="w-[423px] bg-[#3F8CFf] text-center text-white py-1">Role</p>
                 )}
-                <div className=" border-l-[10px] border-[#3F8CFF] flex">
-                  <div >
+                <div className="border-l-[10px] border-[#3F8CFF] flex W-[340px]">
+                  <div className="w-[352px] ">
                     <ul>
                       {getData[activeTab].tabContent.map((content, idx) => (
                         <li
@@ -152,17 +152,17 @@ function ProfileDoc() {
                       ))}
                     </ul>
                   </div>
-                  <div className=" ml-64 -mt-8 flex ">
+                  <div className=" -mt-8 flex ">
                     {selectedStage && (
                       <div className="w-[400px] border-l-[6px] border-[#3F8CFF] h-full">
                         <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Stage Description</p>
                         <h3 className="text-lg font-bold mb-3"><PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />
-                          <button className="hover:bg-[#3F8CFF] mt-2 hover:rounded-md hover:p-.5 px-2"
+                          <button className="hover:bg-[#3F8CFF] mt-2 hover:rounded-md hover:p-0.5 px-2"
                             onClick={handleForumClick}>Forum</button></h3>
-                        <div className="h-[400px] top-0 overflow-y-auto text-white">
-                          <ul >
+                        <div className="h-[400px] w-full top-0 overflow-y-auto text-white ml-3">
+                          <ul>
                             {selectedStage.questions.map((question, idx) => (
-                              <li key={idx} className="py-4 font-bold text-[11px]  bg-[#3F8CFF] mx-3 ml-3">
+                              <li key={idx} className="py-4 font-bold text-[11px]  bg-[#3F8CFF]">
                                 <div className="ml-3">{question}</div>
 
                                 <div className="mt-2">
@@ -183,13 +183,13 @@ function ProfileDoc() {
                     {/* Forum Panel */}
 
                     {showForum && (
-                      <div className="w-[400px] border-l-[6px] border-[#3F8CFF] h-[500px] sticky top-0 overflow-y-auto">
+                      <div className="w-full border-l-[6px] border-[#3F8CFF] h-[500px]  top-0 overflow-y-auto">
                         <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Question & answer</p>
                         <h3 className="text-lg font-bold mb-3 "></h3>
-                        <div >
-                          <ul className="p-3">
+                        <div className="h-[435px] top-0 overflow-y-auto text-white">
+                          <ul className="pl-3 w-full" >
                             {selectedStage.questions.map((question, idx) => (
-                              <li key={idx} className=" py-4 font-bold text-[11px]  bg-[#3F8CFF]">
+                              <li key={idx} className=" py-4 font-bold text-[11px] bg-[#3F8CFF]">
                                 <div className="ml-3">{question}</div>
 
                                 <div className="mt-2">

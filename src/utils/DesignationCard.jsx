@@ -1,17 +1,82 @@
+import axios from "axios";
 import React from "react";
+import { GoPlus } from "react-icons/go";
+import { IoEyeOutline, IoPencil } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
+import { TbDotsCircleHorizontal } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
-function DesignationCard({ image, title, buttonText, url }) {
+function DesignationCard({ id, image, title, buttonText, url, openEditModal,
+  update, }) {
   const Navigate = useNavigate();
 
   const handleClick = (u) => {
     Navigate(u);
   };
 
+  // Delete Designation From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/designation/${id}`) // Delete the designation
+      .then((response) => {
+        console.log("designation deleted successfully:", response.data);
+        update();
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the designation:", error);
+      });
+  };
+
   return (
     <>
-      <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2">
+      <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
+
+        {/* Dropdown Icon */}
+        <div className="absolute top-2 right-3 z-10">
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="m-1">
+              <TbDotsCircleHorizontal className="text-3xl text-gray-500" />
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu z-[1] p-2 w-36 rounded-[18px] shadow-lg bg-[#3F8CFF] ring-1 ring-black ring-opacity-5"
+            >
+              <li>
+                <button
+                  className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
+                  onClick={openEditModal} // Call the function to open modal
+                >
+                  <IoPencil />
+                  <span className="ml-1">Edit</span>
+                </button>
+              </li>
+              <li>
+                <button className="flex items-center px-1 py-3 text-[14px] h-5 text-white">
+                  <IoEyeOutline />
+                  <span className="ml-1">View</span>
+                </button>
+              </li>
+              <li>
+                <button className="flex items-center px-1 py-3 text-[14px] h-5 text-white">
+                  <GoPlus />
+                  <span className="ml-1">Add</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
+                  onClick={() => handleDelete(id)}
+                >
+                  <MdDelete />
+                  <span className="ml-1">Delete</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div className="relative w-[75px] h-[75px] bg-progress-img bg-center bg-[length:100%_100%] justify-center ">
+
           {/* Rounded Image */}
           <img
             className="absolute top-[6px] left-[6px] h-[63px] w-[63px] object-cover rounded-full"

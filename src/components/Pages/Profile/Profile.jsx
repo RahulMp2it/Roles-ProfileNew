@@ -4,12 +4,37 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import EditProfileModal from "./EditProfileModal";
 
 function Profile() {
   const navigate = useNavigate();
   const addProfile = useRef();
   const [profiles, setProfiles] = useState([]);
   const [activeCardId, setActiveCardId] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(selectedProfile);
+
+  const updateProfile = useRef();
+
+  const openEditModal = (profile) => {
+    setSelectedProfile(profile);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedProfile(null);
+  };
+
+  const handleUpdate = (updatedProfile) => {
+    // Update the Profiles state after editing
+    setProfiles((prevProfiles) =>
+      prevProfiles.map((pro) =>
+        pro.id === updatedProfile.id ? updatedProfile : pro
+      )
+    );
+  };
   const [form, setForm] = useState({
     Profile: "",
     designation: "",
@@ -90,7 +115,7 @@ function Profile() {
 
   return (
     <Layout>
-      <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
+      <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
         <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
             "Welcome back, Rahul singh"
@@ -249,18 +274,30 @@ function Profile() {
           </div>
 
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
-            {profiles.map((profile) => (
+            {profiles.map((profile, key) => (
               <ProfileCard
-                key={profile._id}
+                key={key}
+                id={profile._id}
                 image={profile.image || "/image2.png"}
                 title={profile.Profile}
                 depart={profile.Department}
                 position={profile.designation}
                 buttonText="1 Member"
-              // onClick={handleClick}
-              // url={profile?.url}
+                updateEmployee={updateProfile}
+                openEditModal={() => openEditModal(profile)} // Pass function to open modal
               />
             ))}
+
+            {/* Edit Profile Modal */}
+            {selectedProfile && (
+              <EditProfileModal
+                profile={selectedProfile}
+                isOpen={isModalOpen}
+                onClose={closeEditModal}
+                onUpdate={handleUpdate}
+                update={fetchProfiles}
+              />
+            )}
           </div>
         </div>
       </div>

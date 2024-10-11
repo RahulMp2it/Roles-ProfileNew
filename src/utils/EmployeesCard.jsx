@@ -91,7 +91,7 @@ function EmployeesCard({
         <img
           className="absolute top-[6px] left-[6px] h-[63px] w-[63px] object-cover rounded-full"
           src={image}
-          // alt={}
+        // alt={}
         />
       </div>
 
