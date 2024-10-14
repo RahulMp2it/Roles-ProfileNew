@@ -135,11 +135,11 @@ const Department = () => {
                               message: "min length 3",
                             },
                             maxLength: {
-                              value: 20,
-                              message: "max length 20",
+                              value: 50,
+                              message: "max length 50",
                             },
                             pattern: {
-                              value: /^[A-Za-z]+$/i,
+                              value: /^[A-Za-z\s]+$/i,
                               message: "not valid number not allowed",
                             },
                           })}

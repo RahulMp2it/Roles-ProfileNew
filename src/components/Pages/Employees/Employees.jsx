@@ -153,7 +153,8 @@ function Employees() {
                                 message: "Max length is 50 characters",
                               },
                               pattern: {
-                                value: /^[A-Za-z]+$/i,
+                                value: /^[A-Za-z\s]+$/i,
+
                                 message: "not valid number not allowed",
                               },
                             })}
@@ -202,14 +203,17 @@ function Employees() {
                             {...register("phone", {
                               required: true,
                               pattern: {
+
                                 value: /^\d{10}$/,
                                 message: "Enter a valid phone number",
                               },
                             })}
+                            maxLength={10} // Restrict the input to 10 characters
                             type="number"
                             name="phone"
                             value={form.phone}
                             onChange={handleChange}
+
                             placeholder="+91"
                             className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           />

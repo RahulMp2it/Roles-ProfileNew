@@ -8,6 +8,7 @@ function ProfileDoc() {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedStage, setSelectedStage] = useState(null);
   const [showForum, setShowForum] = useState(false); // New state for showing the Forum
+  const [skills, setSkills] = useState([""]); // Initial state with one input box
 
   const getData = [
     {
@@ -65,6 +66,18 @@ function ProfileDoc() {
 
   const handleForumClick = () => {
     setShowForum(true); // Show forum when clicked
+  };
+
+  // Function to handle adding more input boxes
+  const handleAddSkill = () => {
+    setSkills([...skills, ""]); // Add empty string
+  };
+
+  // Function to handle skill input change
+  const handleSkillChange = (index, event) => {
+    const newSkills = [...skills];
+    newSkills[index] = event.target.value; // Update the skill at the given index
+    setSkills(newSkills);
   };
 
   return (
@@ -218,22 +231,28 @@ function ProfileDoc() {
 
           <div>
 
-            <dialog ref={UploadSkills} className="modal h-auto shadow-xl">
-              <div className="modal-box">
-                <h3 className="font-bold text-lg">Upload Skills</h3>
-                <div className="rounded-[8px]">
-                  <input
-                    type="text"
-                    className="w-10 h-3 bg-white text-black "
-                    placeholder="Write Your Skills Here"
-                  />
+            <dialog ref={UploadSkills} className="modal h-auto shadow-xl ">
+              <div className="modal-box bg-[#3F8CFf]">
+                <h3 className="text-white pl-3 text-lg pb-3">Upload Skills</h3>
+                <div className="rounded-[8px] border-none">
+                  {skills.map((skill, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      value={skill}
+                      onChange={(e) => handleSkillChange(index, e)}
+                      className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                      placeholder={`Write Your skills Here ${index + 1}`}
+                    />
+                  ))}
                 </div>
-                <p className="text-white ">+ Add one more </p>
+                <p className="text-white text-center font-medium pt-3 cursor-pointer"
+                  onClick={handleAddSkill}>
+                  + Add one more </p>
                 <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
+                  <form method="dialog ">
                     <button
-                      className="btn w-[200px] h-4 bg-white text-[#3F8CFF]"
+                      className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF] "
                       type="submit"
                     >
                       Save
