@@ -6,25 +6,11 @@ import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
-const Card = ({ id, image, title, buttonText, url, openEditModal,
-  update, }) => {
+const Card = ({ id, image, title, buttonText, url, openEditModal, handleDelete }) => {
   const navigate = useNavigate();
 
   const handleClick = (u) => {
     navigate(u);
-  };
-
-  // Delete employee From database
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/department/${id}`) // Delete the department
-      .then((response) => {
-        console.log("Employee deleted successfully:", response.data);
-        update();
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the employee:", error);
-      });
   };
 
   return (

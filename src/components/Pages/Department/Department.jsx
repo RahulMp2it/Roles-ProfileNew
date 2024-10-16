@@ -14,7 +14,6 @@ const Department = () => {
   const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(selectedDepartment);
 
   const updateDepartment = useRef();
 
@@ -62,9 +61,7 @@ const Department = () => {
       );
 
       if (response.status === 201) {
-        alert("Department added successfully!");
         addDepartment.current.close();
-        // setForm({ DepartmentName: "" });
         reset();
         fetchDepartments();
       }
@@ -85,6 +82,25 @@ const Department = () => {
       alert("Failed to fetch departments");
     }
   };
+
+  // Delete employee From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/department/${id}`) // Delete the department
+      .then((response) => {
+        console.log("Employee deleted successfully:", response.data);
+        updateDepartments();
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the employee:", error);
+      });
+  };
+
+  //Update the function to refresh after delete
+  const updateDepartments = () => {
+    fetchDepartments(); // re-fresh the Department
+  }
+
 
   return (
     <Layout>
@@ -179,6 +195,7 @@ const Department = () => {
                 title={department.DepartmentName}
                 buttonText="1 Member"
                 updateDepartment={updateDepartment}
+                handleDelete={handleDelete}
                 openEditModal={() => openEditModal(department)} // Pass function to open modal
               />
             ))}

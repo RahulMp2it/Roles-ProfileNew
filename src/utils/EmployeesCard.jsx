@@ -15,21 +15,9 @@ function EmployeesCard({
   email,
   name,
   openEditModal,
+  handleDelete,
   update,
 }) {
-  // Delete employee From database
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/employee/${id}`) // Delete the employee
-      .then((response) => {
-        // alert("Employee deleted successfully");
-        console.log("Employee deleted successfully:", response.data);
-        update();
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the employee:", error);
-      });
-  };
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-5 relative">

@@ -94,6 +94,23 @@ function Employees() {
     fetchEmployees();
   }, []);
 
+  // Delete employee From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/employee/${id}`) // Delete the employee
+      .then((response) => {
+        console.log("Employee deleted successfully:", response.data);
+        updateEmployees();
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the employee:", error);
+      });
+  };
+  //Update the function to refresh after delete
+  const updateEmployees = () => {
+    fetchEmployees(); // re-fresh the Employee
+  }
+
   //Validation
   const {
     register,
@@ -209,11 +226,10 @@ function Employees() {
                               },
                             })}
                             maxLength={10} // Restrict the input to 10 characters
-                            type="number"
+                            type="tel"
                             name="phone"
                             value={form.phone}
                             onChange={handleChange}
-
                             placeholder="+91"
                             className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           />
@@ -324,6 +340,7 @@ function Employees() {
                   name={employee.name}
                   email={employee.email}
                   phone={employee.phone}
+                  handleDelete={handleDelete}
                   updateEmployee={updateEmployee}
                   openEditModal={() => openEditModal(employee)} // Pass function to open modal
                 />

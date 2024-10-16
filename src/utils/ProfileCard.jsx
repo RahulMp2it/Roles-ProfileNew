@@ -16,22 +16,10 @@ const ProfileCard = ({
   url,
   id,
   openEditModal,
-  update,
+  handleDelete,
 }) => {
 
-  // Delete AssignCard From database
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/profile/${id}`) // Delete the employee
-      .then((response) => {
-        // alert("Employee deleted successfully");
-        console.log("Employee deleted successfully:", response.data);
-        update();
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the employee:", error);
-      });
-  };
+
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
@@ -49,6 +37,7 @@ const ProfileCard = ({
               <button
                 className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
                 onClick={openEditModal} // Call the function to open modal
+
               >
                 <IoPencil />
                 <span className="ml-1">Edit</span>

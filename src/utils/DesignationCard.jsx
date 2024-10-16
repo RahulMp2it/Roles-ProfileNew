@@ -7,24 +7,11 @@ import { TbDotsCircleHorizontal } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 function DesignationCard({ id, image, title, buttonText, url, openEditModal,
-  update, }) {
+  update, handleDelete }) {
   const Navigate = useNavigate();
 
   const handleClick = (u) => {
     Navigate(u);
-  };
-
-  // Delete Designation From database
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/designation/${id}`) // Delete the designation
-      .then((response) => {
-        console.log("designation deleted successfully:", response.data);
-        update();
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the designation:", error);
-      });
   };
 
   return (

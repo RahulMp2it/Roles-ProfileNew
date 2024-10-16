@@ -42,30 +42,62 @@ function Sidebar() {
               />
               <span>Employees</span>
             </NavLink>
-            <Link to={"/profile"}>
-              <div className="flex py-3 px-2 rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
-                <BsCalendar2Fill className="size-4" />
-                <span>Profile</span>
-              </div>
-            </Link>
-            <Link to={"/"}>
-              <div className="flex py-3 px-2 rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
-                <RxDashboard className="size-5" />
-                <span>Department</span>
-              </div>
-            </Link>
-            <Link to={"/Designation"}>
-              <div className="flex py-3 px-2 rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
-                <TbStack2Filled className="size-5" />
-                <span>Designation</span>
-              </div>
-            </Link>
-            <Link to={"/ProfileAssign"}>
-              <div className="flex py-3 px-2 rounded transition duration-200 hover:bg-[#F4F9FD] items-center gap-x-4">
-                <PiChatsCircleFill className="size-5" />
-                <span>Profile Assign</span>
-              </div>
-            </Link>
+            <NavLink
+              to={"/profile"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <BsCalendar2Fill
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={20}
+              />
+              <span>Profile</span>
+            </NavLink>
+            <NavLink
+              to={"/"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <RxDashboard
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={20}
+              />
+              <span>Department</span>
+            </NavLink>
+            <NavLink
+              to={"/Designation"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <TbStack2Filled
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={20}
+              />
+              <span>Designation</span>
+            </NavLink>
+            <NavLink
+              to={"/ProfileAssign"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <PiChatsCircleFill
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={20}
+              />
+              <span>Profile Assign</span>
+            </NavLink>
           </div>
         </div>
 

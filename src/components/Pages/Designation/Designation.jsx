@@ -94,6 +94,25 @@ function Designation() {
     }
   };
 
+  // Delete Designation From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/designation/${id}`)
+      .then((response) => {
+        console.log("designation deleted successfully:", response.data);
+        updateDesignations();
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the designation:", error);
+      });
+  };
+
+  //Update the function to refresh after delete
+  const updateDesignations = () => {
+    fetchDesignations();
+  }
+
+
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -228,6 +247,7 @@ function Designation() {
                 title={designation.DesignationName}
                 buttonText="1 Member"
                 updateDesignation={updateDesignation}
+                handleDelete={handleDelete}
                 openEditModal={() => openEditModal(designation)} // Pass function to open modal
               />
             ))}

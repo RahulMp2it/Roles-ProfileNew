@@ -8,7 +8,49 @@ function ProfileDoc() {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedStage, setSelectedStage] = useState(null);
   const [showForum, setShowForum] = useState(false); // New state for showing the Forum
-  const [skills, setSkills] = useState([""]); // Initial state with one input box
+  const [modalType, setModalType] = useState(''); // Modal type (skills, stages, or roles)
+  const [skills, setSkills] = useState(['']);
+  const [stages, setStages] = useState(['']);
+  const [roles, setRoles] = useState(['']);
+  const UploadModal = useRef(null);
+  const [showUpload, setShowUpload] = useState(null); // Controls which upload button to show
+
+
+  // Handle change for dynamic input
+  const handleInputChange = (index, e, type) => {
+    const newValue = e.target.value;
+    if (type === 'skills') {
+      const updatedSkills = [...skills];
+      updatedSkills[index] = newValue;
+      setSkills(updatedSkills);
+    } else if (type === 'stages') {
+      const updatedStages = [...stages];
+      updatedStages[index] = newValue;
+      setStages(updatedStages);
+    } else if (type === 'roles') {
+      const updatedRoles = [...roles];
+      updatedRoles[index] = newValue;
+      setRoles(updatedRoles);
+    }
+  };
+
+  // Add new input field
+  const handleAdd = (type) => {
+    if (type === 'skills') {
+      setSkills([...skills, '']);
+    } else if (type === 'stages') {
+      setStages([...stages, '']);
+    } else if (type === 'roles') {
+      setRoles([...roles, '']);
+    }
+  };
+
+  // Open modal based on button clicked
+  const handleOpenModal = (type) => {
+    setModalType(type);
+    setShowUpload(type); // Set the state to show relevant upload button
+    UploadModal.current.showModal();
+  };
 
   const getData = [
     {
@@ -80,6 +122,83 @@ function ProfileDoc() {
     setSkills(newSkills);
   };
 
+  // Render content based on modal type
+  const renderModalContent = () => {
+    if (modalType === 'skills') {
+      return (
+        <>
+          <h3 className="text-white pl-3 text-lg pb-3">Upload Skills</h3>
+          <div className="rounded-[8px] border-none">
+            {skills.map((skill, index) => (
+              <input
+                key={index}
+                type="text"
+                value={skill}
+                onChange={(e) => handleInputChange(index, e, 'skills')}
+                className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                placeholder={`Write Your Skill ${index + 1}`}
+              />
+            ))}
+          </div>
+          <p
+            className="text-white text-center font-medium pt-3 cursor-pointer"
+            onClick={() => handleAdd('skills')}
+          >
+            + Add one more
+          </p>
+        </>
+      );
+    } else if (modalType === 'stages') {
+      return (
+        <>
+          <h3 className="text-white pl-3 text-lg pb-3">Upload Stages</h3>
+          <div className="rounded-[8px] border-none">
+            {stages.map((stage, index) => (
+              <input
+                key={index}
+                type="text"
+                value={stage}
+                onChange={(e) => handleInputChange(index, e, 'stages')}
+                className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                placeholder={`Write Your Stage ${index + 1}`}
+              />
+            ))}
+          </div>
+          <p
+            className="text-white text-center font-medium pt-3 cursor-pointer"
+            onClick={() => handleAdd('stages')}
+          >
+            + Add one more
+          </p>
+        </>
+      );
+    } else if (modalType === 'roles') {
+      return (
+        <>
+          <h3 className="text-white pl-3 text-lg pb-3">Upload Role</h3>
+          <div className="rounded-[8px] border-none">
+            {roles.map((role, index) => (
+              <input
+                key={index}
+                type="text"
+                value={role}
+                onChange={(e) => handleInputChange(index, e, 'roles')}
+                className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                placeholder={`Write Your Role ${index + 1}`}
+              />
+            ))}
+          </div>
+          <p
+            className="text-white text-center font-medium pt-3 cursor-pointer"
+            onClick={() => handleAdd('roles')}
+          >
+            + Add one more
+          </p>
+        </>
+      );
+    }
+  };
+
   return (
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
@@ -136,10 +255,24 @@ function ProfileDoc() {
                 </div>
               </div>
               <button
-                className="btn text-black font-nunito w-[125px] px-2 bg-[#D9D9D9] rounded-xl"
-                onClick={() => UploadSkills.current.showModal()}
+                className="btn text-white bg-blue-500"
+                onClick={() => { setShowUpload('skills'); handleOpenModal('skills'); }}
               >
-                + Upload Skills
+                + upload Skills
+              </button>
+
+              <button
+                className="btn text-white bg-blue-500"
+                onClick={() => { setShowUpload('stages'); handleOpenModal('stages'); }}
+              >
+                + Upload Stages
+              </button>
+
+              <button
+                className="btn text-white bg-blue-500"
+                onClick={() => { setShowUpload('roles'); handleOpenModal('roles'); }}
+              >
+                + Upload Roles
               </button>
               {/* content */}
               <div className="content-area p-4 bg-white rounded-md shadow-md">
@@ -170,7 +303,7 @@ function ProfileDoc() {
                       <div className="w-[400px] border-l-[6px] border-[#3F8CFF] h-full">
                         <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Stage Description</p>
                         <h3 className="text-lg font-bold mb-3"><PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />
-                          <button className="hover:bg-[#3F8CFF] mt-2 hover:rounded-md hover:p-0.5 px-2"
+                          <button className="hover:bg-[#3F8CFF] mt-2 hover:rounded-md hover:text-white px-2"
                             onClick={handleForumClick}>Forum</button></h3>
                         <div className="h-[400px] w-full top-0 overflow-y-auto text-white ml-3">
                           <ul>
@@ -231,7 +364,7 @@ function ProfileDoc() {
 
           <div>
 
-            <dialog ref={UploadSkills} className="modal h-auto shadow-xl ">
+            {/* <dialog ref={UploadSkills} className="modal h-auto shadow-xl ">
               <div className="modal-box bg-[#3F8CFf]">
                 <h3 className="text-white pl-3 text-lg pb-3">Upload Skills</h3>
                 <div className="rounded-[8px] border-none">
@@ -253,6 +386,23 @@ function ProfileDoc() {
                   <form method="dialog ">
                     <button
                       className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF] "
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </dialog> */}
+            {/* Modal */}
+            <dialog ref={UploadModal} className="modal h-auto shadow-xl">
+              <div className="modal-box bg-[#3F8CFF]">
+                {renderModalContent()}
+
+                <div className="modal-action">
+                  <form method="dialog">
+                    <button
+                      className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]"
                       type="submit"
                     >
                       Save

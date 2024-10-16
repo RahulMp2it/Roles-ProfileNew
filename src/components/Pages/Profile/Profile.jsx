@@ -13,10 +13,53 @@ function Profile() {
   const [activeCardId, setActiveCardId] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(selectedProfile);
+  const [departments, setDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
+
+  // console.log(selectedProfile);
 
   const updateProfile = useRef();
 
+  // Fetch profiles from backend on component mount
+  useEffect(() => {
+    fetchProfiles();
+    fetchDepartments();
+    fetchDesignations();
+  }, []);
+
+  // Fetch all profiles
+  const fetchProfiles = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/profile");
+
+      setProfiles(response.data.data);
+    } catch (error) {
+      console.error("Error fetching profiles", error);
+    }
+  };
+
+  // Fetch departments from backend
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/department");
+      setDepartments(response.data.data);
+    } catch (error) {
+      console.error("Error fetching departments", error);
+    }
+  };
+
+  // Fetch designations from backend
+  const fetchDesignations = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/designation");
+      setDesignations(response.data.data);
+      console.log('designation', response.data.data);
+    } catch (error) {
+      console.error("Error fetching designations", error);
+    }
+  };
+
+  // Open edit modal and set selected profile
   const openEditModal = (profile) => {
     setSelectedProfile(profile);
     setIsModalOpen(true);
@@ -35,48 +78,21 @@ function Profile() {
       )
     );
   };
+
+  // Form state for adding a new profile
   const [form, setForm] = useState({
     Profile: "",
     designation: "",
-    Department: "",
+    department: "",
   });
 
-  const departments = [
-    { id: 1, name: "Human Resources Department" },
-    { id: 2, name: "Engineering Department" },
-    { id: 3, name: "Marketing Department" },
-    { id: 4, name: "R&D Department" },
-    { id: 5, name: "HR Department" },
-    // we can add more departments as needed
-  ];
-
-  const designations = [
-    { id: 1, name: "Team Leder" },
-    { id: 2, name: "Head" },
-    { id: 3, name: "Executive" },
-    { id: 4, name: "CEO" },
-    // we can add more departments as needed
-  ];
-
+  // Handle form data and validation
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
-
-  useEffect(() => {
-    fetchProfiles();
-  }, []);
-
-  const fetchProfiles = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/profile");
-      setProfiles(response.data.data);
-    } catch (error) {
-      console.error("Error fetching profiles", error);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,21 +102,44 @@ function Profile() {
     });
   };
 
+  // Add a new profile
   const onSubmit = async (data) => {
+    console.log('data.department', data.department);
+
     try {
       const response = await axios.post("http://localhost:8080/api/profile", {
         Profile: data.Profile,
         designation: data.designation,
-        Department: data.Department,
+        department: data.department,
       });
       console.log("Profile added successfully", response.data);
       addProfile.current.close();
-      fetchProfiles();
-      setForm({ Profile: "", designation: "", Department: "" });
+      fetchProfiles(); // Refresh profile list
+      reset();
+
     } catch (error) {
       console.error("Error adding profile", error);
     }
   };
+
+  // Delete Card From database
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/profile/${id}`)
+      .then((response) => {
+        console.log("Employee deleted successfully:", response.data);
+        updateProfiles();
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the employee:", error);
+      });
+  };
+
+  // Update function to refresh the profiles list after delete
+  const updateProfiles = () => {
+    fetchProfiles(); // Simply re-fetch the profiles to update the state
+  };
+
 
   const handleClick = (id, url) => {
     setActiveCardId(id);
@@ -153,11 +192,11 @@ function Profile() {
                           Type of Department
                         </label>
                         <select
-                          {...register("Department", {
+                          {...register("department", {
                             required: "Department name is required",
                           })}
-                          name="Department"
-                          value={form.Department}
+                          name="department"
+                          value={form.department}
                           onChange={handleChange}
                           className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
                           required
@@ -166,14 +205,14 @@ function Profile() {
                             Select Department
                           </option>
                           {departments.map((department) => (
-                            <option key={department.id} value={department.name}>
-                              {department.name}
+                            <option key={department._id} value={department._id}>
+                              {department.DepartmentName}
                             </option>
                           ))}
                         </select>
-                        {errors.Department && (
+                        {errors.department && (
                           <p className="text-red-600">
-                            {errors.Department.message}
+                            {errors.department.message}
                           </p>
                         )}
                       </div>
@@ -196,10 +235,13 @@ function Profile() {
                           </option>
                           {designations.map((designation) => (
                             <option
-                              key={designation.id}
-                              value={designation.name}
+                              key={designation._id}
+                              value={designation._id
+                              }
                             >
-                              {designation.name}
+                              {designation.
+                                DesignationName
+                              }
                             </option>
                           ))}
                         </select>
@@ -228,7 +270,7 @@ function Profile() {
                                 "Profile name can't exceed 50 characters",
                             },
                             pattern: {
-                              value: /^[A-Za-z]+$/i,
+                              value: /^[A-Za-z\s]+$/i,
                               message: "not valid number not allowed",
                             },
                           })}
@@ -236,7 +278,7 @@ function Profile() {
                           name="Profile"
                           value={form.Profile}
                           onChange={handleChange}
-                          placeholder="Designation Name"
+                          placeholder="Profile Name"
                           className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
                           required
                         />
@@ -280,9 +322,10 @@ function Profile() {
                 id={profile._id}
                 image={profile.image || "/image2.png"}
                 title={profile.Profile}
-                depart={profile.Department}
-                position={profile.designation}
+                depart={profile.department?.DepartmentName || "No Department"}
+                position={profile.designation?.DesignationName || "No Designation"}
                 buttonText="1 Member"
+                handleDelete={handleDelete}
                 updateEmployee={updateProfile}
                 openEditModal={() => openEditModal(profile)} // Pass function to open modal
               />
