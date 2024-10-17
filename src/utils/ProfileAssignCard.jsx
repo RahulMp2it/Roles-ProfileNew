@@ -4,24 +4,17 @@ import { IoEyeOutline, IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
 
-function ProfileAssignCard({ image, depart, position, title, buttonText }) {
-
-  // Delete AssignCard From database
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/employee/${id}`) // Delete the employee
-      .then((response) => {
-        // alert("Employee deleted successfully");
-        console.log("Employee deleted successfully:", response.data);
-        update();
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the employee:", error);
-      });
-  };
+function ProfileAssignCard({ image, depart, position, title, buttonText, id, }) {
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
+      {/* Checkbox - Top Left Corner */}
+      <div className="absolute top-2 left-2">
+        <input
+          type="checkbox"
+          className="w-7 h-7 shadow-custom-blue border-inherit rounded-md"
+        />
+      </div>
 
       {/* Dropdown Icon */}
       <div className="absolute top-2 right-3 z-10">

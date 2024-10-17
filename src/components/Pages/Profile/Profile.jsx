@@ -104,8 +104,6 @@ function Profile() {
 
   // Add a new profile
   const onSubmit = async (data) => {
-    console.log('data.department', data.department);
-
     try {
       const response = await axios.post("http://localhost:8080/api/profile", {
         Profile: data.Profile,
