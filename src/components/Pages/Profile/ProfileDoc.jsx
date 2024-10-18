@@ -76,11 +76,12 @@ function ProfileDoc() {
     {
       tabName: "Training Material",
       tabContent: [
-        "vedio",
-        "vedio",
-        "vedio",
-        "vedio",
-        "vedio",
+        <div className="flex gap-20 ">
+          <img src="vedioImg.png" alt="" className="h-32 w-32" />,
+          <img src="vedioImg.png" alt="" className="h-32 w-32 " />,
+          <img src="vedioImg.png" alt="" className="h-32 w-32" />,
+          <img src="vedioImg.png" alt="" className="h-32 w-32" />,
+        </div>
       ],
     },
     {
@@ -254,26 +255,62 @@ function ProfileDoc() {
                   ))}
                 </div>
               </div>
-              <button
-                className="btn text-white bg-blue-500"
-                onClick={() => { setShowUpload('skills'); handleOpenModal('skills'); }}
-              >
-                + upload Skills
-              </button>
 
-              <button
-                className="btn text-white bg-blue-500"
-                onClick={() => { setShowUpload('stages'); handleOpenModal('stages'); }}
-              >
-                + Upload Stages
-              </button>
-
-              <button
-                className="btn text-white bg-blue-500"
-                onClick={() => { setShowUpload('roles'); handleOpenModal('roles'); }}
-              >
-                + Upload Roles
-              </button>
+              {activeTab === 0 && (
+                <button
+                  className="btn text-black font-bold bg-[#D9D9D9]"
+                  onClick={() => {
+                    setShowUpload('skills');
+                    handleOpenModal('skills');
+                  }}
+                >
+                  + Upload Skills
+                </button>
+              )}
+              {activeTab === 1 && (
+                <button
+                  className="btn text-black font-bold bg-[#D9D9D9]"
+                  onClick={() => {
+                    setShowUpload('stages');
+                    handleOpenModal('stages');
+                  }}
+                >
+                  + Upload Stages
+                </button>
+              )}
+              {activeTab === 3 && (
+                <button
+                  className="btn text-black font-bold bg-[#D9D9D9]"
+                  onClick={() => {
+                    setShowUpload('roles');
+                    handleOpenModal('roles');
+                  }}
+                >
+                  + Upload Roles
+                </button>
+              )}
+              {/* Conditionally rendering the button */}
+              {selectedStage && (
+                <button
+                  className="btn text-black font-bold bg-[#D9D9D9] ml-60"
+                  onClick={() => {
+                    handleOpenModal('stageDescription');
+                  }}
+                >
+                  + Upload Stage Description
+                </button>
+              )}
+              {/* Conditionally rendering the button */}
+              {showForum && (
+                <button
+                  className="btn text-black font-bold bg-[#D9D9D9] ml-60"
+                  onClick={() => {
+                    handleOpenModal('stageDescription');
+                  }}
+                >
+                  + Upload Q&A
+                </button>
+              )}
               {/* content */}
               <div className="content-area p-4 bg-white rounded-md shadow-md">
                 {activeTab === 1 && (
@@ -310,7 +347,6 @@ function ProfileDoc() {
                             {selectedStage.questions.map((question, idx) => (
                               <li key={idx} className="py-4 font-bold text-[11px]  bg-[#3F8CFF]">
                                 <div className="ml-3">{question}</div>
-
                                 <div className="mt-2">
                                   <label className="block mb-1"></label>
                                   <input
@@ -327,7 +363,6 @@ function ProfileDoc() {
                     )}
 
                     {/* Forum Panel */}
-
                     {showForum && (
                       <div className="w-full border-l-[6px] border-[#3F8CFF] h-[500px]  top-0 overflow-y-auto">
                         <p className="w-full bg-[#3F8CFf] text-center text-white py-1">Question & answer</p>
@@ -358,42 +393,9 @@ function ProfileDoc() {
                 </div>
               </div>
             </div>
-
-
           </div>
 
           <div>
-
-            {/* <dialog ref={UploadSkills} className="modal h-auto shadow-xl ">
-              <div className="modal-box bg-[#3F8CFf]">
-                <h3 className="text-white pl-3 text-lg pb-3">Upload Skills</h3>
-                <div className="rounded-[8px] border-none">
-                  {skills.map((skill, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      value={skill}
-                      onChange={(e) => handleSkillChange(index, e)}
-                      className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                      placeholder={`Write Your skills Here ${index + 1}`}
-                    />
-                  ))}
-                </div>
-                <p className="text-white text-center font-medium pt-3 cursor-pointer"
-                  onClick={handleAddSkill}>
-                  + Add one more </p>
-                <div className="modal-action">
-                  <form method="dialog ">
-                    <button
-                      className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF] "
-                      type="submit"
-                    >
-                      Save
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </dialog> */}
             {/* Modal */}
             <dialog ref={UploadModal} className="modal h-auto shadow-xl">
               <div className="modal-box bg-[#3F8CFF]">

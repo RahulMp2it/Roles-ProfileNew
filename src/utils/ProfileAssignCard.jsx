@@ -4,7 +4,11 @@ import { IoEyeOutline, IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
 
-function ProfileAssignCard({ image, depart, position, title, buttonText, id, }) {
+function ProfileAssignCard({ image, depart, position, title, buttonText, id, onCheckboxChange }) {
+
+  const handleCheckboxChange = (e) => {
+    onCheckboxChange(id); // Notify parent when checkbox is toggled
+  };
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
@@ -13,6 +17,7 @@ function ProfileAssignCard({ image, depart, position, title, buttonText, id, }) 
         <input
           type="checkbox"
           className="w-7 h-7 shadow-custom-blue border-inherit rounded-md"
+          onChange={handleCheckboxChange}
         />
       </div>
 

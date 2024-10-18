@@ -6,79 +6,6 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import Select from 'react-select';
 
-// const profileAssigns = [
-//   {
-//     id: 1,
-//     name: "UI/UX Designer",
-//     image: "image8.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 2,
-//     name: "UI/UX Designer",
-//     image: "image7.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 3,
-//     name: "UI/UX Designer",
-//     image: "image3.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 4,
-//     name: "UI/UX Designer",
-//     image: "image5.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 5,
-//     name: "UI/UX Designer",
-//     image: "image4.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 6,
-//     name: "UI/UX Designer",
-//     image: "image1.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 7,
-//     name: "UI/UX Designer",
-//     image: "image.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 8,
-//     name: "UI/UX Designer",
-//     image: "image8.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 9,
-//     name: "UI/UX Designer",
-//     image: "image1.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-//   {
-//     id: 10,
-//     name: "UI/UX Designer",
-//     image: "image4.png",
-//     depart: "Marketing Department",
-//     position: "Executive",
-//   },
-// ];
-
 function ProfileAssign() {
   const navigate = useNavigate();
   const addProfile = useRef();
@@ -87,14 +14,10 @@ function ProfileAssign() {
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
+  const [selectedProfiles, setSelectedProfiles] = useState([]); // Track selected profiles
 
-  // Fetch profiles on component mount (this is the same as the Profile component)
-  useEffect(() => {
-    fetchProfiles();
-    fetchDepartments();
-    fetchDesignations();
-    fetchEmployees();
-  }, []);
+
+  const { register, handleSubmit, formState: { errors }, reset, } = useForm();
 
   // Fetch employees
   const fetchEmployees = async () => {
@@ -136,29 +59,45 @@ function ProfileAssign() {
     }
   };
 
-  // Handle form data and validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  // Fetch profiles on component mount (this is the same as the Profile component)
+  useEffect(() => {
+    fetchProfiles();
+    fetchDepartments();
+    fetchDesignations();
+    fetchEmployees();
+  }, []);
 
-  const [form, setForm] = useState({
-    employee: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value
-    });
+  // Toggle the profile selection
+  const handleCheckboxChange = (id) => {
+    setSelectedProfiles((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((profileId) => profileId !== id)
+        : [...prevSelected, id]
+    );
   };
 
-  const handleBackClick = () => {
-    navigate(-1); // Go back to the previous page
+  // Handle profile assign button action
+  const handleProfileAssignClick = () => {
+    if (selectedProfiles.length > 0) {
+      ProfileAssign.current.showModal();
+    }
   };
+
+  const handleProfileAssignSubmit = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/employee/assignprofile", { employeeId: data, profileId: selectedProfiles });
+
+      console.log(response);
+
+
+      // if (!response.ok) {
+      //   throw new Error("Network response was not ok");
+      // }
+
+    } catch (error) {
+      console.error("Error assigning profiles ==> ", error);
+    }
+  }
 
   return (
     <Layout>
@@ -176,8 +115,14 @@ function ProfileAssign() {
 
             <div className=" text-end">
               <button
-                className="btn text-white font-nunito w-[200px] px-2 py-3 bg-[#3F8CFF] rounded-xl"
-                onClick={() => ProfileAssign.current.showModal()}
+                className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${selectedProfiles.length > 0 ? "bg-[#3F8CFF]" : "bg-gray-400"
+                  }`}
+                onClick={() => {
+                  //ProfileAssign.current.showModal(); // First action: open modal
+                  handleProfileAssignClick(); // Second action: handle additional logic
+                }}
+                disabled={selectedProfiles.length === 0} // Disable when no profiles selected
+
               >
                 + Profile Assign
               </button>
@@ -186,7 +131,7 @@ function ProfileAssign() {
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={() => ProfileAssign.current.close()}>
                     ✕
                   </button>
-                  <form method="dialog modal-action" >
+                  <form method="dialog modal-action" onSubmit={handleSubmit(handleProfileAssignSubmit)}>
                     <div className="text-[20px] text-start px-4 py-4 font-bold">
                       Profile Assign
                     </div>
@@ -198,8 +143,8 @@ function ProfileAssign() {
                         <select
                           {...register("employeeId", { required: "Employee is required" })}
                           name="employeeId"
-                          value={form.employee}
-                          onChange={handleChange}
+                          //value={form.employee}
+                          //onChange={handleChange}
                           className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
                           required
                         >
@@ -222,7 +167,7 @@ function ProfileAssign() {
                       type="submit"
                       className="btn text-white font-nunito w-[150px] px-2 py-3 bg-[#3F8CFF] rounded-xl"
                     >
-                      Save Profile
+                      Assign
                     </button>
                   </form>
                 </div>
@@ -240,13 +185,13 @@ function ProfileAssign() {
                 depart={profile.department?.DepartmentName || "No Department"}
                 position={profile.designation?.DesignationName || "No Designation"}
                 buttonText="1 Member"
-
+                onCheckboxChange={handleCheckboxChange} // Pass checkbox handler
               />
             ))}
           </div>
         </div>
       </div>
-    </Layout>
+    </Layout >
   );
 }
 
