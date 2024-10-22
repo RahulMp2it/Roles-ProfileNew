@@ -86,8 +86,8 @@ const ProfileCard = ({
         {title}
       </h2>
       <div className="p-3 text-center">
-        <NavLink to={"/profileDoc"}
-          onClick={() => onClick(id, url)}
+        <NavLink to={`/profileDescribe?profile_id=${id}`}
+          //onClick={() => onClick(id, url)}
           className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
         >
           {buttonText}

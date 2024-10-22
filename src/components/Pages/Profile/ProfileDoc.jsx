@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import Layout from "../../Layout";
 import { PiArrowRightFill } from "react-icons/pi";
+import axios from "axios";
 
 function ProfileDoc() {
   const UploadSkills = useRef();
@@ -9,11 +10,47 @@ function ProfileDoc() {
   const [selectedStage, setSelectedStage] = useState(null);
   const [showForum, setShowForum] = useState(false); // New state for showing the Forum
   const [modalType, setModalType] = useState(''); // Modal type (skills, stages, or roles)
-  const [skills, setSkills] = useState(['']);
-  const [stages, setStages] = useState(['']);
+  const [skills, setSkills] = useState([]);  // State to store the list of skills
+  const [newSkill, setNewSkill] = useState('');  // State to store new skill input
+  const [stages, setStages] = useState([]);
   const [roles, setRoles] = useState(['']);
   const UploadModal = useRef(null);
   const [showUpload, setShowUpload] = useState(null); // Controls which upload button to show
+  const [searchParams] = useSearchParams();
+  const profileId = searchParams.get("profile_id")
+  console.log(skills);
+
+  const fetchSkills = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/skill");
+      setSkills(response.data);
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+    }
+  };
+
+  // post a new skill 
+  const handleSkillSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8080/api/skill", { skill: newSkill, profileId });
+      //setSkills([...skills, response.data]);
+      fetchSkills()
+      // setNewSkill('');
+    } catch (error) {
+      console.error("Error creating new skill:", error);
+    }
+  };
+
+  // Handle input change for the new skill
+  const handleSkillInputChange = (e) => {
+    setNewSkill(e.target.value);
+  };
+
+  // Fetch skills 
+  useEffect(() => {
+    fetchSkills();
+  }, []);
 
 
   // Handle change for dynamic input
@@ -111,26 +148,28 @@ function ProfileDoc() {
     setShowForum(true); // Show forum when clicked
   };
 
-  // Function to handle adding more input boxes
-  const handleAddSkill = () => {
-    setSkills([...skills, ""]); // Add empty string
-  };
-
-  // Function to handle skill input change
-  const handleSkillChange = (index, event) => {
-    const newSkills = [...skills];
-    newSkills[index] = event.target.value; // Update the skill at the given index
-    setSkills(newSkills);
-  };
-
   // Render content based on modal type
   const renderModalContent = () => {
     if (modalType === 'skills') {
       return (
         <>
           <h3 className="text-white pl-3 text-lg pb-3">Upload Skills</h3>
+          <form onSubmit={handleSkillSubmit}>  {/* Form for submitting new skill */}
+            <input
+              type="text"
+              value={newSkill}  // Bind input to newSkill state
+              onChange={handleSkillInputChange}  // Update state when input changes
+              className="w-full h-11 rounded-xl bg-white text-black mb-2"
+              placeholder="Write Your New Skill"
+              required
+            />
+            <button type="submit" className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]">
+              Save Skill
+            </button>
+          </form>
+
           <div className="rounded-[8px] border-none">
-            {skills.map((skill, index) => (
+            {/* {skills.map((skill, index) => (
               <input
                 key={index}
                 type="text"
@@ -139,7 +178,7 @@ function ProfileDoc() {
                 className="w-full h-11 rounded-xl bg-white text-black mb-2"
                 placeholder={`Write Your Skill ${index + 1}`}
               />
-            ))}
+            ))} */}
           </div>
           <p
             className="text-white text-center font-medium pt-3 cursor-pointer"

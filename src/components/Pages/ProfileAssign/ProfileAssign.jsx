@@ -86,14 +86,7 @@ function ProfileAssign() {
   const handleProfileAssignSubmit = async (data) => {
     try {
       const response = await axios.post("http://localhost:8080/api/employee/assignprofile", { employeeId: data, profileId: selectedProfiles });
-
-      console.log(response);
-
-
-      // if (!response.ok) {
-      //   throw new Error("Network response was not ok");
-      // }
-
+      //console.log(response);
     } catch (error) {
       console.error("Error assigning profiles ==> ", error);
     }
@@ -118,8 +111,7 @@ function ProfileAssign() {
                 className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${selectedProfiles.length > 0 ? "bg-[#3F8CFF]" : "bg-gray-400"
                   }`}
                 onClick={() => {
-                  //ProfileAssign.current.showModal(); // First action: open modal
-                  handleProfileAssignClick(); // Second action: handle additional logic
+                  handleProfileAssignClick();
                 }}
                 disabled={selectedProfiles.length === 0} // Disable when no profiles selected
 
@@ -143,8 +135,6 @@ function ProfileAssign() {
                         <select
                           {...register("employeeId", { required: "Employee is required" })}
                           name="employeeId"
-                          //value={form.employee}
-                          //onChange={handleChange}
                           className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
                           required
                         >
