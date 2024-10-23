@@ -1,50 +1,49 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { PiArrowRightFill } from 'react-icons/pi';
 import { useSearchParams } from 'react-router-dom';
 
-function Skill() {
-  const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState('');
+function PBehaviour() {
+
+  const [behaviours, setbehaviours] = useState([]);
+  const [newBehaviour, setNewBehaviour] = useState('');
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
-  const skillModal = useRef(null);
+  const behaviourModal = useRef(null);
 
-  const fetchSkills = async () => {
+  const fetchBehaviours = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/skill/${profileId}`);
+      const response = await axios.get(`http://localhost:8080/api/behaviour/${profileId}`);
       //console.log('==>', response.data);
-
-      setSkills(response.data);
+      setbehaviours(response.data);
     } catch (error) {
-      console.error("Error fetching skills:", error);
+      console.error("Error fetching behaviours :", error);
     }
   };
 
-  // post a new skill 
-  const handleSkillSubmit = async (e) => {
+  // post a new Behaviours 
+  const handleBehaviourSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/skill", { skill: newSkill, profileId });
+      const response = await axios.post("http://localhost:8080/api/behaviour ", { behaviour: newBehaviour, profileId });
       console.log(response);
-
-      fetchSkills()
+      fetchBehaviours()
     } catch (error) {
-      console.error("Error creating new skill:", error);
+      console.error("Error creating new Behaviours:", error);
     }
   };
 
-  // Fetch skills 
+  // Fetch Behaviours 
   useEffect(() => {
-    fetchSkills();
+    fetchBehaviours();
   }, []);
 
   return (
     <div>
       <button
         className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9]"
-        onClick={() => skillModal.current.showModal()} >
-        + Upload Skills
+        onClick={() => behaviourModal.current.showModal()} >
+        + Upload PBehaviour
       </button>
 
       <div className="border-l-[10px] border-[#3F8CFF] mt-3 flex W-[340px]">
@@ -52,10 +51,10 @@ function Skill() {
           <ul>
 
             {
-              skills && skills.map((skill, key) => {
+              behaviours && behaviours.map((behaviour, key) => {
                 return (
                   <li key={key} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {skill.skill}
+                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {behaviour.behaviour}
                   </li>
                 )
               })
@@ -66,16 +65,16 @@ function Skill() {
 
       <div>
         {/* Modal */}
-        <dialog ref={skillModal} className="modal h-auto shadow-xl">
+        <dialog ref={behaviourModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
-            <h3 className="text-white pl-3 text-lg pb-3">Create Skill</h3>
-            <form onSubmit={handleSkillSubmit}>
+            <h3 className="text-white pl-3 text-lg pb-3">Upload </h3>
+            <form onSubmit={handleBehaviourSubmit}>
               <input
                 type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
+                value={newBehaviour}
+                onChange={(e) => setNewBehaviour(e.target.value)}
                 className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your New Skill`}
+                placeholder={`Write Your PB`}
                 required
               />
             </form>
@@ -83,7 +82,7 @@ function Skill() {
             <div className="modal-action">
               <form method="dialog">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
-                  Save Skill
+                  Save
                 </button>
               </form>
             </div>
@@ -92,7 +91,9 @@ function Skill() {
       </div>
 
     </div>
+
+
   )
 }
 
-export default Skill
+export default PBehaviour

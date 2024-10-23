@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../../Layout'
-import { useSearchParams } from 'react-router-dom';
 import Skill from '../ProfileDescribe/Skill';
-import Roles from '../ProfileDescribe/Roles';
+import Role from '../ProfileDescribe/Role';
+import Interview from '../ProfileDescribe/Interview';
+import Knowledge from '../ProfileDescribe/Knowledge';
 
 function ProfileDescribe() {
 
@@ -54,14 +54,33 @@ function ProfileDescribe() {
                 <Skill />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role & Function" />
               <div role="tabpanel" className="tab-content p-10">
-                <Roles />
+                <Role />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="PB" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Interview" />
               <div role="tabpanel" className="tab-content p-10">
-                Tab content 3</div>
+                <Interview />
+              </div>
+
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" />
+              <div role="tabpanel" className="tab-content p-10">
+                Tab content 4</div>
+
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" />
+              <div role="tabpanel" className="tab-content p-10">
+                <Knowledge />
+              </div>
+
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Professional Behaviour" />
+              <div role="tabpanel" className="tab-content p-10">
+                Tab content 6</div>
+
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" />
+              <div role="tabpanel" className="tab-content p-10">
+                Tab content 7</div>
+
             </div>
 
           </div>

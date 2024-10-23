@@ -3,48 +3,47 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PiArrowRightFill } from 'react-icons/pi';
 import { useSearchParams } from 'react-router-dom';
 
-function Skill() {
-  const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState('');
+function Role() {
+
+  const [roles, setRoles] = useState([]);
+  const [newRole, setNewRole] = useState('');
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
-  const skillModal = useRef(null);
+  const roleModal = useRef(null);
 
-  const fetchSkills = async () => {
+  const fetchRoles = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/skill/${profileId}`);
+      const response = await axios.get(`http://localhost:8080/api/role/${profileId}`);
       //console.log('==>', response.data);
-
-      setSkills(response.data);
+      setRoles(response.data);
     } catch (error) {
-      console.error("Error fetching skills:", error);
+      console.error("Error fetching Roles:", error);
     }
   };
 
-  // post a new skill 
-  const handleSkillSubmit = async (e) => {
+  // post a new Role 
+  const handleRoleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/skill", { skill: newSkill, profileId });
+      const response = await axios.post("http://localhost:8080/api/role", { role: newRole, profileId });
       console.log(response);
-
-      fetchSkills()
+      fetchRoles()
     } catch (error) {
-      console.error("Error creating new skill:", error);
+      console.error("Error creating new Role:", error);
     }
   };
 
   // Fetch skills 
   useEffect(() => {
-    fetchSkills();
+    fetchRoles();
   }, []);
 
   return (
     <div>
       <button
         className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9]"
-        onClick={() => skillModal.current.showModal()} >
-        + Upload Skills
+        onClick={() => roleModal.current.showModal()} >
+        + Upload Role
       </button>
 
       <div className="border-l-[10px] border-[#3F8CFF] mt-3 flex W-[340px]">
@@ -52,10 +51,10 @@ function Skill() {
           <ul>
 
             {
-              skills && skills.map((skill, key) => {
+              roles && roles.map((role, key) => {
                 return (
                   <li key={key} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {skill.skill}
+                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {role.role}
                   </li>
                 )
               })
@@ -66,16 +65,16 @@ function Skill() {
 
       <div>
         {/* Modal */}
-        <dialog ref={skillModal} className="modal h-auto shadow-xl">
+        <dialog ref={roleModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
-            <h3 className="text-white pl-3 text-lg pb-3">Create Skill</h3>
-            <form onSubmit={handleSkillSubmit}>
+            <h3 className="text-white pl-3 text-lg pb-3">Upload Role</h3>
+            <form onSubmit={handleRoleSubmit}>
               <input
                 type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
                 className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your New Skill`}
+                placeholder={`Write Your Role`}
                 required
               />
             </form>
@@ -83,7 +82,7 @@ function Skill() {
             <div className="modal-action">
               <form method="dialog">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
-                  Save Skill
+                  Save
                 </button>
               </form>
             </div>
@@ -95,4 +94,4 @@ function Skill() {
   )
 }
 
-export default Skill
+export default Role
