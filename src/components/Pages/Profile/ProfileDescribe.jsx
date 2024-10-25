@@ -3,6 +3,8 @@ import Skill from '../ProfileDescribe/Skill';
 import Role from '../ProfileDescribe/Role';
 import Interview from '../ProfileDescribe/Interview';
 import Knowledge from '../ProfileDescribe/Knowledge';
+import PBehaviour from '../ProfileDescribe/PBehaviour';
+import Tasksheet from '../ProfileDescribe/Tasksheet';
 
 function ProfileDescribe() {
 
@@ -75,11 +77,13 @@ function ProfileDescribe() {
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Professional Behaviour" />
               <div role="tabpanel" className="tab-content p-10">
-                Tab content 6</div>
+                <PBehaviour />
+              </div>
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" />
               <div role="tabpanel" className="tab-content p-10">
-                Tab content 7</div>
+                <Tasksheet />
+              </div>
 
             </div>
 

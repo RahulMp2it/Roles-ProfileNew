@@ -27,7 +27,7 @@ function Skill() {
     try {
       const response = await axios.post("http://localhost:8080/api/skill", { skill: newSkill, profileId });
       console.log(response);
-
+      skillModal.current.close();
       fetchSkills()
     } catch (error) {
       console.error("Error creating new skill:", error);
@@ -68,7 +68,13 @@ function Skill() {
         {/* Modal */}
         <dialog ref={skillModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
-            <h3 className="text-white pl-3 text-lg pb-3">Create Skill</h3>
+            <button
+              className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
+              onClick={() => skillModal.current.close()}
+            >
+              ✕
+            </button>
+            <h3 className="text-white pl-3 text-lg pb-3">Upload Skill</h3>
             <form onSubmit={handleSkillSubmit}>
               <input
                 type="text"
@@ -78,15 +84,14 @@ function Skill() {
                 placeholder={`Write Your New Skill`}
                 required
               />
+
+              <div className="modal-action">
+                <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
+                  Save
+                </button>
+              </div>
             </form>
 
-            <div className="modal-action">
-              <form method="dialog">
-                <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
-                  Save Skill
-                </button>
-              </form>
-            </div>
           </div>
         </dialog>
       </div>
