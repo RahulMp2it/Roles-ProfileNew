@@ -26,6 +26,7 @@ function Interview() {
     try {
       const response = await axios.post("http://localhost:8080/api/interview ", { interview: newInterview, profileId });
       console.log(response);
+      interviewModal.current.close(); //close the modal
       fetchInterviews()
     } catch (error) {
       console.error("Error creating new Interview:", error);
@@ -66,6 +67,12 @@ function Interview() {
         {/* Modal */}
         <dialog ref={interviewModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
+            <button
+              className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
+              onClick={() => interviewModal.current.close()}
+            >
+              ✕
+            </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Stage</h3>
             <form onSubmit={handleInterviewSubmit}>
               <input
@@ -76,15 +83,14 @@ function Interview() {
                 placeholder={`Write Your Stage`}
                 required
               />
-            </form>
 
-            <div className="modal-action">
-              <form method="dialog">
+              <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
                   Save
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
+
           </div>
         </dialog>
       </div>

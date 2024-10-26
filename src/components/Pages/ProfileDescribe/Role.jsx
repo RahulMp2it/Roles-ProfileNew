@@ -69,6 +69,7 @@ function Role() {
     try {
       const response = await axios.post("http://localhost:8080/api/role", { role: newRole, profileId });
       console.log(response);
+      roleModal.current.close();
       fetchRoles()
     } catch (error) {
       console.error("Error creating new Role:", error);
@@ -84,6 +85,7 @@ function Role() {
         roleTask: newTask,
         roleId: selectedRole._id, // Link task to the selected role
       });
+      taskModal.current.close();
       fetchTasksForRole(selectedRole._id); // Refresh tasks for the current role
     } catch (error) {
       console.error('Error creating new Task:', error);
@@ -98,6 +100,7 @@ function Role() {
         roleInstruction: newInstruction,
         roleId: selectedRole._id,
       });
+      instructionModal.current.close();
       fetchInstructionsForRole(selectedRole._id);
     } catch (error) {
       console.error('Error creating new Instruction:', error);

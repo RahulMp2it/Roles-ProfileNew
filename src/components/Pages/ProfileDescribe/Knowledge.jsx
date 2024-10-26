@@ -27,6 +27,7 @@ function Knowledge() {
     try {
       const response = await axios.post("http://localhost:8080/api/knowledge ", { knowledge: newKnowledge, profileId });
       console.log(response);
+      knowledgeModal.current.close();
       fetchKnowledges()
     } catch (error) {
       console.error("Error creating new Knowledges:", error);
@@ -67,6 +68,12 @@ function Knowledge() {
         {/* Modal */}
         <dialog ref={knowledgeModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
+            <button
+              className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
+              onClick={() => knowledgeModal.current.close()}
+            >
+              ✕
+            </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload </h3>
             <form onSubmit={handleKnowledgeSubmit}>
               <input
@@ -77,15 +84,15 @@ function Knowledge() {
                 placeholder={`Write Your Notes`}
                 required
               />
-            </form>
 
-            <div className="modal-action">
-              <form method="dialog">
+              <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
                   Save
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
+
+
           </div>
         </dialog>
       </div>

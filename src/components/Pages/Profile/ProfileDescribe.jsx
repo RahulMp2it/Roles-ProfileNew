@@ -5,8 +5,13 @@ import Interview from '../ProfileDescribe/Interview';
 import Knowledge from '../ProfileDescribe/Knowledge';
 import PBehaviour from '../ProfileDescribe/PBehaviour';
 import Tasksheet from '../ProfileDescribe/Tasksheet';
+import { useLocation } from 'react-router-dom';
 
 function ProfileDescribe() {
+
+  const location = useLocation();
+  const { profileName, department, designation } = location.state || {};
+  // console.log("Location state:", location.state);
 
   return (
     <Layout>
@@ -33,20 +38,17 @@ function ProfileDescribe() {
             <div className="w-[1250px] h-20 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
               <div className="px-6">
                 <p className="text-[#91929E] text-[12px]">Profile Name</p>
-                <p className="text-[16px]">UI/UX Designer</p>
+                <p className="text-[16px]">{profileName}</p>
               </div>
               <div className="px-6">
                 <p className="text-[#91929E] text-[12px]">Department</p>
-                <p className="text-[16px]">Research & Development</p>
+                <p className="text-[16px]">{department}</p>
               </div>
               <div className="px-11">
-                <p className="text-[#91929E] text-[12px]">Position</p>
-                <p className="text-[16px]">None</p>
+                <p className="text-[#91929E] text-[12px]">Designation</p>
+                <p className="text-[16px]">{designation}</p>
               </div>
-              <div className="px-24">
-                <p className="text-[#91929E] text-[12px]">Assigne</p>
-                <img src="image2.png" className="w-5 h-5 " alt="" />
-              </div>
+
             </div>
 
             {/* Second NavBar */}
@@ -75,7 +77,7 @@ function ProfileDescribe() {
                 <Knowledge />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Professional Behaviour" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Evaluation Behaviour" />
               <div role="tabpanel" className="tab-content p-10">
                 <PBehaviour />
               </div>

@@ -27,6 +27,7 @@ function PBehaviour() {
     try {
       const response = await axios.post("http://localhost:8080/api/behaviour ", { behaviour: newBehaviour, profileId });
       console.log(response);
+      behaviourModal.current.close();
       fetchBehaviours()
     } catch (error) {
       console.error("Error creating new Behaviours:", error);
@@ -43,10 +44,25 @@ function PBehaviour() {
       <button
         className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9]"
         onClick={() => behaviourModal.current.showModal()} >
-        + Upload PBehaviour
+        + Upload productivity
       </button>
 
-      <div className="border-l-[10px] border-[#3F8CFF] mt-3 flex W-[340px]">
+      <button
+        className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9] ml-[250px]"
+        onClick={() => taskModal.current.showModal()}
+      >
+        + Upload Learning
+      </button>
+
+      <button
+        className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9] ml-[250px]"
+        onClick={() => instructionModal.current.showModal()}
+      >
+        + Upload Behaviour
+      </button>
+
+      <p className="bg-[#3F8CFf] text-center text-white py-1 w-[362px]">Productivity</p>
+      <div className="border-l-[10px] border-[#3F8CFF] flex W-[340px]">
         <div className="w-[352px] ">
           <ul>
 
@@ -63,10 +79,17 @@ function PBehaviour() {
         </div>
       </div>
 
+
       <div>
         {/* Modal */}
         <dialog ref={behaviourModal} className="modal h-auto shadow-xl">
           <div className="modal-box bg-[#3F8CFF]">
+            <button
+              className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
+              onClick={() => behaviourModal.current.close()}
+            >
+              ✕
+            </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload </h3>
             <form onSubmit={handleBehaviourSubmit}>
               <input
@@ -77,15 +100,14 @@ function PBehaviour() {
                 placeholder={`Write Your PB`}
                 required
               />
-            </form>
 
-            <div className="modal-action">
-              <form method="dialog">
+              <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
                   Save
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
+
           </div>
         </dialog>
       </div>

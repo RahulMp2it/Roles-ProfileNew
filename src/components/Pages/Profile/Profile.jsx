@@ -15,9 +15,6 @@ function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
-
-  // console.log(selectedProfile);
-
   const updateProfile = useRef();
 
   // Fetch profiles from backend on component mount
@@ -135,20 +132,33 @@ function Profile() {
 
   // Update function to refresh the profiles list after delete
   const updateProfiles = () => {
-    fetchProfiles(); // Simply re-fetch the profiles to update the state
+    fetchProfiles();
   };
 
+  const handleClick = (profile) => {
 
-  const handleClick = (id, url) => {
-    setActiveCardId(id);
-    if (url) {
-      navigate(url);
-    }
+    setActiveCardId(profile._id);
+    navigate("/profileDescribe", {
+      state: {
+        profileName: profile.Profile,
+        department: profile.department?.DepartmentName || "No Department",
+        designation: profile.designation?.DesignationName || "No Designation",
+      },
+    });
   };
+
+  // const handleClick = (id, url) => {
+  //   setActiveCardId(id);
+  //   if (url) {
+  //     navigate(url);
+  //   }
+  // };
 
   const handleBackClick = () => {
     navigate(-1);
   };
+
+
 
   return (
     <Layout>
@@ -326,6 +336,7 @@ function Profile() {
                 handleDelete={handleDelete}
                 updateEmployee={updateProfile}
                 openEditModal={() => openEditModal(profile)} // Pass function to open modal
+                onClick={handleClick}
               />
             ))}
 
