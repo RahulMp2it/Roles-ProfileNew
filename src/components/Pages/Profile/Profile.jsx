@@ -147,13 +147,6 @@ function Profile() {
     });
   };
 
-  // const handleClick = (id, url) => {
-  //   setActiveCardId(id);
-  //   if (url) {
-  //     navigate(url);
-  //   }
-  // };
-
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -215,6 +208,7 @@ function Profile() {
                           {departments.map((department) => (
                             <option key={department._id} value={department._id}>
                               {department.DepartmentName}
+
                             </option>
                           ))}
                         </select>

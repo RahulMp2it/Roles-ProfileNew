@@ -10,6 +10,7 @@ function Designation() {
   const navigate = useNavigate();
   const addDesignation = useRef();
   const [designations, setDesignations] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   console.log(selectedDesignation);
@@ -37,16 +38,8 @@ function Designation() {
 
   const [form, setForm] = useState({
     DesignationName: "",
-    DepartmentName: "",
+    department: "",
   });
-
-  const departments = [
-    { id: 1, name: "Human Resources Department" },
-    { id: 2, name: "Engineering Department" },
-    { id: 3, name: "Marketing Department" },
-    { id: 4, name: "R&D Department" },
-    // we can add more departments as needed
-  ];
 
   const {
     register,
@@ -66,8 +59,19 @@ function Designation() {
     }
   };
 
+  // Fetch departments from the backend
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/department");
+      setDepartments(response.data.data);
+    } catch (error) {
+      console.error("Failed to fetch departments:", error);
+    }
+  };
+
   useEffect(() => {
     fetchDesignations();
+    fetchDepartments(); //fetchDepartments when the component mounts
   }, []);
 
   const handleChange = (e) => {
@@ -155,11 +159,11 @@ function Designation() {
                           Type of Department
                         </label>
                         <select
-                          {...register("DepartmentName", {
+                          {...register("department", {
                             required: "Department name is required",
                           })}
-                          name="DepartmentName"
-                          value={form.DepartmentName}
+                          name="department"
+                          value={form.department}
                           onChange={handleChange}
                           className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
                           required
@@ -168,14 +172,14 @@ function Designation() {
                             Select Department
                           </option>
                           {departments.map((department) => (
-                            <option key={department.id} value={department.name}>
-                              {department.name}
+                            <option key={department._id} value={department._id}>
+                              {department.DepartmentName}
                             </option>
                           ))}
                         </select>
-                        {errors.DepartmentName && (
+                        {errors.department && (
                           <p className="text-red-600">
-                            {errors.DepartmentName.message}
+                            {errors.department.message}
                           </p>
                         )}
                       </div>

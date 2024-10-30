@@ -1,17 +1,10 @@
-import axios from "axios";
 import React from "react";
 import { GoPlus } from "react-icons/go";
 import { IoEyeOutline, IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
 
-const Card = ({ id, image, title, buttonText, url, openEditModal, handleDelete }) => {
-  const navigate = useNavigate();
-
-  const handleClick = (u) => {
-    navigate(u);
-  };
+const Card = ({ id, image, title, buttonText, url, openEditModal, handleDelete, onClick }) => {
 
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
@@ -73,7 +66,8 @@ const Card = ({ id, image, title, buttonText, url, openEditModal, handleDelete }
       </h2>
       <div className="p-4 text-center">
         <button
-          onClick={() => handleClick(url)}
+          // onClick={() => handleClick(url)}
+          onClick={onClick} // Triggers handleClick to navigate to department detail page
           className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
         >
           {buttonText}

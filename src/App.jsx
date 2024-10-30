@@ -26,6 +26,7 @@ import SignUp from "./components/SignUp";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProfileDoc from "./components/Pages/Profile/ProfileDoc";
 import ProfileDescribe from "./components/Pages/Profile/ProfileDescribe";
+import DepartmentDetail from "./components/Pages/Department/DepartmentDetail";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -151,6 +152,8 @@ function App() {
           <Route path="/RDPosition" element={<RDposition />} />
           <Route path="/RDprofile" element={<RDprofile />} />
           <Route path="/RDemployee" element={<RDemployee />} />
+          <Route path="/department/:id" element={<DepartmentDetail />} />
+          {/* <Route path="/department/:id/employees" element={<DepartmentEmployees />} /> */}
           <Route
             path="/designationRDdepart"
             element={<DesignationRDdepart />}

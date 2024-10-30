@@ -197,6 +197,9 @@ const Department = () => {
                 updateDepartment={updateDepartment}
                 handleDelete={handleDelete}
                 openEditModal={() => openEditModal(department)} // Pass function to open modal
+                url={`/department/${department._id}`} // URL for department details page
+                onClick={() => navigate(`/department/${department._id}`, { state: { DepartmentName: department.DepartmentName } })} // Pass department name in state
+
               />
             ))}
 
