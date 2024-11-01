@@ -33,6 +33,14 @@ const DepartmentDetail = () => {
     }
   };
 
+  const openEditModal = (itemId) => {
+    console.log("Open edit modal for ID:", itemId);
+  };
+
+  const handleDelete = (itemId) => {
+    console.log("Delete item with ID:", itemId);
+  };
+
   return (
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
@@ -40,15 +48,25 @@ const DepartmentDetail = () => {
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
             "Welcome back, Rahul singh"
           </p>
-          <div className="grid grid-cols-3 place-content-between gap-4">
+          <div className="grid grid-cols-4 place-content-between gap-4">
             <div className="col-span-3">
               <h1 className="text-[34px] font-nunito font-semibold">Sub Department</h1>
             </div>
-            <Card
-              title={`${DepartmentName} Designation`}
-              buttonText="View Designations"
-              onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName } })}
-            />
+          </div>
+          <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
+            {/* Render Cards dynamically for Designations */}
+            {designations.map((designation) => (
+              <Card
+                key={designation._id}
+                id={designation._id}
+                image="https://via.placeholder.com/75"
+                title={`${DepartmentName} ${designation.name}`}
+                buttonText="View Designations"
+                onClick={() => navigate(`/department/${id}/designations`)}
+                openEditModal={() => openEditModal(designation._id)}
+                handleDelete={() => handleDelete(designation._id)}
+              />
+            ))}
 
             <Card title={`${DepartmentName} Profile`} buttonText="View Profiles" />
 
@@ -58,6 +76,7 @@ const DepartmentDetail = () => {
               onClick={() => navigate(`/department/${id}/employee`)}
             />
           </div>
+
         </div>
       </div>
     </Layout>
