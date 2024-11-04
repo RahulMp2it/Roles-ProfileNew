@@ -54,27 +54,21 @@ const DepartmentDetail = () => {
             </div>
           </div>
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
-            {/* Render Cards dynamically for Designations */}
-            {designations.map((designation) => (
-              <Card
-                key={designation._id}
-                id={designation._id}
-                image="https://via.placeholder.com/75"
-                title={`${DepartmentName} ${designation.name}`}
-                buttonText="View Designations"
-                onClick={() => navigate(`/department/${id}/designations`)}
-                openEditModal={() => openEditModal(designation._id)}
-                handleDelete={() => handleDelete(designation._id)}
-              />
-            ))}
 
-            <Card title={`${DepartmentName} Profile`} buttonText="View Profiles" />
+            <Card title={`${DepartmentName} Designation`} buttonText="View Designation"
+              onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName, id } })}
+            />
+
+            <Card title={`${DepartmentName} Profile`} buttonText="View Profiles"
+              onClick={() => navigate(`/department/${id}/profiles`, { state: { DepartmentName, id } })}
+            />
 
             <Card
               title={`${DepartmentName} Employees`}
               buttonText="View Employees"
-              onClick={() => navigate(`/department/${id}/employee`)}
+              onClick={() => navigate(`/department/${id}/employees`, { state: { DepartmentName, id } })}
             />
+
           </div>
 
         </div>
