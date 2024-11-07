@@ -14,20 +14,27 @@ const DepartmentDetail = () => {
   const [profiles, setProfiles] = useState([]);
   const [employees, setEmployees] = useState([]);
 
+
+
   useEffect(() => {
-    fetchData();
+    if (id) {
+      fetchData();
+    } else {
+      console.error("Department ID is undefined");
+    }
   }, [id]);
 
   const fetchData = async () => {
     try {
       const [designationRes, profileRes, employeeRes] = await Promise.all([
-        axios.get(`http://localhost:8080/api/designation/${id}`),
-        axios.get(`http://localhost:8080/api/profile/${id}`),
-        axios.get(`http://localhost:8080/api/employee/${id}`)
+        axios.get(`http://localhost:8080/api/designation/department/${id}`),
+        axios.get(`http://localhost:8080/api/profile/department/${id}`),
+        axios.get(`http://localhost:8080/api/employee/department/${id}`)
       ]);
       setDesignations(designationRes.data);
       setProfiles(profileRes.data);
       setEmployees(employeeRes.data);
+      console.log('====>', profileRes);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -54,21 +61,23 @@ const DepartmentDetail = () => {
             </div>
           </div>
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
+            {id && (
+              <>
+                <Card title={`${DepartmentName} Designation`} buttonText="View Designation"
+                  onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName, id } })}
+                />
 
-            <Card title={`${DepartmentName} Designation`} buttonText="View Designation"
-              onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName, id } })}
-            />
+                <Card title={`${DepartmentName} Profile`} buttonText="View Profiles"
+                  onClick={() => navigate(`/department/${id}/profiles`, { state: { DepartmentName, id } })}
+                />
 
-            <Card title={`${DepartmentName} Profile`} buttonText="View Profiles"
-              onClick={() => navigate(`/department/${id}/profiles`, { state: { DepartmentName, id } })}
-            />
-
-            <Card
-              title={`${DepartmentName} Employees`}
-              buttonText="View Employees"
-              onClick={() => navigate(`/department/${id}/employees`, { state: { DepartmentName, id } })}
-            />
-
+                <Card
+                  title={`${DepartmentName} Employees`}
+                  buttonText="View Employees"
+                  onClick={() => navigate(`/department/${id}/employees`, { state: { DepartmentName, id } })}
+                />
+              </>
+            )}
           </div>
 
         </div>

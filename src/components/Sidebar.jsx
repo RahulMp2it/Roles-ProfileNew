@@ -7,6 +7,7 @@ import { TbStack2Filled } from "react-icons/tb";
 import { PiChatsCircleFill } from "react-icons/pi";
 import { MdLogout } from "react-icons/md";
 import "@fontsource/nunito-sans/500.css";
+import logo from '/logo.png';
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Sidebar() {
         <div>
           <div className="bg-[#3F8CFF] w-11 rounded-[8px] ">
             <Link to={"/"}>
-              <img src="logo.png" alt="Logo" />
+              <img src={logo} alt="Logo" />
             </Link>
           </div>
 

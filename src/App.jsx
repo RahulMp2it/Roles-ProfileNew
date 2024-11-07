@@ -27,6 +27,8 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProfileDescribe from "./components/Pages/Profile/ProfileDescribe";
 import DepartmentDetail from "./components/Pages/Department/DepartmentDetail";
 import EmployeeList from "./components/Pages/Department/EmployeeList";
+import ProfileList from "./components/Pages/Department/ProfileList";
+import DesignationList from "./components/Pages/Department/DesignationList";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -153,8 +155,8 @@ function App() {
           <Route path="/RDemployee" element={<RDemployee />} />
           <Route path="/department/:id" element={<DepartmentDetail />} />
           {/* <Route path="/department/:id/employees" element={<DepartmentEmployees />} /> */}
-          {/* <Route path="/department/:id/designations" element={<DesignationList />} /> */}
-          {/* <Route path="/department/:id/profiles" element={<ProfileList />} /> */}
+          <Route path="/department/:id/designations" element={<DesignationList />} />
+          <Route path="/department/:id/profiles" element={<ProfileList />} />
           <Route path="/department/:id/employees" element={<EmployeeList />} />
           <Route
             path="/designationRDdepart"
