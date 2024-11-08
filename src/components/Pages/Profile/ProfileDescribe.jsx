@@ -5,10 +5,12 @@ import Interview from '../ProfileDescribe/Interview';
 import Knowledge from '../ProfileDescribe/Knowledge';
 import PBehaviour from '../ProfileDescribe/PBehaviour';
 import Tasksheet from '../ProfileDescribe/Tasksheet';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaArrowLeftLong } from 'react-icons/fa6';
 
-function ProfileDescribe() {
+function ProfileDescribe({ heading, isSubPage }) {
 
+  const navigate = useNavigate();
   const location = useLocation();
   const { profileName, department, designation } = location.state || {};
   // console.log("Location state:", location.state);
@@ -18,7 +20,13 @@ function ProfileDescribe() {
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
         <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
           <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
-            "Welcome back, Rahul singh"
+            {isSubPage ? (
+              <button onClick={() => navigate(-1)} className="text-blue-500 flex items-center">
+                <FaArrowLeftLong className="mr-2" /> {heading}
+              </button>
+            ) : (
+              <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">{heading}</p>
+            )}
           </p>
           <div className="grid grid-cols-4 place-content-between gap-4">
             <div className="col-span-3 ">

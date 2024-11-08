@@ -55,69 +55,85 @@ function App() {
     }
   }, [isLoggedIn, navigate]);
 
+  // useEffect(() => {
+  //   switch (location.pathname) {
+  //     case "/Employees":
+  //       setHeading("Employees");
+  //       setIsSubPage(false);
+  //       break;
+  //     case "/department":
+  //       setHeading("Department");
+  //       setIsSubPage(false);
+  //       break;
+  //     case "/profile":
+  //       setHeading("Profile");
+  //       setIsSubPage(false);
+  //       break;
+  //     case "/Designation":
+  //       setHeading("Designation");
+  //       setIsSubPage(false);
+  //       break;
+  //     case "/ProfileAssign":
+  //       setHeading("Profile Assign");
+  //       setIsSubPage(false);
+  //       break;
+  //     case "/department/:id":
+  //       setHeading("Department/Sub-Department");
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/RDPosition":
+  //       setHeading("Department/Sub-Department/R&D Department Position");
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/RDprofile":
+  //       setHeading("Department/Sub-Department/R&D Department Profile");
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/RDemployee":
+  //       setHeading("Department/Sub-Department/R&D Department Employee");
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/designationRDdepart": //sub Designation pages
+  //       setHeading("Designation/Designation R&D Department");
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/designationEmployee":
+  //       setHeading(
+  //         "Designation/Designation R&D Department/Employee Designation Department"
+  //       );
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/designationProfile":
+  //       setHeading(
+  //         "Designation/Designation R&D Department/Profile Designation Department"
+  //       );
+  //       setIsSubPage(true);
+  //       break;
+  //     case "/designationPosition":
+  //       setHeading(
+  //         "Designation/Designation R&D Department/Position Designation Department"
+  //       );
+  //       setIsSubPage(true);
+  //       break;
+  //     default:
+  //       setHeading("Department");
+  //       setIsSubPage(false);
+  //   }
+  // }, [location.pathname]);
+
   useEffect(() => {
     switch (location.pathname) {
       case "/Employees":
-        setHeading("Employees");
-        setIsSubPage(false);
-        break;
       case "/department":
-        setHeading("Department");
-        setIsSubPage(false);
-        break;
       case "/profile":
-        setHeading("Profile");
-        setIsSubPage(false);
-        break;
       case "/Designation":
-        setHeading("Designation");
-        setIsSubPage(false);
-        break;
       case "/ProfileAssign":
-        setHeading("Profile Assign");
+        setHeading("Welcome back, Rahul Singh");
         setIsSubPage(false);
-        break;
-      case "/SubDepartment":
-        setHeading("Department/Sub-Department");
-        setIsSubPage(true);
-        break;
-      case "/RDPosition":
-        setHeading("Department/Sub-Department/R&D Department Position");
-        setIsSubPage(true);
-        break;
-      case "/RDprofile":
-        setHeading("Department/Sub-Department/R&D Department Profile");
-        setIsSubPage(true);
-        break;
-      case "/RDemployee":
-        setHeading("Department/Sub-Department/R&D Department Employee");
-        setIsSubPage(true);
-        break;
-      case "/designationRDdepart": //sub Designation pages
-        setHeading("Designation/Designation R&D Department");
-        setIsSubPage(true);
-        break;
-      case "/designationEmployee":
-        setHeading(
-          "Designation/Designation R&D Department/Employee Designation Department"
-        );
-        setIsSubPage(true);
-        break;
-      case "/designationProfile":
-        setHeading(
-          "Designation/Designation R&D Department/Profile Designation Department"
-        );
-        setIsSubPage(true);
-        break;
-      case "/designationPosition":
-        setHeading(
-          "Designation/Designation R&D Department/Position Designation Department"
-        );
-        setIsSubPage(true);
         break;
       default:
-        setHeading("Department");
-        setIsSubPage(false);
+        setHeading("Back to Dashboard");
+        setIsSubPage(true);
     }
   }, [location.pathname]);
 
@@ -127,12 +143,6 @@ function App() {
 
   return (
     <>
-      {/* {isLoggedIn && (
-        <>
-          <Sidebar />
-          <Navbar />
-        </>
-      )} */}
 
       <Routes>
         <Route
@@ -142,22 +152,22 @@ function App() {
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
 
         <Route path="" element={<ProtectedRoutes />}>
-          <Route path="/" element={<Department />} />
+          <Route path="/" element={<Department heading={heading} isSubPage={isSubPage} />} />
           <Route path="/Employees" element={<Employees />} />
           <Route path="/department" element={<Department />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/profileDescribe" element={<ProfileDescribe />} />
+          <Route path="/profileDescribe" element={<ProfileDescribe heading={heading} isSubPage={isSubPage} />} />
           <Route path="/Designation" element={<Designation />} />
           <Route path="/ProfileAssign" element={<ProfileAssign />} />
           <Route path="/SubDepartment" element={<SubDepartment />} />
           <Route path="/RDPosition" element={<RDposition />} />
           <Route path="/RDprofile" element={<RDprofile />} />
           <Route path="/RDemployee" element={<RDemployee />} />
-          <Route path="/department/:id" element={<DepartmentDetail />} />
-          {/* <Route path="/department/:id/employees" element={<DepartmentEmployees />} /> */}
-          <Route path="/department/:id/designations" element={<DesignationList />} />
-          <Route path="/department/:id/profiles" element={<ProfileList />} />
-          <Route path="/department/:id/employees" element={<EmployeeList />} />
+          <Route path="/department/:id" element={<DepartmentDetail heading={heading} isSubPage={isSubPage} />} />
+
+          <Route path="/department/:id/designations" element={<DesignationList heading={heading} isSubPage={isSubPage} />} />
+          <Route path="/department/:id/profiles" element={<ProfileList heading={heading} isSubPage={isSubPage} />} />
+          <Route path="/department/:id/employees" element={<EmployeeList heading={heading} isSubPage={isSubPage} />} />
           <Route
             path="/designationRDdepart"
             element={<DesignationRDdepart />}
@@ -174,50 +184,6 @@ function App() {
         </Route>
       </Routes>
 
-      {/* <Routes>
-        {!isRegistered && (
-          <Route
-            path="/register"
-            element={<SignUp onRegister={handleRegister} />}
-          />
-        )}
-
-        {!isLoggedIn && (
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-        )}
-        {isLoggedIn ? (
-          <>
-            <Route path="/" element={<Department />} />
-            <Route path="/Employees" element={<Employees />} />
-            <Route path="/department" element={<Department />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/Designation" element={<Designation />} />
-            <Route path="/ProfileAssign" element={<ProfileAssign />} />
-            <Route path="/SubDepartment" element={<SubDepartment />} />
-            <Route path="/RDPosition" element={<RDposition />} />
-            <Route path="/RDprofile" element={<RDprofile />} />
-            <Route path="/RDemployee" element={<RDemployee />} />
-            <Route
-              path="/designationRDdepart"
-              element={<DesignationRDdepart />}
-            />
-            <Route
-              path="/designationPosition"
-              element={<DesignationPosition />}
-            />
-            <Route
-              path="/designationProfile"
-              element={<DesignationProfile />}
-            />
-            <Route
-              path="/designationEmployee"
-              element={<DesignationEmployee />}
-            />
-          </>
-        ) : (
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-        )}
-      </Routes> */}
     </>
   );
 }

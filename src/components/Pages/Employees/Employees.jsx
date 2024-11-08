@@ -12,9 +12,10 @@ function Employees() {
   const addEmployee = useRef();
   const ProfileAssign = useRef();
   const [employees, setEmployees] = useState([]);
+  const [departments, setDepartments] = useState([]); // New state for departments
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(selectedEmployee);
+  //console.log(selectedEmployee);
 
   const updateEmployee = useRef();
 
@@ -41,6 +42,7 @@ function Employees() {
     name: "",
     email: "",
     phone: "",
+    department: "", // Add department field
   });
 
   // const showSideMenu = () => {
@@ -65,6 +67,7 @@ function Employees() {
           name: "",
           email: "",
           phone: "",
+          department: "", // Reset department field
         });
         addEmployee.current.close();
         reset();
@@ -74,6 +77,18 @@ function Employees() {
         console.error("There was an error adding the employee:", error);
       });
   };
+
+  // Fetch departments data
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/department");
+      setDepartments(response.data.data);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+    }
+  };
+
+  // Fetch employees data
   const fetchEmployees = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/employee");
@@ -92,6 +107,7 @@ function Employees() {
 
   useEffect(() => {
     fetchEmployees();
+    fetchDepartments(); // Fetch departments when component mounts
   }, []);
 
   // Delete employee From database
@@ -237,6 +253,29 @@ function Employees() {
                             <p className="text-[red]">{errors.phone.message}</p>
                           )}
                         </div>
+
+                        {/* Department selection dropdown */}
+                        <div className="mb-4 py-2">
+                          <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
+                            Department
+                          </label>
+                          <select
+                            {...register("department", { required: "Department is required" })}
+                            name="department"
+                            value={form.department}
+                            onChange={handleChange}
+                            className="mt-1 flex w-full px-3 border border-gray-300 rounded-[14px]"
+                          >
+                            <option value="">Select Department</option>
+                            {departments.map((department) => (
+                              <option key={department._id} value={department._id}>
+                                {department.DepartmentName}
+                              </option>
+                            ))}
+                          </select>
+                          {errors.department && <p className="text-red-600">{errors.department.message}</p>}
+                        </div>
+
                       </div>
                       <button
                         type="submit"
