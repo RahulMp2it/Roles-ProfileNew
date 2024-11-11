@@ -4,15 +4,8 @@ import { GoPlus } from "react-icons/go";
 import { IoEyeOutline, IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
 
-function DesignationCard({ id, image, title, buttonText, url, openEditModal,
-  update, handleDelete }) {
-  const Navigate = useNavigate();
-
-  const handleClick = (u) => {
-    Navigate(u);
-  };
+function DesignationCard({ id, image, title, buttonText, openEditModal, handleDelete, onClick }) {
 
   return (
     <>
@@ -77,7 +70,7 @@ function DesignationCard({ id, image, title, buttonText, url, openEditModal,
         </h2>
         <div className="p-4 text-center">
           <button
-            onClick={() => handleClick(url)}
+            onClick={onClick} // Triggers handleClick to navigate to department detail page
             className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
           >
             {buttonText}

@@ -66,7 +66,7 @@ const Card = ({ id, image, title, buttonText, url, openEditModal, handleDelete, 
       </h2>
       <div className="p-4 text-center">
         <button
-          // onClick={() => handleClick(url)}
+
           onClick={onClick} // Triggers handleClick to navigate to department detail page
           className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
         >

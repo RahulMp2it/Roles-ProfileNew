@@ -246,14 +246,16 @@ function Designation() {
             {designations.map((designation, key) => (
               <DesignationCard
                 key={key}
-                id={designation._id} // unique ID
+                id={designation._id} // unique IDa
                 image={designation.image || "/image2.png"}
                 title={designation.DesignationName}
                 buttonText="1 Member"
                 updateDesignation={updateDesignation}
                 handleDelete={handleDelete}
                 openEditModal={() => openEditModal(designation)} // Pass function to open modal
+                onClick={() => navigate(`/designation/${designation._id}`, { state: { DesignationName: designation.DesignationName } })} // Pass department name in state
               />
+
             ))}
 
             {/* Edit Designation Modal */}

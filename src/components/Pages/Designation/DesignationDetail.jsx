@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import Card from '../../../utils/Card';
+import DesignationCard from '../../../utils/DesignationCard';
 import Layout from '../../Layout';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 
-const DepartmentDetail = ({ heading, isSubPage }) => {
+const DesignationDetail = ({ heading, isSubPage }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { state } = useLocation();
-  const DepartmentName = state?.DepartmentName || 'Department';
+  const DesignationName = state?.DesignationName || 'Designation';
 
-  const [designations, setDesignations] = useState([]);
+  console.log("id is===> ", id);
+
+
+  const [department, setDepartment] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [employees, setEmployees] = useState([]);
 
@@ -19,32 +22,24 @@ const DepartmentDetail = ({ heading, isSubPage }) => {
     if (id) {
       fetchData();
     } else {
-      console.error("Department ID is undefined");
+      console.error("Designation ID is undefined");
     }
   }, [id]);
 
   const fetchData = async () => {
     try {
-      const [designationRes, profileRes, employeeRes] = await Promise.all([
-        axios.get(`http://localhost:8080/api/designation/department/${id}`),
-        axios.get(`http://localhost:8080/api/profile/department/${id}`),
-        axios.get(`http://localhost:8080/api/employee/department/${id}`)
+      const [departmentRes, profileRes, employeeRes] = await Promise.all([
+        axios.get(`http://localhost:8080/api/department/designation/${id}`),
+        axios.get(`http://localhost:8080/api/profile/designation/${id}`),
+        axios.get(`http://localhost:8080/api/employee/designation/${id}`)
       ]);
-      setDesignations(designationRes.data);
+      setDepartment(departmentRes.data);
       setProfiles(profileRes.data);
       setEmployees(employeeRes.data);
       console.log('====>', profileRes);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
-
-  const openEditModal = (itemId) => {
-    console.log("Open edit modal for ID:", itemId);
-  };
-
-  const handleDelete = (itemId) => {
-    console.log("Delete item with ID:", itemId);
   };
 
   return (
@@ -62,24 +57,20 @@ const DepartmentDetail = ({ heading, isSubPage }) => {
           </p>
           <div className="grid grid-cols-4 place-content-between gap-4">
             <div className="col-span-3">
-              <h1 className="text-[34px] font-nunito font-semibold">Department/Sub Department</h1>
+              <h1 className="text-[34px] font-nunito font-semibold">Designation /Sub Designation</h1>
             </div>
           </div>
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
             {id && (
               <>
-                <Card title={`${DepartmentName} Designation`} buttonText="View Designation"
-                  onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName, id } })}
+                <DesignationCard title={`${DesignationName} Department`} buttonText="View Department"
+                  onClick={() => navigate(`/designation/${id}/department`, { state: { DesignationName, id } })}
                 />
-
-                <Card title={`${DepartmentName} Profile`} buttonText="View Profiles"
-                  onClick={() => navigate(`/department/${id}/profiles`, { state: { DepartmentName, id } })}
+                <DesignationCard title={`${DesignationName} Profile`} buttonText="View Profiles"
+                  onClick={() => navigate(`/designation/${id}/profiles`, { state: { DesignationName, id } })}
                 />
-
-                <Card
-                  title={`${DepartmentName} Employees`}
-                  buttonText="View Employees"
-                  onClick={() => navigate(`/department/${id}/employees`, { state: { DepartmentName, id } })}
+                <DesignationCard title={`${DesignationName} Employees`} buttonText="View Employees"
+                  onClick={() => navigate(`/designation/${id}/employees`, { state: { DesignationName, id } })}
                 />
               </>
             )}
@@ -88,7 +79,7 @@ const DepartmentDetail = ({ heading, isSubPage }) => {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default DepartmentDetail; 
+export default DesignationDetail;

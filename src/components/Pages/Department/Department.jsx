@@ -98,7 +98,7 @@ const Department = () => {
 
   //Update the function to refresh after delete
   const updateDepartments = () => {
-    fetchDepartments(); // re-fresh the Department
+    fetchDepartments();
   }
 
 
@@ -197,7 +197,7 @@ const Department = () => {
                 updateDepartment={updateDepartment}
                 handleDelete={handleDelete}
                 openEditModal={() => openEditModal(department)} // Pass function to open modal
-                url={`/department/${department._id}`} // URL for department details page
+                // url={`/department/${department._id}`} // URL for department details page
                 onClick={() => navigate(`/department/${department._id}`, { state: { DepartmentName: department.DepartmentName } })} // Pass department name in state
 
               />
