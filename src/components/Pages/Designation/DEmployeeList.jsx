@@ -3,36 +3,35 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../../Layout';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-import Card from '../../../utils/Card';
+import EmployeesCard from '../../../utils/EmployeesCard';
 
-
-function DProfileList({ heading, isSubPage }) {
+function DEmployeeList({ heading, isSubPage }) {
 
   const navigate = useNavigate();
-  const { id: designationId } = useParams(); // Use designationId to fetch related profiles
+  const { id: designationId } = useParams();
   const { state } = useLocation();
   const DesignationName = state?.DesignationName || 'Designation';
 
-  const [profiles, setProfiles] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (designationId) {
-      fetchProfiles();
+      fetchEmployees();
     } else {
       console.error("Designation ID is undefined");
     }
   }, [designationId]);
 
-  const fetchProfiles = async () => {
+  const fetchEmployees = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/profile/designation/${designationId}`);
-      setProfiles(response.data?.data || []);
+      const response = await axios.get(`http://localhost:8080/api/employee/designation/${designationId}`);
+      setEmployees(response.data?.data || []);
     } catch (error) {
-      console.error("Error fetching profiles:", error);
-      setError("Failed to load profiles.");
+      console.error("Error fetching employees:", error);
+      setError("Failed to load employees.");
     } finally {
       setLoading(false);
     }
@@ -53,18 +52,19 @@ function DProfileList({ heading, isSubPage }) {
           </p>
           <div className="grid grid-cols-4 place-content-between gap-4">
             <div className="col-span-3">
-              <h1 className="text-[34px] font-nunito font-semibold">{DesignationName} Profiles</h1>
+              <h1 className="text-[34px] font-nunito font-semibold">{DesignationName} Employees</h1>
             </div>
           </div>
           <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
             {
-              profiles.map(profile => (
-                <Card
-                  key={profile._id}
-                  image={profile.image || "/image2.png"}
-                  title={profile.Profile}
+              employees.map(employee => (
+                <EmployeesCard
+                  key={employee._id}
+                  image={employee.image || "/dummy-profile.png"}
+                  title={employee.name}
+                  subtitle={employee.position || 'Position Unknown'}
                   buttonText="View Details"
-                  onClick={() => navigate(`/profile/${profile._id}`, { state: { DesignationName, designationId } })}
+                  onClick={() => navigate(`/employee/${employee._id}`, { state: { DesignationName, designationId } })}
                 />
               ))
             }
@@ -72,7 +72,7 @@ function DProfileList({ heading, isSubPage }) {
         </div>
       </div>
     </Layout>
-  )
+  );
 }
 
-export default DProfileList
+export default DEmployeeList;

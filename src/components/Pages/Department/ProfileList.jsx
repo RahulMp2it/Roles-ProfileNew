@@ -63,7 +63,6 @@ const ProfileList = ({ heading, isSubPage }) => {
                 <Card
                   key={profile._id}
                   image={profile.image || "/image2.png"}
-                  //title={profile.name}
                   title={profile.Profile}
                   buttonText="View Details"
                 // onClick={() => console.log("Viewing profile:", profile._id)}

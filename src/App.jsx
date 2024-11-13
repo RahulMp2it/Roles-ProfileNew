@@ -5,8 +5,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
 import Department from "./components/Pages/Department/Department";
 import Profile from "./components/Pages/Profile/Profile";
 import Designation from "./components/Pages/Designation/Designation";
@@ -31,6 +29,7 @@ import ProfileList from "./components/Pages/Department/ProfileList";
 import DesignationList from "./components/Pages/Department/DesignationList";
 import DesignationDetail from "./components/Pages/Designation/DesignationDetail";
 import DProfileList from "./components/Pages/Designation/DProfileList";
+import DEmployeeList from "./components/Pages/Designation/DEmployeeList";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -171,6 +170,8 @@ function App() {
           <Route path="/department/:id/employees" element={<EmployeeList heading={heading} isSubPage={isSubPage} />} />
           <Route path="/designation/:id" element={<DesignationDetail heading={heading} isSubPage={isSubPage} />} />
           <Route path="/designation/:id/profiles" element={<DProfileList heading={heading} isSubPage={isSubPage} />} />
+          <Route path="/designation/:id/employees" element={<DEmployeeList heading={heading} isSubPage={isSubPage} />} />
+
 
           <Route
             path="/designationRDdepart"
