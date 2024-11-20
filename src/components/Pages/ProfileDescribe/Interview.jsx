@@ -49,7 +49,6 @@ function Interview() {
       <div className="border-l-[10px] border-[#3F8CFF] mt-3 flex W-[340px]">
         <div className="w-[352px] ">
           <ul>
-
             {
               interviews && interviews.map((interview, key) => {
                 return (

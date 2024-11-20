@@ -22,12 +22,12 @@ function EmployeesCard({
   return (
     <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-5 relative">
       {/* Checkbox - Top Left Corner */}
-      <div className="absolute top-2 left-2">
+      {/* <div className="absolute top-2 left-2">
         <input
           type="checkbox"
           className="w-7 h-7 shadow-custom-blue border-inherit rounded-md"
         />
-      </div>
+      </div> */}
 
       {/* Dropdown Icon */}
       <div className="absolute top-2 right-3 z-10">

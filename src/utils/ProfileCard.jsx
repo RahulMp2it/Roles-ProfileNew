@@ -4,7 +4,7 @@ import { GoPlus } from "react-icons/go";
 import { IoEyeOutline, IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TbDotsCircleHorizontal } from "react-icons/tb";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const ProfileCard = ({
   image,
@@ -12,19 +12,22 @@ const ProfileCard = ({
   position,
   title,
   buttonText,
-  onClick,
-  url,
   id,
   openEditModal,
   handleDelete,
 }) => {
 
-
+  const handleDropdownClick = (e) => {
+    e.stopPropagation(); // Prevent the click from bubbling up to the card's Link
+  };
 
   return (
-    <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
+    <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative"
+      onClick={() => window.location.assign(`/profileDescribe?profile_id=${id}`)} // Redirect when card is clicked
+    >
       {/* Dropdown Icon */}
-      <div className="absolute top-2 right-3 z-10">
+      <div className="absolute top-2 right-3 z-10"
+        onClick={handleDropdownClick}      >
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="m-1">
             <TbDotsCircleHorizontal className="text-3xl text-gray-500" />
@@ -86,12 +89,10 @@ const ProfileCard = ({
         {title}
       </h2>
       <div className="p-3 text-center">
-        <NavLink to={`/profileDescribe?profile_id=${id}`}
-          //onClick={() => onClick(id, url)}
-          className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
+        <span className="inline-flex items-center border  border-[#8f97a3] px-4 py-1 text-[11px] font-nunito  text-[#7D8592] bg-[#F4F9FD] rounded-[3.5px] focus:outline-none"
         >
           {buttonText}
-        </NavLink >
+        </span >
       </div>
     </div>
   );

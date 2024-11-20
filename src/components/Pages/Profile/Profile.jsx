@@ -147,12 +147,6 @@ function Profile() {
     });
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-
-
   return (
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 z-10">
@@ -326,7 +320,7 @@ function Profile() {
                 title={profile.Profile}
                 depart={profile.department?.DepartmentName || "No Department"}
                 position={profile.designation?.DesignationName || "No Designation"}
-                buttonText="1 Member"
+                buttonText="view"
                 handleDelete={handleDelete}
                 updateEmployee={updateProfile}
                 openEditModal={() => openEditModal(profile)} // Pass function to open modal

@@ -7,6 +7,7 @@ import PBehaviour from '../ProfileDescribe/PBehaviour';
 import Tasksheet from '../ProfileDescribe/Tasksheet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
+import Training from '../ProfileDescribe/Training';
 
 function ProfileDescribe({ heading, isSubPage }) {
 
@@ -78,7 +79,8 @@ function ProfileDescribe({ heading, isSubPage }) {
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" />
               <div role="tabpanel" className="tab-content p-10">
-                Tab content 4</div>
+                <Training />
+              </div>
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" />
               <div role="tabpanel" className="tab-content p-10">

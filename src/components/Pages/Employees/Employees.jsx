@@ -288,7 +288,7 @@ function Employees() {
                 </dialog>
 
                 {/* Profile Assign Buttton */}
-                <button
+                {/* <button
                   className="btn text-white font-nunito w-[200px] px-2 py-3 bg-[#3F8CFF] rounded-xl"
                   onClick={() => ProfileAssign.current.showModal()}
                 >
@@ -359,14 +359,14 @@ function Employees() {
                       </button>
                     </form>
                   </div>
-                </dialog>
+                </dialog> */}
                 {/* filter button */}
-                <div
+                {/* <div
                   className="w-12 h-12 py-1  bg-[white] flex items-center justify-center rounded-[15px] cursor-pointer z-20"
                 // onClick={showSideMenu}
                 >
                   <FiFilter fontSize={20} />
-                </div>
+                </div> */}
               </div>
             </div>
 
