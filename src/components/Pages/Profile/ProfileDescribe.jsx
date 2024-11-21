@@ -8,6 +8,7 @@ import Tasksheet from '../ProfileDescribe/Tasksheet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import Training from '../ProfileDescribe/Training';
+import { useState } from 'react';
 
 function ProfileDescribe({ heading, isSubPage }) {
 
@@ -15,6 +16,8 @@ function ProfileDescribe({ heading, isSubPage }) {
   const location = useLocation();
   const { profileName, department, designation } = location.state || {};
   // console.log("Location state:", location.state);
+  const [activeTab, setActiveTab] = useState('Skills'); // State to track the active tab
+
 
   return (
     <Layout>
@@ -34,8 +37,12 @@ function ProfileDescribe({ heading, isSubPage }) {
               <h1 className="text-[34px] font-nunito font-semibold">Profile</h1>
             </div>
 
-            <div className=" text-end">
-              <button className="btn text-white font-nunito w-[200px] px-2 py-3 bg-[#3F8CFF] rounded-xl">
+            <div className="text-end">
+              <button
+                className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${activeTab === 'Training Material' ? 'bg-[#3F8CFF]' : 'bg-gray-400'
+                  }`}
+                disabled={activeTab !== 'Training Material'}
+              >
                 + Upload Files
               </button>
             </div>
@@ -62,37 +69,37 @@ function ProfileDescribe({ heading, isSubPage }) {
 
             {/* Second NavBar */}
             <div role="tablist" className="tabs tabs-bordered w-[1250px] h-14 bg-[#F4F9FD]">
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Skills" defaultChecked />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Skills" id="tab-skills" onClick={() => setActiveTab('Skills')} defaultChecked />
               <div role="tabpanel" className="tab-content p-10">
                 <Skill />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role & Function" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role & Function" id="tab-role" onClick={() => setActiveTab('Role & Function')} />
               <div role="tabpanel" className="tab-content p-10">
                 <Role />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Interview" />
-              <div role="tabpanel" className="tab-content p-10">
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Interview" onClick={() => setActiveTab('Interview')} />
+              <div role="tabpanel" className="tab-content p-10" id="tab-interview">
                 <Interview />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" id="tab-training" onClick={() => setActiveTab('Training Material')} />
               <div role="tabpanel" className="tab-content p-10">
                 <Training />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" id="tab-knowledge" onClick={() => setActiveTab('Knowledge')} />
               <div role="tabpanel" className="tab-content p-10">
                 <Knowledge />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Evaluation Behaviour" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Evaluation Behaviour" id="tab-behaviour" onClick={() => setActiveTab('Evaluation Behaviour')} />
               <div role="tabpanel" className="tab-content p-10">
                 <PBehaviour />
               </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" />
+              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" id="tab-tasksheet" onClick={() => setActiveTab('TaskSheet')} />
               <div role="tabpanel" className="tab-content p-10">
                 <Tasksheet />
               </div>
