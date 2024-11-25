@@ -31,6 +31,7 @@ import DesignationDetail from "./components/Pages/Designation/DesignationDetail"
 import DProfileList from "./components/Pages/Designation/DProfileList";
 import DEmployeeList from "./components/Pages/Designation/DEmployeeList";
 import DDepartmentList from "./components/Pages/Designation/DDepartmentList";
+import Demo from "./components/Demo";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -171,6 +172,7 @@ function App() {
           <Route path="/designation/:id" element={<DesignationDetail heading={heading} isSubPage={isSubPage} />} />
           <Route path="/designation/:id/profiles" element={<DProfileList heading={heading} isSubPage={isSubPage} />} />
           <Route path="/designation/:id/department" element={<DDepartmentList heading={heading} isSubPage={isSubPage} />} />
+          <Route path="/demo" element={<Demo/>} />
 
 
           <Route

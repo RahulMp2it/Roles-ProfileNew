@@ -96,7 +96,7 @@ function Training() {
           <label>
             Link:
             <input
-              type="text"
+              type="file"
               value={link}
               onChange={(e) => setLink(e.target.value)}
               placeholder="Enter material link"

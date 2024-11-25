@@ -16,19 +16,18 @@ function Profile() {
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
   const updateProfile = useRef();
+  const [filteredDesignations, setFilteredDesignations] = useState([]);
 
   // Fetch profiles from backend on component mount
   useEffect(() => {
     fetchProfiles();
     fetchDepartments();
-    fetchDesignations();
   }, []);
 
   // Fetch all profiles
   const fetchProfiles = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/profile");
-
       setProfiles(response.data.data);
     } catch (error) {
       console.error("Error fetching profiles", error);
@@ -45,22 +44,37 @@ function Profile() {
     }
   };
 
-  // Fetch designations from backend
-  const fetchDesignations = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/designation");
-      setDesignations(response.data.data);
-      console.log('designation', response.data.data);
-    } catch (error) {
-      console.error("Error fetching designations", error);
-    }
-  };
+ // Fetch designations by department ID
+ const fetchDesignationsByDepartment = async (departmentId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/profile/designationsbydepartment/${departmentId}`
+    );
+    setFilteredDesignations(response.data.data);
+  } catch (error) {
+    console.error("Error fetching designations by department ID", error);
+  }
+};
+
+ // Handle department change and fetch designations dynamically
+ const handleDepartmentChange = (e) => {
+  const selectedDepartmentId = e.target.value;
+  setForm({ ...form, department: selectedDepartmentId });
+
+  // Fetch designations related to the selected department
+  if (selectedDepartmentId) {
+    fetchDesignationsByDepartment(selectedDepartmentId);
+  } else {
+    setFilteredDesignations([]);
+  }
+};
 
   // Open edit modal and set selected profile
   const openEditModal = (profile) => {
     setSelectedProfile(profile);
     setIsModalOpen(true);
   };
+
 
   const closeEditModal = () => {
     setIsModalOpen(false);
@@ -192,7 +206,7 @@ function Profile() {
                           })}
                           name="department"
                           value={form.department}
-                          onChange={handleChange}
+                          onChange={handleDepartmentChange}
                           className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none"
                           required
                         >
@@ -229,7 +243,7 @@ function Profile() {
                           <option value="" disabled>
                             Select designation
                           </option>
-                          {designations.map((designation) => (
+                          {filteredDesignations.map((designation) => (
                             <option
                               key={designation._id}
                               value={designation._id

@@ -32,10 +32,8 @@ function Demo() {
                 {/* Custom button to trigger the file input */}
                 <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
                     <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '200px' }} />
-                    <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '200px' }} />
-                    <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '200px' }} />
                 </button>
-
+            
 
             </div>
 

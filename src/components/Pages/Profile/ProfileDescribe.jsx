@@ -8,7 +8,7 @@ import Tasksheet from '../ProfileDescribe/Tasksheet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import Training from '../ProfileDescribe/Training';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 function ProfileDescribe({ heading, isSubPage }) {
 
@@ -17,6 +17,23 @@ function ProfileDescribe({ heading, isSubPage }) {
   const { profileName, department, designation } = location.state || {};
   // console.log("Location state:", location.state);
   const [activeTab, setActiveTab] = useState('Skills'); // State to track the active tab
+  const uploadModal = useRef(null); // Reference for the modal
+  const fileInputRef = useRef(null);  // Create a ref for the file input
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const uploadedFile = event.target.files[0];
+    setFile(uploadedFile);
+};
+
+const handleUpload = () => {
+    console.log('file data', file);
+};
+
+const triggerFileInput = () => {
+    // Trigger the file input dialog using the ref
+    fileInputRef.current.click();
+};
 
 
   return (
@@ -41,12 +58,63 @@ function ProfileDescribe({ heading, isSubPage }) {
               <button
                 className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${activeTab === 'Training Material' ? 'bg-[#3F8CFF]' : 'bg-gray-400'
                   }`}
+                onClick={() => uploadModal.current.showModal()} // Open the modal
                 disabled={activeTab !== 'Training Material'}
               >
                 + Upload Files
               </button>
             </div>
           </div>
+
+          {/* Modal for uploading files */}
+          <dialog ref={uploadModal} className="modal h-auto">
+            <div className="modal-box overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
+              <button
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={() => uploadModal.current.close()} // Close the modal
+              >
+                ✕
+              </button>
+              <h2 className="text-[20px] font-bold mb-4">Upload Files</h2>
+              <form>
+                <div className="mb-4 grid grid-col-2 ">
+                  {/* <label className="block text-[#7D8592] text-[12px] mb-1 font-medium">Select File</label> */}
+
+                  {/* Hidden file input using the ref */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}  // Attach the ref here
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}  // Hide the default input element
+                  />
+
+                  {/* Custom button to trigger the file input */}
+                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
+                    <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                  </button>
+
+                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
+                    <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                  </button>
+
+                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
+                    <img src='public\Training Material.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                  </button>
+
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleUpload}
+                    // disabled={!file}
+                    type="button"
+                    className="btn text-white font-nunito px-4 py-2 bg-[#3F8CFF] rounded-xl"
+                  >
+                    Upload
+                  </button>
+                </div>
+              </form>
+            </div>
+          </dialog>
 
           {/* main Container */}
           <div className="max-w-[1400px] h-[100%] mt-3 pl-3 pr-[20px] py-8 mx-auto rounded-[20px] bg-white">
