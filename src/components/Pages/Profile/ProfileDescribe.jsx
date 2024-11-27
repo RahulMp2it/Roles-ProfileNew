@@ -20,20 +20,48 @@ function ProfileDescribe({ heading, isSubPage }) {
   const uploadModal = useRef(null); // Reference for the modal
   const fileInputRef = useRef(null);  // Create a ref for the file input
   const [file, setFile] = useState(null);
+  const [selectedFileType, setSelectedFileType] = useState(null); // Track the selected file type
+  const [error, setError] = useState(null); // Track validation errors
+
+  const handleFileIconClick = (fileType) => {
+    setSelectedFileType(fileType); // Set the file type (PDF, MP4, Word) based on the clicked image
+    fileInputRef.current.click(); // Trigger the file input
+  };  
 
   const handleFileChange = (event) => {
     const uploadedFile = event.target.files[0];
-    setFile(uploadedFile);
-};
 
-const handleUpload = () => {
+    if (uploadedFile) {
+      // Validate file type
+      const validFileTypes = {
+        pdf: ['application/pdf'],
+        mp4: ['video/mp4'],
+        word: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+      };
+  
+      if (!validFileTypes[selectedFileType].includes(uploadedFile.type)) {
+        setError(`Invalid file type. Please upload a ${selectedFileType.toUpperCase()} file.`);
+        setFile(null);
+        return;
+      }
+  
+      // If valid, clear errors and set the file
+      setError(null);
+      setFile(uploadedFile);
+      console.log(`Uploaded ${selectedFileType.toUpperCase()} file:`, uploadedFile);
+    }
+  
+    ///setFile(uploadedFile);
+  };
+
+  const handleUpload = () => {
     console.log('file data', file);
-};
+  };
 
-const triggerFileInput = () => {
+  const triggerFileInput = () => {
     // Trigger the file input dialog using the ref
     fileInputRef.current.click();
-};
+  };
 
 
   return (
@@ -78,40 +106,49 @@ const triggerFileInput = () => {
               <h2 className="text-[20px] font-bold mb-4">Upload Files</h2>
               <form>
                 <div className="mb-4 grid grid-col-2 ">
-                  {/* <label className="block text-[#7D8592] text-[12px] mb-1 font-medium">Select File</label> */}
-
                   {/* Hidden file input using the ref */}
                   <input
                     type="file"
                     ref={fileInputRef}  // Attach the ref here
                     onChange={handleFileChange}
+                    accept={
+                      selectedFileType === 'pdf'
+                        ? '.pdf'
+                        : selectedFileType === 'mp4'
+                        ? '.mp4'
+                        : selectedFileType === 'word'
+                        ? '.doc,.docx'
+                        : '*'
+                    }
                     style={{ display: 'none' }}  // Hide the default input element
                   />
+                  <div className='grid lg:grid-cols-2 '>
+                    {/* Custom button to trigger the file input */}
+                    <button type="button"onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
+                      <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                    </button>
 
-                  {/* Custom button to trigger the file input */}
-                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
-                    <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                  </button>
+                    <button type="button"  onClick={() => handleFileIconClick('mp4')} style={{ marginBottom: '10px', }}>
+                      <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                    </button>
 
-                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
-                    <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                  </button>
+                    <button type="button" onClick={() => handleFileIconClick('word')} style={{ marginBottom: '10px', }}>
+                      <img src='public\Training Material.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                    </button>
 
-                  <button onClick={triggerFileInput} style={{ marginBottom: '10px', }}>
-                    <img src='public\Training Material.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                  </button>
-
+                    <div className="mt-[100px] ml-[70px]">
+                      <button
+                        onClick={handleUpload}
+                        // disabled={!file}
+                        type="button"
+                        className="btn text-white font-nunito px-8 py-3 bg-[#3F8CFF] rounded-xl"
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleUpload}
-                    // disabled={!file}
-                    type="button"
-                    className="btn text-white font-nunito px-4 py-2 bg-[#3F8CFF] rounded-xl"
-                  >
-                    Upload
-                  </button>
-                </div>
+
               </form>
             </div>
           </dialog>
