@@ -5,28 +5,58 @@ import Interview from '../ProfileDescribe/Interview';
 import Knowledge from '../ProfileDescribe/Knowledge';
 import PBehaviour from '../ProfileDescribe/PBehaviour';
 import Tasksheet from '../ProfileDescribe/Tasksheet';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import Training from '../ProfileDescribe/Training';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import TrainingVideoCard from '../../../utils/TrainingVideoCard';
+import TrainingDocCard from '../../../utils/TrainingDocCard';
+import TrainingPdfCard from '../../../utils/TrainingPdfCard';
 
-function ProfileDescribe({ heading, isSubPage }) {
+function ProfileDescribe({ heading, isSubPage, }) {
 
   const navigate = useNavigate();
   const location = useLocation();
   const { profileName, department, designation } = location.state || {};
-  // console.log("Location state:", location.state);
   const [activeTab, setActiveTab] = useState('Skills'); // State to track the active tab
   const uploadModal = useRef(null); // Reference for the modal
   const fileInputRef = useRef(null);  // Create a ref for the file input
   const [file, setFile] = useState(null);
   const [selectedFileType, setSelectedFileType] = useState(null); // Track the selected file type
   const [error, setError] = useState(null); // Track validation errors
+  const [searchParams] = useSearchParams();
+  const profileId = searchParams.get("profile_id")
+  const [trainingMaterials, setTrainingMaterials] = useState([]);
+
+
+  //console.log("id is ==>", profileId);
+
+  // Fetch training materials
+  useEffect(() => {
+    const fetchTrainingMaterials = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/training/${profileId}`);
+        setTrainingMaterials(response.data);
+      } catch (error) {
+        console.error("Error fetching training materials:", error);
+      }
+    };
+
+
+
+    if (profileId) {
+      fetchTrainingMaterials();
+    }
+  }, [profileId]);
+
+  console.log("data =>>", trainingMaterials);
+  
 
   const handleFileIconClick = (fileType) => {
     setSelectedFileType(fileType); // Set the file type (PDF, MP4, Word) based on the clicked image
     fileInputRef.current.click(); // Trigger the file input
-  };  
+  };
 
   const handleFileChange = (event) => {
     const uploadedFile = event.target.files[0];
@@ -38,31 +68,48 @@ function ProfileDescribe({ heading, isSubPage }) {
         mp4: ['video/mp4'],
         word: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
       };
-  
+
       if (!validFileTypes[selectedFileType].includes(uploadedFile.type)) {
         setError(`Invalid file type. Please upload a ${selectedFileType.toUpperCase()} file.`);
         setFile(null);
         return;
       }
-  
+
       // If valid, clear errors and set the file
       setError(null);
       setFile(uploadedFile);
       console.log(`Uploaded ${selectedFileType.toUpperCase()} file:`, uploadedFile);
     }
-  
+
     ///setFile(uploadedFile);
   };
 
-  const handleUpload = () => {
-    console.log('file data', file);
-  };
+  const handleUpload = async () => {
+    if (!file || !selectedFileType) {
+      setError("Please select a file and type before uploading.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileType", selectedFileType);
+    formData.append("profileId", profileId);
 
-  const triggerFileInput = () => {
-    // Trigger the file input dialog using the ref
-    fileInputRef.current.click();
-  };
+    try {
+      const response = await axios.post("http://localhost:8080/api/training/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("File uploaded successfully!");
+      console.log("Uploaded file response:", response.data);
 
+      // Clear the form and close the modal after successful upload
+      setFile(null);
+      setSelectedFileType(null);
+      uploadModal.current.close();
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setError("Failed to upload the file. Please try again.");
+    }
+  };
 
   return (
     <Layout>
@@ -81,6 +128,7 @@ function ProfileDescribe({ heading, isSubPage }) {
             <div className="col-span-3 ">
               <h1 className="text-[34px] font-nunito font-semibold">Profile</h1>
             </div>
+
 
             <div className="text-end">
               <button
@@ -115,20 +163,20 @@ function ProfileDescribe({ heading, isSubPage }) {
                       selectedFileType === 'pdf'
                         ? '.pdf'
                         : selectedFileType === 'mp4'
-                        ? '.mp4'
-                        : selectedFileType === 'word'
-                        ? '.doc,.docx'
-                        : '*'
+                          ? '.mp4'
+                          : selectedFileType === 'word'
+                            ? '.doc,.docx'
+                            : '*'
                     }
                     style={{ display: 'none' }}  // Hide the default input element
                   />
                   <div className='grid lg:grid-cols-2 '>
                     {/* Custom button to trigger the file input */}
-                    <button type="button"onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
+                    <button type="button" onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
                       <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
                     </button>
 
-                    <button type="button"  onClick={() => handleFileIconClick('mp4')} style={{ marginBottom: '10px', }}>
+                    <button type="button" onClick={() => handleFileIconClick('mp4')} style={{ marginBottom: '10px', }}>
                       <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
                     </button>
 
@@ -141,6 +189,7 @@ function ProfileDescribe({ heading, isSubPage }) {
                         onClick={handleUpload}
                         // disabled={!file}
                         type="button"
+                        disabled={!file || !selectedFileType}
                         className="btn text-white font-nunito px-8 py-3 bg-[#3F8CFF] rounded-xl"
                       >
                         Upload
@@ -191,7 +240,21 @@ function ProfileDescribe({ heading, isSubPage }) {
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" id="tab-training" onClick={() => setActiveTab('Training Material')} />
               <div role="tabpanel" className="tab-content p-10">
-                <Training />
+                <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
+                  {
+                    trainingMaterials.map((item) => {
+                      return (
+                        item.fileType === 'video' ?
+                          <TrainingVideoCard key={item._id} link={item.link} />
+                          : item.fileType === 'docx' ?
+                            <TrainingDocCard key={item._id} link={item.link} />
+                            : item.fileType === 'pdf' ?
+                              <TrainingPdfCard key={item._id} link={item.link} />
+                              : 'Type not supported'
+                      )
+                    })
+                  }
+                </div>
               </div>
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" id="tab-knowledge" onClick={() => setActiveTab('Knowledge')} />
@@ -214,8 +277,8 @@ function ProfileDescribe({ heading, isSubPage }) {
           </div>
 
         </div>
-      </div>
-    </Layout>
+      </div >
+    </Layout >
   )
 }
 
