@@ -14,7 +14,6 @@ function Profile() {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [designations, setDesignations] = useState([]);
   const updateProfile = useRef();
   const [filteredDesignations, setFilteredDesignations] = useState([]);
 
