@@ -43,15 +43,10 @@ function ProfileDescribe({ heading, isSubPage, }) {
       }
     };
 
-
-
     if (profileId) {
       fetchTrainingMaterials();
     }
   }, [profileId]);
-
-  console.log("data =>>", trainingMaterials);
-  
 
   const handleFileIconClick = (fileType) => {
     setSelectedFileType(fileType); // Set the file type (PDF, MP4, Word) based on the clicked image
@@ -240,13 +235,17 @@ function ProfileDescribe({ heading, isSubPage, }) {
 
               <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" id="tab-training" onClick={() => setActiveTab('Training Material')} />
               <div role="tabpanel" className="tab-content p-10">
+
+               
                 <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
                   {
                     trainingMaterials.map((item) => {
+                      console.log('item', item);
+                      
                       return (
-                        item.fileType === 'video' ?
+                        item.fileType === 'mp4' ?
                           <TrainingVideoCard key={item._id} link={item.link} />
-                          : item.fileType === 'docx' ?
+                          : item.fileType === 'word' ?
                             <TrainingDocCard key={item._id} link={item.link} />
                             : item.fileType === 'pdf' ?
                               <TrainingPdfCard key={item._id} link={item.link} />
