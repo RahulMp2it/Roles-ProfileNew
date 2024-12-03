@@ -6,9 +6,9 @@ import { useSearchParams } from 'react-router-dom';
 function Role() {
 
   const [roles, setRoles] = useState([]);
-  const [newRole, setNewRole] = useState('');
-  const [newTask, setNewTask] = useState(''); // For adding new task
-  const [newInstruction, setNewInstruction] = useState(''); // For adding new instruction
+  const [newRoles, setNewRoles] = useState(['']); // For uploading multiple roles
+  const [newTasks, setNewTasks] = useState(['']);
+  const [newInstructions, setNewInstructions] = useState(['']);
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const roleModal = useRef(null);
@@ -18,7 +18,7 @@ function Role() {
   const taskModal = useRef(null); // Reference for the task modal
   const instructionModal = useRef(null); // Reference for the instruction modal
   const [showInstructions, setShowInstructions] = useState(false); // Track if instructions are visible
-  console.log(instructions);
+  // console.log(instructions);
 
 
   const fetchRoles = async () => {
@@ -42,10 +42,11 @@ function Role() {
     }
   };
 
+  // Fetch Instructions for a selected role
   const fetchInstructionsForRole = async (roleId) => {
     try {
       const response = await axios.get(`http://localhost:8080/api/instruction/${roleId}`);
-      console.log('==>', response.data);
+      //console.log('==>', response.data);
       setInstructions(response.data);
     } catch (error) {
       console.error('Error fetching Instructions:', error);
@@ -67,12 +68,12 @@ function Role() {
   const handleRoleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/role", { role: newRole, profileId });
+      const response = await axios.post("http://localhost:8080/api/role", { roles: newRoles, profileId });
       console.log(response);
       roleModal.current.close();
-      fetchRoles()
+      fetchRoles([''])
     } catch (error) {
-      console.error("Error creating new Role:", error);
+      console.error("Error creating new Roles:", error);
     }
   };
 
@@ -82,26 +83,44 @@ function Role() {
     if (!selectedRole) return alert('Please select a role first.');
     try {
       await axios.post('http://localhost:8080/api/task', {
-        roleTask: newTask,
+        roleTasks: newTasks,
         roleId: selectedRole._id, // Link task to the selected role
       });
       taskModal.current.close();
       fetchTasksForRole(selectedRole._id); // Refresh tasks for the current role
+      setNewTasks(['']); // Reset input fields
     } catch (error) {
       console.error('Error creating new Task:', error);
     }
   };
+
+  // Add a new input field for tasks
+  const handleAddFields = () => {
+    setNewTasks((prev) => [...prev, '']);
+  };
+
+  // Handle input changes
+  const handleInputChanges = (index, value) => {
+    setNewTasks((prev) => {
+      const updatedTasks = [...prev];
+      updatedTasks[index] = value;
+      return updatedTasks;
+    });
+  };
+
 
   const handleInstructionSubmit = async (e) => {
     e.preventDefault();
     if (!selectedRole) return alert('Please select a role first.');
     try {
       await axios.post('http://localhost:8080/api/instruction', {
-        roleInstruction: newInstruction,
+        roleInstruction: newInstructions,
         roleId: selectedRole._id,
       });
       instructionModal.current.close();
       fetchInstructionsForRole(selectedRole._id);
+      setNewInstructions(['']); // Reset input fields
+
     } catch (error) {
       console.error('Error creating new Instruction:', error);
     }
@@ -111,6 +130,20 @@ function Role() {
   useEffect(() => {
     fetchRoles();
   }, []);
+
+  // Add a new input field
+  const handleAddField = (setter, value) => {
+    setter((prev) => [...prev, value]);
+  };
+
+  // Update an input field
+  const handleInputChange = (setter, index, value) => {
+    setter((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  };
 
   return (
     <div>
@@ -217,14 +250,24 @@ function Role() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Role</h3>
             <form onSubmit={handleRoleSubmit}>
-              <input
-                type="text"
-                value={newRole}
-                onChange={(e) => setNewRole(e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your Role`}
-                required
-              />
+              {newRoles.map((role, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={role}
+                  onChange={(e) => handleInputChange(setNewRoles, index, e.target.value)}
+                  className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                  placeholder={`Write Role ${index + 1}`}
+                  required
+                />
+              ))}
+              <button
+                type="button"
+                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
+                onClick={() => handleAddField(setNewRoles, '')}
+              >
+                + Add More
+              </button>
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
                   Save
@@ -247,14 +290,25 @@ function Role() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Task for {selectedRole?.role}</h3>
             <form onSubmit={handleTaskSubmit}>
-              <input
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your Task`}
-                required
-              />
+              {newTasks.map((task, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={task}
+                  onChange={(e) => handleInputChanges(index, e.target.value)}
+                  className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                  placeholder={`Write Your Task`}
+                  required
+                />
+              ))}
+
+              <button
+                type="button"
+                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
+                onClick={handleAddFields}
+              >
+                + Add More
+              </button>
 
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
@@ -276,14 +330,24 @@ function Role() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Instruction for {selectedRole?.role}</h3>
             <form onSubmit={handleInstructionSubmit}>
-              <input
-                type="text"
-                value={newInstruction}
-                onChange={(e) => setNewInstruction(e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder="Write Your Instruction"
-                required
-              />
+              {newInstructions.map((instruction, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={instruction}
+                  onChange={(e) => setNewInstructions(e.target.value)}
+                  className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                  placeholder="Write Your Instruction"
+                  required
+                />
+              ))}
+              <button
+                type="button"
+                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
+                //onClick={handleAddInsFields}
+              >
+                + Add More
+              </button>
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
                   Save
