@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 function Skill() {
   const [skills, setSkills] = useState([]);
+  const [skillList, setSkillList] = useState(['']); // Array of skills
   const [newSkill, setNewSkill] = useState('');
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
@@ -13,8 +14,6 @@ function Skill() {
   const fetchSkills = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/skill/${profileId}`);
-      //console.log('==>', response.data);
-
       setSkills(response.data);
     } catch (error) {
       console.error("Error fetching skills:", error);
@@ -25,14 +24,30 @@ function Skill() {
   const handleSkillSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/skill", { skill: newSkill, profileId });
+      const response = await axios.post("http://localhost:8080/api/skill", { skills: skillList, profileId });
       console.log(response);
       skillModal.current.close();
       fetchSkills()
+      setSkillList([""]); // Reset input fields
     } catch (error) {
       console.error("Error creating new skill:", error);
     }
   };
+
+  const addSkillField = () => {
+    setSkillList([...skillList, ""]);
+  };
+
+  const removeSkillField = (index) => {
+    const updatedList = skillList.filter((_, i) => i !== index);
+    setSkillList(updatedList);
+  };
+  const handleSkillChange = (index, value) => {
+    const updatedList = [...skillList];
+    updatedList[index] = value;
+    setSkillList(updatedList);
+  };
+
 
   // Fetch skills 
   useEffect(() => {
@@ -76,14 +91,34 @@ function Skill() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Skill</h3>
             <form onSubmit={handleSkillSubmit}>
+            {skillList.map((skill, index) => (
+              <div key={index} className="flex items-center mb-2">
               <input
                 type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
+                value={skill}
+                onChange={(e) => handleSkillChange(index, e.target.value)}
                 className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your New Skill`}
+                placeholder={`Write Skill ${index + 1}`}
                 required
               />
+              {index > 0 && (
+                <button
+                  type="button"
+                  className="text-red-600 font-bold"
+                  onClick={() => removeSkillField(index)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+                type="button"
+                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2 "
+                onClick={addSkillField}
+              >
+                + Add More
+              </button>
 
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
