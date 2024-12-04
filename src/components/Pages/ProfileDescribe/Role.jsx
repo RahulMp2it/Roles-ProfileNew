@@ -56,6 +56,8 @@ function Role() {
   const handleRoleClick = (role) => {
     setSelectedRole(role);
     setShowInstructions(false); // Reset instructions visibility
+    setTasks([]); // Clear previous tasks
+    setInstructions([]); // Clear previous instructions
     fetchTasksForRole(role._id); // Fetch tasks for the selected role
     fetchInstructionsForRole(role._id); // Fetch instructions for the selected role
   };
@@ -108,13 +110,13 @@ function Role() {
     });
   };
 
-
+// Handle Instruction Submit (adding a new Instruction)
   const handleInstructionSubmit = async (e) => {
     e.preventDefault();
     if (!selectedRole) return alert('Please select a role first.');
     try {
       await axios.post('http://localhost:8080/api/instruction', {
-        roleInstruction: newInstructions,
+        roleInstructions: newInstructions,
         roleId: selectedRole._id,
       });
       instructionModal.current.close();
@@ -335,7 +337,7 @@ function Role() {
                   key={index}
                   type="text"
                   value={instruction}
-                  onChange={(e) => setNewInstructions(e.target.value)}
+                  onChange={(e) => handleInputChange(setNewInstructions, index, e.target.value)}
                   className="w-full h-11 rounded-xl bg-white text-black mb-2"
                   placeholder="Write Your Instruction"
                   required
@@ -344,7 +346,7 @@ function Role() {
               <button
                 type="button"
                 className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
-                //onClick={handleAddInsFields}
+                onClick={() => handleAddField(setNewInstructions)}
               >
                 + Add More
               </button>
