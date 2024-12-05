@@ -91,20 +91,21 @@ function Skill() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Skill</h3>
             <form onSubmit={handleSkillSubmit}>
+
             {skillList.map((skill, index) => (
-              <div key={index} className="flex items-center mb-2">
+              <div key={index} className="flex items-center mb-2 relative ">
               <input
                 type="text"
                 value={skill}
                 onChange={(e) => handleSkillChange(index, e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black mb-2"
+                className="w-full h-11 rounded-xl bg-white text-black pr-10"
                 placeholder={`Write Skill ${index + 1}`}
                 required
               />
               {index > 0 && (
                 <button
                   type="button"
-                  className="text-red-600 font-bold"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 font-bold"
                   onClick={() => removeSkillField(index)}
                 >
                   ✕
