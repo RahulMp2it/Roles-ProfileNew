@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 function Interview() {
   const [interviews, setInterviews] = useState([]);
+  const [stages, setStages] = useState([{ stage: '', time: '' }]); // Array for stages with times
   const [newInterview, setNewInterview] = useState('');
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
@@ -24,13 +25,29 @@ function Interview() {
   const handleInterviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/interview ", { interview: newInterview, profileId });
+      const response = await axios.post("http://localhost:8080/api/interview ", { stages, profileId });
       console.log(response);
       interviewModal.current.close(); //close the modal
       fetchInterviews()
+      setStages([{ stage: '', time: '' }]); // Reset the input fields
     } catch (error) {
       console.error("Error creating new Interview:", error);
     }
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedStages = [...stages];
+    updatedStages[index][field] = value;
+    setStages(updatedStages);
+  };
+
+  const addStageField = () => {
+    setStages([...stages, { stage: '', time: '' }]);
+  };
+
+  const removeStageField = (index) => {
+    const updatedStages = stages.filter((_, i) => i !== index);
+    setStages(updatedStages);
   };
 
   // Fetch Interviews 
@@ -74,14 +91,49 @@ function Interview() {
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Stage</h3>
             <form onSubmit={handleInterviewSubmit}>
+
+            {stages.map((stageObj, index) => (
+              <div key={index} className="flex items-center mb-3">
               <input
                 type="text"
-                value={newInterview}
-                onChange={(e) => setNewInterview(e.target.value)}
+                value={stageObj.stage}
+                onChange={(e) => handleInputChange(index, 'stage', e.target.value)}
                 className="w-full h-11 rounded-xl bg-white text-black mb-2"
                 placeholder={`Write Your Stage`}
                 required
               />
+
+              {/* Time Input */}
+              <input
+              type="number"
+              value={stageObj.time}
+              onChange={(e) => handleInputChange(index, 'time', e.target.value)}
+              className="w-20 h-11 rounded-xl bg-white text-black mb-2 px-3 ml-2"
+              placeholder="Time"
+              required
+            />
+
+            {/* Remove Button */}
+            {index > 0 && (
+              <button
+                type="button"
+                className="text-red-600 font-bold ml-2"
+                onClick={() => removeStageField(index)}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        ))}
+
+        {/* Add More Button */}
+        <button
+                type="button"
+                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
+                onClick={addStageField}
+              >
+                + Add one More
+              </button>
 
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
