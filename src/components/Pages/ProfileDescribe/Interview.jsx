@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { PiArrowRightFill } from 'react-icons/pi';
 import { useSearchParams } from 'react-router-dom';
+import { WiTime5 } from "react-icons/wi";
+
 
 function Interview() {
   const [interviews, setInterviews] = useState([]);
@@ -10,6 +12,9 @@ function Interview() {
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const interviewModal = useRef(null);
+
+  console.log('===>', interviews);
+
 
   const fetchInterviews = async () => {
     try {
@@ -25,7 +30,7 @@ function Interview() {
   const handleInterviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/interview ", { stages, profileId });
+      const response = await axios.post("http://localhost:8080/api/interview/stage/${profileId}", { stages, profileId });
       console.log(response);
       interviewModal.current.close(); //close the modal
       fetchInterviews()
@@ -69,9 +74,11 @@ function Interview() {
             {
               interviews && interviews.map((interview, key) => {
                 return (
-                  <li key={key} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {interview.interview}
-                  </li>
+                  interview.stages && interview.stages.map((item, index) =>
+                      <li key={index} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
+                        <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {item.stage} : {item.time} min
+                      </li>
+                  )
                 )
               })
             }
@@ -90,44 +97,48 @@ function Interview() {
               ✕
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">Upload Stage</h3>
+
             <form onSubmit={handleInterviewSubmit}>
 
-            {stages.map((stageObj, index) => (
-              <div key={index} className="flex items-center mb-3">
-              <input
-                type="text"
-                value={stageObj.stage}
-                onChange={(e) => handleInputChange(index, 'stage', e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black mb-2"
-                placeholder={`Write Your Stage`}
-                required
-              />
+              {stages.map((stageObj, index) => (
+                <div key={index} className="flex items-center mb-3">
+                  <input
+                    type="text"
+                    value={stageObj.stage}
+                    onChange={(e) => handleInputChange(index, 'stage', e.target.value)}
+                    className="w-80 h-11 rounded-xl bg-white text-black mb-2"
+                    placeholder={`Write Your Stage`}
+                    required
+                  />
 
-              {/* Time Input */}
-              <input
-              type="number"
-              value={stageObj.time}
-              onChange={(e) => handleInputChange(index, 'time', e.target.value)}
-              className="w-20 h-11 rounded-xl bg-white text-black mb-2 px-3 ml-2"
-              placeholder="Time"
-              required
-            />
+                  {/* Time Input */}
+                  <div className="relative">
+                    <input
+                      type="number"
+                      value={stageObj.time}
+                      onChange={(e) => handleInputChange(index, 'time', e.target.value)}
+                      className="w-20 h-11 rounded-xl bg-white text-black pl-8 mb-2 px-3 ml-2"
+                      placeholder="12"
+                      required
+                    />
+                    <WiTime5 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#3F8CFF] text-xl" />
+                  </div>
 
-            {/* Remove Button */}
-            {index > 0 && (
+                  {/* Remove Button */}
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      className="text-red-600 font-bold ml-2"
+                      onClick={() => removeStageField(index)}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* Add More Button */}
               <button
-                type="button"
-                className="text-red-600 font-bold ml-2"
-                onClick={() => removeStageField(index)}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        ))}
-
-        {/* Add More Button */}
-        <button
                 type="button"
                 className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
                 onClick={addStageField}
