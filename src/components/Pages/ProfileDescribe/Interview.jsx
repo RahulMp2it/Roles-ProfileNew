@@ -13,9 +13,6 @@ function Interview() {
   const profileId = searchParams.get("profile_id")
   const interviewModal = useRef(null);
 
-  console.log('===>', interviews);
-
-
   const fetchInterviews = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/interview/${profileId}`);
@@ -26,17 +23,26 @@ function Interview() {
     }
   };
 
-  // post a new Interview 
   const handleInterviewSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form submission reload
+  
     try {
-      const response = await axios.post("http://localhost:8080/api/interview/stage/${profileId}", { stages, profileId });
-      console.log(response);
-      interviewModal.current.close(); //close the modal
-      fetchInterviews()
-      setStages([{ stage: '', time: '' }]); // Reset the input fields
+      // Combine all stages into a single object with profileId
+      const payload = {
+        profile: profileId,
+        stages,
+      };
+  
+      // POST the data to the backend
+      const response = await axios.post("http://localhost:8080/api/interview/stage/${profileId}", payload);
+  
+      // Refresh the interview list and close modal on success
+      fetchInterviews(); // Refresh interview data
+      setStages([{ stage: '', time: '' }]); // Reset the form fields
+      interviewModal.current.close(); // Close modal
     } catch (error) {
-      console.error("Error creating new Interview:", error);
+      console.error("Error creating/updating interview:", error);
+      alert("Failed to create/update the interview. Please try again.");
     }
   };
 
