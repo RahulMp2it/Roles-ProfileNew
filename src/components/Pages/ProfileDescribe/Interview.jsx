@@ -8,7 +8,6 @@ import { WiTime5 } from "react-icons/wi";
 function Interview() {
   const [interviews, setInterviews] = useState([]);
   const [stages, setStages] = useState([{ stage: '', time: '' }]); // Array for stages with times
-  const [newInterview, setNewInterview] = useState('');
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const interviewModal = useRef(null);
@@ -23,28 +22,37 @@ function Interview() {
     }
   };
 
+  //  // post a new Interview 
+  //  const handleInterviewSubmit = async (profileId, stage, time) => {  
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, { stage,
+  //       time,});
+  //     interviewModal.current.close(); //close the modal
+  //     fetchInterviews()
+  //     setStages([{ stage: '', time: '' }]); // Reset the input fields
+  //   } catch (error) {
+  //     console.error("Error creating new Interview:", error);
+  //   }
+  // };
+  
   const handleInterviewSubmit = async (e) => {
-    e.preventDefault(); // Prevent form submission reload
-  
+    e.preventDefault();
     try {
-      // Combine all stages into a single object with profileId
-      const payload = {
-        profile: profileId,
-        stages,
-      };
-  
-      // POST the data to the backend
-      const response = await axios.post("http://localhost:8080/api/interview/stage/${profileId}", payload);
-  
-      // Refresh the interview list and close modal on success
-      fetchInterviews(); // Refresh interview data
-      setStages([{ stage: '', time: '' }]); // Reset the form fields
-      interviewModal.current.close(); // Close modal
+      for (const stageObj of stages) {
+        await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, {
+          stage: stageObj.stage,
+          time: stageObj.time,
+        });
+      }
+      interviewModal.current.close();
+      fetchInterviews(); // Refresh the list after posting
+      setStages([{ stage: '', time: '' }]); // Reset input fields
     } catch (error) {
-      console.error("Error creating/updating interview:", error);
-      alert("Failed to create/update the interview. Please try again.");
+      console.error("Error creating new Interview:", error.response?.data || error.message);
     }
   };
+
 
   const handleInputChange = (index, field, value) => {
     const updatedStages = [...stages];
@@ -81,9 +89,9 @@ function Interview() {
               interviews && interviews.map((interview, key) => {
                 return (
                   interview.stages && interview.stages.map((item, index) =>
-                      <li key={index} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                        <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {item.stage} : {item.time} min
-                      </li>
+                    <li key={index} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
+                      <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {item.stage} : {item.time} min
+                    </li>
                   )
                 )
               })
@@ -168,3 +176,4 @@ function Interview() {
 }
 
 export default Interview
+
