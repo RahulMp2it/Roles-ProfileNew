@@ -54,8 +54,6 @@ function Training({ profileId }) {
 
   return (
     <>
-      
-
       <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
         {
           trainingMaterials.map((item) => {
