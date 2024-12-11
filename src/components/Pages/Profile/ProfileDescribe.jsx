@@ -93,8 +93,11 @@ function ProfileDescribe({ heading, isSubPage, }) {
       const response = await axios.post("http://localhost:8080/api/training/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("File uploaded successfully!");
+      //alert("File uploaded successfully!");
       console.log("Uploaded file response:", response.data);
+
+      // Add the new file to trainingMaterials state
+      setTrainingMaterials((prevMaterials) => [...prevMaterials, response.data]);
 
       // Clear the form and close the modal after successful upload
       setFile(null);
@@ -240,13 +243,13 @@ function ProfileDescribe({ heading, isSubPage, }) {
                 <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
                   {
                     trainingMaterials.map((item) => {
-                      console.log('item', item);
+                      console.log('item123', item);
                       
                       return (
                         item.fileType === 'mp4' ?
-                          <TrainingVideoCard key={item._id} link={item.link} />
+                          <TrainingVideoCard key={item._id} link={item.link} name={item.originalName} path1={item.filePath} />
                           : item.fileType === 'word' ?
-                            <TrainingDocCard key={item._id} link={item.link} />
+                            <TrainingDocCard key={item._id} link={item.link} name={item.originalName} docPath={item.filePath} />
                             : item.fileType === 'pdf' ?
                               <TrainingPdfCard key={item._id} link={item.link} />
                               : 'Type not supported'
