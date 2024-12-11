@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 function Employees() {
   const navigate = useNavigate();
   const addEmployee = useRef();
-  const ProfileAssign = useRef();
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]); // New state for departments
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -44,13 +43,6 @@ function Employees() {
     phone: "",
     department: "", // Add department field
   });
-
-  // const showSideMenu = () => {
-  //   setToggle(true);
-  // };
-  // const hideSideMenu = () => {
-  //   setToggle(false);
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -286,87 +278,6 @@ function Employees() {
                     </form>
                   </div>
                 </dialog>
-
-                {/* Profile Assign Buttton */}
-                {/* <button
-                  className="btn text-white font-nunito w-[200px] px-2 py-3 bg-[#3F8CFF] rounded-xl"
-                  onClick={() => ProfileAssign.current.showModal()}
-                >
-                  + Profile Assign
-                </button>
-                <dialog ref={ProfileAssign} className="modal h-auto">
-                  <div className=" modal-box overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
-                    <form method="dialog modal-action">
-                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                        ✕
-                      </button>
-                      <div className="text-[20px] text-start px-4 py-4 font-bold">
-                        Profile Assign
-                      </div>
-                      <div className="px-4 pb-8">
-                        <div className="mb-4 py-2">
-                          <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
-                            Profile Selection
-                          </label>
-                          <select className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none">
-                            <option disabled selected>
-                              HR
-                            </option>
-                            <option>Han Solo</option>
-                            <option>Greedo</option>
-                          </select>
-                        </div>
-                        <div className="mb-4 py-2">
-                          <label className="block text-[12px] pb-1 text-[#7D8592] text-start font-medium ">
-                            Employee Selection
-                          </label>
-                          <select className="select mt-1 flex w-full px-3 border border-gray-300 rounded-[14px] shadow-sm items-center text-[#7D8592] focus:outline-none">
-                            <option disabled selected>
-                              Mern Stack Developer
-                            </option>
-                            <option>Han Solo</option>
-                            <option>Greedo</option>
-                          </select>
-                        </div>
-                        <div className="mb-4 py-2">
-                          <label className="block text-[12px] text-start pb-1 font-medium text-[#7D8592]">
-                            Assign Profile Code
-                          </label>
-                          <input
-                            type="text"
-                            name="code"
-                            // value={form.code}
-                            // onChange={handleChange}
-                            placeholder="Assign Profile Code"
-                            className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px]"
-                          />
-                        </div>
-                        <div className="mb-6 py-2">
-                          <label className="block text-start text-[12px] pb-1 font-medium text-[#7D8592]">
-                            Description
-                          </label>
-                          <textarea
-                            name="description"
-                            // value={form.description}
-                            // onChange={handleChange}
-                            placeholder=" Add some Descriptionof"
-                            className="mt-1 flex items-center w-full px-3 py-2 border border-gray-300 rounded-[14px] shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder:text-[12px] min-h-[100px]"
-                          />
-                        </div>
-                      </div>
-                      <button className="btn text-white font-nunito w-[150px] px-2 py-3 bg-[#3F8CFF] rounded-xl">
-                        Save
-                      </button>
-                    </form>
-                  </div>
-                </dialog> */}
-                {/* filter button */}
-                {/* <div
-                  className="w-12 h-12 py-1  bg-[white] flex items-center justify-center rounded-[15px] cursor-pointer z-20"
-                // onClick={showSideMenu}
-                >
-                  <FiFilter fontSize={20} />
-                </div> */}
               </div>
             </div>
 
