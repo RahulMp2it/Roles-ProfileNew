@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import EmployeesCard from "../../../utils/EmployeesCard";
-import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
-import { FiFilter } from "react-icons/fi";
 import axios from "axios";
 import EditEmployeeModal from "./EditEmployeeModal";
 import { useForm } from "react-hook-form";
 
 function Employees() {
-  const navigate = useNavigate();
   const addEmployee = useRef();
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]); // New state for departments
