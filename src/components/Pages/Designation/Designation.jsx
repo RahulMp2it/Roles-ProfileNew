@@ -191,15 +191,15 @@ function Designation() {
                           {...register("DesignationName", {
                             required: "Designation name is required",
                             minLength: {
-                              value: 3,
-                              message: "Min length is 3 characters",
+                              value: 2,
+                              message: "Min length is 2 characters",
                             },
                             maxLength: {
                               value: 50,
                               message: "Max length is 50 characters",
                             },
                             pattern: {
-                              value: /^[A-Za-z]+$/i,
+                              value: /^[A-Za-z\s]+$/i,
                               message: "not valid number not allowed",
                             },
                           })}
