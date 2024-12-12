@@ -16,6 +16,7 @@ import TrainingPdfCard from '../../../utils/TrainingPdfCard';
 
 function ProfileDescribe({ heading, isSubPage, }) {
 
+
   const navigate = useNavigate();
   const location = useLocation();
   const { profileName, department, designation } = location.state || {};
@@ -110,6 +111,17 @@ function ProfileDescribe({ heading, isSubPage, }) {
   };
 
   return (
+    <>
+    <style>
+        {`
+          [type='radio']:checked {
+              background-image: none !important;
+              background-size: initial !important;
+          }
+            
+        `}
+      </style>
+
     <Layout>
       <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
         <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
@@ -243,7 +255,7 @@ function ProfileDescribe({ heading, isSubPage, }) {
                 <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
                   {
                     trainingMaterials.map((item) => {
-                      console.log('item123', item);
+                      //console.log('item123', item);
                       
                       return (
                         item.fileType === 'mp4' ?
@@ -281,6 +293,8 @@ function ProfileDescribe({ heading, isSubPage, }) {
         </div>
       </div >
     </Layout >
+
+    </>
   )
 }
 
