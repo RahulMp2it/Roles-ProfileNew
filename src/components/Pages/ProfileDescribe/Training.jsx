@@ -42,6 +42,8 @@ function Training({ profileId }) {
       try {
         const response = await axios.get(`http://localhost:8080/api/training/${profileId}`);
         setTrainingMaterials(response.data);
+        // console.log('trainingData...',response.data);
+        
       } catch (error) {
         console.error("Error fetching training materials:", error);
       }
@@ -57,9 +59,11 @@ function Training({ profileId }) {
       <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
         {
           trainingMaterials.map((item) => {
+            // console.log('itemsss',item);
+            
             return (
               item.type === 'video' ?
-                <TrainingVideoCard key={item._id} link={item.link} />
+                <TrainingVideoCard key={item._id} link = {item.link} name = {item.originalName} />
                 : item.type === 'docx' ?
                   <TrainingDocCard key={item._id} link={item.link} />
                   : item.type === 'pdf' ?

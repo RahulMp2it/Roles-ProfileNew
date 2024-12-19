@@ -329,7 +329,7 @@ function Profile() {
               <ProfileCard
                 key={key}
                 id={profile._id}
-                image={profile.image || "/image2.png"}
+                image={profile.image || "/profile.png"}
                 title={profile.Profile}
                 depart={profile.department?.DepartmentName || "No Department"}
                 position={profile.designation?.DesignationName || "No Designation"}

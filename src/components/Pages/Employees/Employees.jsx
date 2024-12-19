@@ -283,7 +283,7 @@ function Employees() {
                 <EmployeesCard
                   key={key}
                   id={employee._id} // unique ID
-                  image={employee.image ? employee.image : "/dummy-profile.png"}
+                  image={employee.image ? employee.image : "/profile.png"}
                   name={employee.name}
                   email={employee.email}
                   phone={employee.phone}

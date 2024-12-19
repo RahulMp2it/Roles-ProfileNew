@@ -6,10 +6,15 @@ import { TbDotsCircleHorizontal } from "react-icons/tb";
 
 const Card = ({ id, image, title, buttonText, openEditModal, handleDelete, onClick }) => {
 
+  const handleDropdownClick = (e) => {
+    e.stopPropagation(); // Prevent the click from bubbling up to the card's Link
+  };
+
   return (
-    <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
+    <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative" 
+    onClick={onClick}>
       {/* Dropdown Icon */}
-      <div className="absolute top-2 right-3 z-10">
+      <div className="absolute top-2 right-3 z-10" onClick={handleDropdownClick}>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="m-1">
             <TbDotsCircleHorizontal className="text-3xl text-gray-500" />
@@ -22,6 +27,7 @@ const Card = ({ id, image, title, buttonText, openEditModal, handleDelete, onCli
               <button
                 className="flex items-center px-1 py-3 text-[14px] h-5 text-white"
                 onClick={openEditModal} // Call the function to open modal
+                
               >
                 <IoPencil />
                 <span className="ml-1">Edit</span>

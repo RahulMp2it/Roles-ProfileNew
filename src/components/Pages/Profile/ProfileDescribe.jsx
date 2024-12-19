@@ -7,7 +7,6 @@ import PBehaviour from '../ProfileDescribe/PBehaviour';
 import Tasksheet from '../ProfileDescribe/Tasksheet';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FaArrowLeftLong } from 'react-icons/fa6';
-import Training from '../ProfileDescribe/Training';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import TrainingVideoCard from '../../../utils/TrainingVideoCard';
@@ -29,9 +28,36 @@ function ProfileDescribe({ heading, isSubPage, }) {
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const [trainingMaterials, setTrainingMaterials] = useState([]);
-
-
+  const [profileDetails, setProfileDetails] = useState({
+    profileName: '',
+    department: '',
+    designation: '',
+  });
   //console.log("id is ==>", profileId);
+
+  // Fetch profile details based on profileId
+  useEffect(() => {
+    const fetchProfileDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/profile/${profileId}`);
+        console.log("Profile API Response:", response.data.data.designation);
+        
+        setProfileDetails({
+          profileName: response.data.data.Profile || '',
+          department: response.data.data.department || '',
+          designation: response.data.data.designation || '',
+        });
+      } catch (error) {
+        console.error("Error fetching profile details:", error);
+      }
+    };
+
+    if (profileId) {
+      fetchProfileDetails();
+    }else {
+      console.error("Profile ID is undefined");
+    }
+  }, [profileId]);
 
   // Fetch training materials
   useEffect(() => {
@@ -112,187 +138,197 @@ function ProfileDescribe({ heading, isSubPage, }) {
 
   return (
     <>
-    <style>
+      <style>
         {`
           [type='radio']:checked {
               background-image: none !important;
               background-size: initial !important;
-          }
-            
+          },
+          .tab:checked {
+border-radius: 16px;
+        }
+          // [type='radio']:hover {
+          //     background-color: transparent !important;
+          //     border-color: inherit !important;
+          // }
+          //  [type='radio']:checked:hover {
+          //     background-color: transparent !important;
+          //     border-color: inherit !important;
+          // }
         `}
       </style>
 
-    <Layout>
-      <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
-        <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
-          <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
-            {isSubPage ? (
-              <button onClick={() => navigate(-1)} className="text-blue-500 flex items-center">
-                <FaArrowLeftLong className="mr-2" /> {heading}
-              </button>
-            ) : (
-              <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">{heading}</p>
-            )}
-          </p>
-          <div className="grid grid-cols-4 place-content-between gap-4">
-            <div className="col-span-3 ">
-              <h1 className="text-[34px] font-nunito font-semibold">Profile</h1>
+      <Layout>
+        <div className=" fixed top-14 me-3 ms-[215px] pt-5 pb-[100px] w-[85%] p-2 ">
+          <div className=" overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
+            <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">
+              {isSubPage ? (
+                <button onClick={() => navigate(-1)} className="text-blue-500 flex items-center">
+                  <FaArrowLeftLong className="mr-2" /> {heading}
+                </button>
+              ) : (
+                <p className="text-[#7D8592] text-[14px] tracking-wide mb-0">{heading}</p>
+              )}
+            </p>
+            <div className="grid grid-cols-4 place-content-between gap-4">
+              <div className="col-span-3 ">
+                <h1 className="text-[34px] font-nunito font-semibold">Profile/ {profileDetails.profileName || 'Not Available'}</h1>
+              </div>
+
+
+              <div className="text-end">
+                <button
+                  className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${activeTab === 'Training Material' ? 'bg-[#3F8CFF]' : 'bg-gray-400'
+                    }`}
+                  onClick={() => uploadModal.current.showModal()} // Open the modal
+                  disabled={activeTab !== 'Training Material'}
+                >
+                  + Upload Files
+                </button>
+              </div>
             </div>
 
-
-            <div className="text-end">
-              <button
-                className={`btn text-white font-nunito w-[200px] px-2 py-3 rounded-xl ${activeTab === 'Training Material' ? 'bg-[#3F8CFF]' : 'bg-gray-400'
-                  }`}
-                onClick={() => uploadModal.current.showModal()} // Open the modal
-                disabled={activeTab !== 'Training Material'}
-              >
-                + Upload Files
-              </button>
-            </div>
-          </div>
-
-          {/* Modal for uploading files */}
-          <dialog ref={uploadModal} className="modal h-auto">
-            <div className="modal-box overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
-              <button
-                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                onClick={() => uploadModal.current.close()} // Close the modal
-              >
-                ✕
-              </button>
-              <h2 className="text-[20px] font-bold mb-4">Upload Files</h2>
-              <form>
-                <div className="mb-4 grid grid-col-2 ">
-                  {/* Hidden file input using the ref */}
-                  <input
-                    type="file"
-                    ref={fileInputRef}  // Attach the ref here
-                    onChange={handleFileChange}
-                    accept={
-                      selectedFileType === 'pdf'
-                        ? '.pdf'
-                        : selectedFileType === 'mp4'
-                          ? '.mp4'
-                          : selectedFileType === 'word'
-                            ? '.doc,.docx'
-                            : '*'
-                    }
-                    style={{ display: 'none' }}  // Hide the default input element
-                  />
-                  <div className='grid lg:grid-cols-2 '>
-                    {/* Custom button to trigger the file input */}
-                    <button type="button" onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
-                      <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                    </button>
-
-                    <button type="button" onClick={() => handleFileIconClick('mp4')} style={{ marginBottom: '10px', }}>
-                      <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                    </button>
-
-                    <button type="button" onClick={() => handleFileIconClick('word')} style={{ marginBottom: '10px', }}>
-                      <img src='public\Training Material.png' alt="File Preview" style={{ maxWidth: '250px' }} />
-                    </button>
-
-                    <div className="mt-[100px] ml-[70px]">
-                      <button
-                        onClick={handleUpload}
-                        // disabled={!file}
-                        type="button"
-                        disabled={!file || !selectedFileType}
-                        className="btn text-white font-nunito px-8 py-3 bg-[#3F8CFF] rounded-xl"
-                      >
-                        Upload
+            {/* Modal for uploading files */}
+            <dialog ref={uploadModal} className="modal h-auto">
+              <div className="modal-box overflow-y-auto no-scrollbar lg:h-[calc(100vh-90px)]">
+                <button
+                  className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                  onClick={() => uploadModal.current.close()} // Close the modal
+                >
+                  ✕
+                </button>
+                <h2 className="text-[20px] font-bold mb-4">Upload Files</h2>
+                <form>
+                  <div className="mb-4 grid grid-col-2 ">
+                    {/* Hidden file input using the ref */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}  // Attach the ref here
+                      onChange={handleFileChange}
+                      accept={
+                        selectedFileType === 'pdf'
+                          ? '.pdf'
+                          : selectedFileType === 'mp4'
+                            ? '.mp4'
+                            : selectedFileType === 'word'
+                              ? '.doc,.docx'
+                              : '*'
+                      }
+                      style={{ display: 'none' }}  // Hide the default input element
+                    />
+                    <div className='grid lg:grid-cols-2 '>
+                      {/* Custom button to trigger the file input */}
+                      <button type="button" onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
+                        <img src='public\Skills.png' alt="File Preview" style={{ maxWidth: '250px' }} />
                       </button>
+
+                      <button type="button" onClick={() => handleFileIconClick('mp4')} style={{ marginBottom: '10px', }}>
+                        <img src='public\Role.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                      </button>
+
+                      <button type="button" onClick={() => handleFileIconClick('word')} style={{ marginBottom: '10px', }}>
+                        <img src='public\Training Material.png' alt="File Preview" style={{ maxWidth: '250px' }} />
+                      </button>
+
+                      <div className="mt-[100px] ml-[70px]">
+                        <button
+                          onClick={handleUpload}
+                          // disabled={!file}
+                          type="button"
+                          disabled={!file || !selectedFileType}
+                          className="btn text-white font-nunito px-8 py-3 bg-[#3F8CFF] rounded-xl"
+                        >
+                          Upload
+                        </button>
+                      </div>
                     </div>
+                  </div>
+
+                </form>
+              </div>
+            </dialog>
+
+            {/* main Container */}
+            <div className="max-w-[1400px] h-[100%] mt-3 pl-3 pr-[20px] py-8 mx-auto rounded-[20px] bg-white">
+              {/* first NavBar */}
+              <div className="w-[1250px] h-20 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
+                <div className="px-6">
+                  <p className="text-[#91929E] text-[12px]">Profile Name</p>
+                  <p className="text-[14px] font-semibold">{profileDetails.profileName || 'Not Available'}</p>
+                </div>
+                <div className="px-6">
+                  <p className="text-[#91929E] text-[12px]">Department</p>
+                  <p className="text-[14px] font-semibold">{profileDetails.department?.DepartmentName || 'Not Available'}</p>
+                </div>
+                <div className="px-11">
+                  <p className="text-[#91929E] text-[12px]">Designation</p>
+                  <p className="text-[14px] font-semibold">{profileDetails.designation?.DesignationName || 'Not Available'}</p>
+                </div>
+
+              </div>
+
+              {/* Second NavBar */}
+              <div role="tablist" className="tabs tabs-bordered w-[1250px] h-16 bg-[#F4F9FD] pt-[8px] pb-[10px]">
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Skills" id="tab-skills" onClick={() => setActiveTab('Skills')} defaultChecked />
+                <div role="tabpanel" className="tab-content p-10 ">
+                  <Skill />
+                </div>
+
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role & Function" id="tab-role" onClick={() => setActiveTab('Role & Function')} />
+                <div role="tabpanel" className="tab-content p-10">
+                  <Role />
+                </div>
+
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Interview" onClick={() => setActiveTab('Interview')} />
+                <div role="tabpanel" className="tab-content p-10" id="tab-interview">
+                  <Interview />
+                </div>
+
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" id="tab-training" onClick={() => setActiveTab('Training Material')} />
+                <div role="tabpanel" className="tab-content p-10">
+
+
+                  <div className="grid lg:grid-cols-6 gap-12 py-8 mx-auto overflow-hidden">
+                    {
+                      trainingMaterials.map((item) => {
+                        //console.log('item123', item);
+
+                        return (
+                          item.fileType === 'mp4' ?
+                            <TrainingVideoCard key={item._id} link={item.link} name={item.originalName} path1={item.filePath} />
+                            : item.fileType === 'word' ?
+                              <TrainingDocCard key={item._id} link={item.link} name={item.originalName} docPath={item.filePath} />
+                              : item.fileType === 'pdf' ?
+                                <TrainingPdfCard key={item._id} link={item.link} />
+                                : 'Type not supported'
+                        )
+                      })
+                    }
                   </div>
                 </div>
 
-              </form>
-            </div>
-          </dialog>
-
-          {/* main Container */}
-          <div className="max-w-[1400px] h-[100%] mt-3 pl-3 pr-[20px] py-8 mx-auto rounded-[20px] bg-white">
-            {/* first NavBar */}
-            <div className="w-[1250px] h-20 bg-[#F4F9FD] flex items-center mb-5 rounded-[18px]">
-              <div className="px-6">
-                <p className="text-[#91929E] text-[12px]">Profile Name</p>
-                <p className="text-[16px]">{profileName}</p>
-              </div>
-              <div className="px-6">
-                <p className="text-[#91929E] text-[12px]">Department</p>
-                <p className="text-[16px]">{department}</p>
-              </div>
-              <div className="px-11">
-                <p className="text-[#91929E] text-[12px]">Designation</p>
-                <p className="text-[16px]">{designation}</p>
-              </div>
-
-            </div>
-
-            {/* Second NavBar */}
-            <div role="tablist" className="tabs tabs-bordered w-[1250px] h-14 bg-[#F4F9FD]">
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Skills" id="tab-skills" onClick={() => setActiveTab('Skills')} defaultChecked />
-              <div role="tabpanel" className="tab-content p-10">
-                <Skill />
-              </div>
-
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Role & Function" id="tab-role" onClick={() => setActiveTab('Role & Function')} />
-              <div role="tabpanel" className="tab-content p-10">
-                <Role />
-              </div>
-
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Interview" onClick={() => setActiveTab('Interview')} />
-              <div role="tabpanel" className="tab-content p-10" id="tab-interview">
-                <Interview />
-              </div>
-
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Training Material" id="tab-training" onClick={() => setActiveTab('Training Material')} />
-              <div role="tabpanel" className="tab-content p-10">
-
-               
-                <div className="grid lg:grid-cols-6 gap-12  py-8 mx-auto overflow-hidden">
-                  {
-                    trainingMaterials.map((item) => {
-                      //console.log('item123', item);
-                      
-                      return (
-                        item.fileType === 'mp4' ?
-                          <TrainingVideoCard key={item._id} link={item.link} name={item.originalName} path1={item.filePath} />
-                          : item.fileType === 'word' ?
-                            <TrainingDocCard key={item._id} link={item.link} name={item.originalName} docPath={item.filePath} />
-                            : item.fileType === 'pdf' ?
-                              <TrainingPdfCard key={item._id} link={item.link} />
-                              : 'Type not supported'
-                      )
-                    })
-                  }
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" id="tab-knowledge" onClick={() => setActiveTab('Knowledge')} />
+                <div role="tabpanel" className="tab-content p-10">
+                  <Knowledge />
                 </div>
-              </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Knowledge" id="tab-knowledge" onClick={() => setActiveTab('Knowledge')} />
-              <div role="tabpanel" className="tab-content p-10">
-                <Knowledge />
-              </div>
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Evaluation Behaviour" id="tab-behaviour" onClick={() => setActiveTab('Evaluation Behaviour')} />
+                <div role="tabpanel" className="tab-content p-10">
+                  <PBehaviour />
+                </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Evaluation Behaviour" id="tab-behaviour" onClick={() => setActiveTab('Evaluation Behaviour')} />
-              <div role="tabpanel" className="tab-content p-10">
-                <PBehaviour />
-              </div>
+                <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" id="tab-tasksheet" onClick={() => setActiveTab('TaskSheet')} />
+                <div role="tabpanel" className="tab-content p-10">
+                  <Tasksheet />
+                </div>
 
-              <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="TaskSheet" id="tab-tasksheet" onClick={() => setActiveTab('TaskSheet')} />
-              <div role="tabpanel" className="tab-content p-10">
-                <Tasksheet />
               </div>
 
             </div>
 
           </div>
-
-        </div>
-      </div >
-    </Layout >
+        </div >
+      </Layout >
 
     </>
   )
