@@ -5,8 +5,6 @@ import "@fontsource/inika";
 import { useForm } from "react-hook-form";
 
 function SignUp() {
-  const [logoBgColor, setLogoBgColor] = useState("white");
-  const [logoColor, setLogoColor] = useState("default");
   const [currentImage, setCurrentImage] = useState("logo1.png");
 
   const navigate = useNavigate();
@@ -35,6 +33,20 @@ function SignUp() {
   // Watch the password field for matching confirmation
   const password = watch("password");
 
+  // Logo switching logic
+  useEffect(() => {
+    const logos = ["logo1.png", "logo2.png"]; // Add more image names if needed
+    let index = 0;
+
+    const interval = setInterval(() => {
+      index = (index + 1) % logos.length; // Cycle through the logos
+      setCurrentImage(logos[index]);
+    }, 3000); // Switch every 3 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, []);
+
+
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setCurrentImage((prevImage) =>
@@ -54,7 +66,7 @@ function SignUp() {
         <div className="bg-[#5882C147] w-[370px] rounded-[18px] p-5 backdrop-filter backdrop-blur-sm bg-opacity-50 relative flex items-center justify-center ">
           {/* logo image */}
           <div className="flex flex-col items-center justify-center">
-            <div className="  relative w-[90px] shadow-logo-shadow ">
+            <div className="  relative w-[90px] rounded-[19px] shadow-logo-shadow ">
               <img src={currentImage} alt="logo" />
             </div>
             <div className="font-inika">
@@ -70,7 +82,7 @@ function SignUp() {
                       minLength: { value: 3, message: "min length 3" },
                       maxLength: { value: 20, message: "max length 20" },
                       pattern: {
-                        value: /^[A-Za-z]+$/i,
+                        value: /^[A-Za-z/s]+$/i,
                         message: "it is not valid",
                       },
                     })}

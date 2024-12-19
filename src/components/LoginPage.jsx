@@ -13,6 +13,19 @@ function LoginPage() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
 
+  // Logo switching logic
+    useEffect(() => {
+      const logos = ["logo1.png", "logo2.png"]; // Add more image names if needed
+      let index = 0;
+  
+      const interval = setInterval(() => {
+        index = (index + 1) % logos.length; // Cycle through the logos
+        setCurrentImage(logos[index]);
+      }, 3000); // Switch every 3 seconds
+  
+      return () => clearInterval(interval); // Cleanup interval on unmount
+    }, []);
+
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setCurrentImage((prevImage) =>
