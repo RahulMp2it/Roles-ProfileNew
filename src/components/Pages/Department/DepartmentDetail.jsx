@@ -33,7 +33,7 @@ const DepartmentDetail = ({ heading, isSubPage }) => {
       setDesignations(designationRes.data);
       setProfiles(profileRes.data);
       setEmployees(employeeRes.data);
-      console.log('====>', profileRes);
+      //console.log('====>', profileRes);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -69,15 +69,18 @@ const DepartmentDetail = ({ heading, isSubPage }) => {
             {id && (
               <>
                 <Card title={`${DepartmentName} Designation`} buttonText="View Designation"
+                  image={designations.image || "/department.jpg"}
                   onClick={() => navigate(`/department/${id}/designations`, { state: { DepartmentName, id } })}
                 />
 
                 <Card title={`${DepartmentName} Profile`} buttonText="View Profiles"
+                  image={profiles.image || "/profile.png"}
                   onClick={() => navigate(`/department/${id}/profiles`, { state: { DepartmentName, id } })}
                 />
 
                 <Card
                   title={`${DepartmentName} Employees`}
+                  image={employees.image || "/profile.png"}
                   buttonText="View Employees"
                   onClick={() => navigate(`/department/${id}/employees`, { state: { DepartmentName, id } })}
                 />
