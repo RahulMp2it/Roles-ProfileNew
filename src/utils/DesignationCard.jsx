@@ -7,12 +7,16 @@ import { TbDotsCircleHorizontal } from "react-icons/tb";
 
 function DesignationCard({ id, image, title, buttonText, openEditModal, handleDelete, onClick }) {
 
+  const handleDropdownClick = (e) => {
+    e.stopPropagation(); // Prevent the click from bubbling up to the card's Link
+  };
+
   return (
     <>
-      <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative">
+      <div className="bg-[#F4F9FD] rounded-[22px] overflow-hidden flex flex-col items-center justify-center pt-6 pb-2 relative" onClick={onClick}>
 
         {/* Dropdown Icon */}
-        <div className="absolute top-2 right-3 z-10">
+        <div className="absolute top-2 right-3 z-10" onClick={handleDropdownClick}>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="m-1">
               <TbDotsCircleHorizontal className="text-3xl text-gray-500" />
