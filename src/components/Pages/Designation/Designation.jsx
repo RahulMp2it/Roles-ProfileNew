@@ -247,7 +247,7 @@ function Designation() {
               <DesignationCard
                 key={key}
                 id={designation._id} // unique IDa
-                image={designation.image || "/profile.png"}
+                image={designation.image || "/image5.png"}
                 title={designation.DesignationName}
                 buttonText="1 Member"
                 updateDesignation={updateDesignation}
