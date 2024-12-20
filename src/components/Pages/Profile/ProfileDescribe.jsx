@@ -18,7 +18,6 @@ function ProfileDescribe({ heading, isSubPage, }) {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { profileName, department, designation } = location.state || {};
   const [activeTab, setActiveTab] = useState('Skills'); // State to track the active tab
   const uploadModal = useRef(null); // Reference for the modal
   const fileInputRef = useRef(null);  // Create a ref for the file input
