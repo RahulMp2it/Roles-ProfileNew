@@ -161,7 +161,7 @@ function App() {
           <Route path="/department" element={<Department />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profileDescribe" element={<ProfileDescribe heading={heading} isSubPage={isSubPage} />} />
-          <Route path="/Designation" element={<Designation />} />
+          <Route path="/Designation" element={<Designation heading={heading} isSubPage={isSubPage} />} />
           <Route path="/ProfileAssign" element={<ProfileAssign />} />
           <Route path="/SubDepartment" element={<SubDepartment />} />
           <Route path="/RDPosition" element={<RDposition />} />
