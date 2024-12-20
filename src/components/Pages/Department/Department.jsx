@@ -191,7 +191,7 @@ const Department = () => {
               <Card
                 key={key}
                 id={department._id} // unique ID
-                image={department.image || "/image1.png"}
+                image={department.image || "/department.jpg"}
                 title={department.DepartmentName}
                 buttonText="1 Member"
                 updateDepartment={updateDepartment}
