@@ -4,11 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import Select from 'react-select';
 
 function ProfileAssign() {
-  const navigate = useNavigate();
-  const addProfile = useRef();
   const ProfileAssign = useRef();
   const [profiles, setProfiles] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -82,11 +79,16 @@ function ProfileAssign() {
       ProfileAssign.current.showModal();
     }
   };
-
+  
   const handleProfileAssignSubmit = async (data) => {
+    const { employeeId } = data; // Extract employeeId from form data
     try {
-      const response = await axios.post("http://localhost:8080/api/employee/assignprofile", { employeeId: data, profileId: selectedProfiles });
-      //console.log(response);
+      const response = await axios.post("http://localhost:8080/api/employee/assignprofile", { employeeId, profileId: selectedProfiles });
+      console.log("Profile assigned successfully:", response.data);
+      // Reset form and selection after successful submission
+      reset();
+      setSelectedProfiles([]);
+      ProfileAssign.current.close(); // Close the modal
     } catch (error) {
       console.error("Error assigning profiles ==> ", error);
     }
