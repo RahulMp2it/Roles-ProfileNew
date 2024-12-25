@@ -34,6 +34,7 @@ import DDepartmentList from "./components/Pages/Designation/DDepartmentList";
 import Demo from "./components/Demo";
 import TrainingVideoView from "./utils/TrainingVideoView";
 import TrainingDocView from "./utils/TrainingDocView";
+import TrainingPdfView from "./utils/TrainingPdfView";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -177,6 +178,7 @@ function App() {
           <Route path="/demo" element={<Demo/>} />
           <Route path="/videoview" element={<TrainingVideoView />} />
           <Route path="/docview" element={<TrainingDocView />} />
+          <Route path="/pdfview" element={<TrainingPdfView />} />
 
 
           <Route
