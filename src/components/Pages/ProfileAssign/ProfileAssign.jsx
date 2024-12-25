@@ -80,6 +80,7 @@ function ProfileAssign() {
     }
   };
   
+  //Assign profile to employee
   const handleProfileAssignSubmit = async (data) => {
     const { employeeId } = data; // Extract employeeId from form data
     try {
