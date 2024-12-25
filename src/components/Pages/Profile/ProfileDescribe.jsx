@@ -40,7 +40,7 @@ function ProfileDescribe({ heading, isSubPage, }) {
       try {
         const response = await axios.get(`http://localhost:8080/api/profile/${profileId}`);
         console.log("Profile API Response:", response.data.data.designation);
-        
+
         setProfileDetails({
           profileName: response.data.data.Profile || '',
           department: response.data.data.department || '',
@@ -53,7 +53,7 @@ function ProfileDescribe({ heading, isSubPage, }) {
 
     if (profileId) {
       fetchProfileDetails();
-    }else {
+    } else {
       console.error("Profile ID is undefined");
     }
   }, [profileId]);
@@ -122,8 +122,16 @@ function ProfileDescribe({ heading, isSubPage, }) {
       //alert("File uploaded successfully!");
       console.log("Uploaded file response:", response.data);
 
-      // Add the new file to trainingMaterials state
-      setTrainingMaterials((prevMaterials) => [...prevMaterials, response.data]);
+      // Add the newly uploaded file to the UI immediately
+    const newFile = {
+      _id: response.data._id, // API response ID
+      fileType: response.data.fileType,
+      originalName: response.data.originalName,
+      filePath: response.data.filePath,
+      link: response.data.link, // Adjust based on API response
+    };
+
+    setTrainingMaterials((prevMaterials) => [...prevMaterials, newFile]);
 
       // Clear the form and close the modal after successful upload
       setFile(null);
@@ -144,7 +152,7 @@ function ProfileDescribe({ heading, isSubPage, }) {
               background-size: initial !important;
           },
           .tab:checked {
-border-radius: 16px;
+                  border-radius: 16px;
         }
           // [type='radio']:hover {
           //     background-color: transparent !important;
@@ -298,7 +306,7 @@ border-radius: 16px;
                             : item.fileType === 'word' ?
                               <TrainingDocCard key={item._id} link={item.link} name={item.originalName} docPath={item.filePath} />
                               : item.fileType === 'pdf' ?
-                                <TrainingPdfCard key={item._id} link={item.link} />
+                                <TrainingPdfCard key={item._id} link={item.link} name={item.originalName} pdfPath={item.filePath} />
                                 : 'Type not supported'
                         )
                       })
