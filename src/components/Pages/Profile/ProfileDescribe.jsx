@@ -72,7 +72,7 @@ function ProfileDescribe({ heading, isSubPage, }) {
     if (profileId) {
       fetchTrainingMaterials();
     }
-  }, [profileId]);
+  }, [profileId,trainingMaterials]);
 
   const handleFileIconClick = (fileType) => {
     setSelectedFileType(fileType); // Set the file type (PDF, MP4, Word) based on the clicked image
@@ -87,7 +87,10 @@ function ProfileDescribe({ heading, isSubPage, }) {
       const validFileTypes = {
         pdf: ['application/pdf'],
         mp4: ['video/mp4'],
-        word: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        word: [
+          'application/msword', 
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ],
       };
 
       if (!validFileTypes[selectedFileType].includes(uploadedFile.type)) {
@@ -208,21 +211,21 @@ function ProfileDescribe({ heading, isSubPage, }) {
                 <form>
                   <div className="mb-4 grid grid-col-2 ">
                     {/* Hidden file input using the ref */}
-                    <input
-                      type="file"
-                      ref={fileInputRef}  // Attach the ref here
-                      onChange={handleFileChange}
-                      accept={
-                        selectedFileType === 'pdf'
-                          ? '.pdf'
-                          : selectedFileType === 'mp4'
-                            ? '.mp4'
-                            : selectedFileType === 'word'
-                              ? '.doc,.docx'
-                              : '*'
-                      }
-                      style={{ display: 'none' }}  // Hide the default input element
-                    />
+                      <input
+                        type="file"
+                        ref={fileInputRef}  // Attach the ref here
+                        onChange={handleFileChange}
+                        accept={
+                          selectedFileType === 'pdf'
+                            ? '.pdf'
+                            : selectedFileType === 'mp4'
+                              ? '.mp4'
+                              : selectedFileType === 'word'
+                                ? '.doc,.docx'
+                                : '*'
+                        }
+                        style={{ display: 'none' }}  // Hide the default input element
+                      />
                     <div className='grid lg:grid-cols-2 '>
                       {/* Custom button to trigger the file input */}
                       <button type="button" onClick={() => handleFileIconClick('pdf')} style={{ marginBottom: '10px', }}>
