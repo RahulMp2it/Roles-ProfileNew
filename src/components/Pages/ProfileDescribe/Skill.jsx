@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { PiArrowRightFill } from 'react-icons/pi';
 import { useSearchParams } from 'react-router-dom';
 
 function Skill() {
   const [skills, setSkills] = useState([]);
   const [skillList, setSkillList] = useState(['']); // Array of skills
-  const [newSkill, setNewSkill] = useState('');
+  const [selectedSkill, setSelectedSkill] = useState(null); // For editing a skill
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const skillModal = useRef(null);
@@ -21,16 +22,53 @@ function Skill() {
   };
 
   // post a new skill 
-  const handleSkillSubmit = async (e) => {
+  // const handleSkillSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post("http://localhost:8080/api/skill", { skills: skillList, profileId });
+  //     console.log(response);
+  //     skillModal.current.close();
+  //     fetchSkills()
+  //     setSkillList([""]); // Reset input fields
+  //   } catch (error) {
+  //     console.error("Error creating new skill:", error);
+  //   }
+  // };
+
+   // Add or Update a Skill
+   const handleSkillSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/api/skill", { skills: skillList, profileId });
-      console.log(response);
+      if (selectedSkill) {
+        // Update skill
+        await axios.put(`http://localhost:8080/api/skill/${selectedSkill._id}`, {
+          skill: skillList[0],
+        });
+      } else {
+        // Add new skills
+        await axios.post("http://localhost:8080/api/skill", { skills: skillList, profileId });
+      }
       skillModal.current.close();
-      fetchSkills()
-      setSkillList([""]); // Reset input fields
+      fetchSkills();
+      setSkillList([""]);
+      setSelectedSkill(null); // Reset selected skill
     } catch (error) {
-      console.error("Error creating new skill:", error);
+      console.error("Error saving skill:", error);
+    }
+  };
+
+  const handleEdit = (skill) => {
+    setSelectedSkill(skill);
+    setSkillList([skill.skill]); // Populate the modal input with the selected skill
+    skillModal.current.showModal();
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/skill/${id}`);
+      fetchSkills();
+    } catch (error) {
+      console.error("Error deleting skill:", error);
     }
   };
 
@@ -66,15 +104,28 @@ function Skill() {
         <div className="w-[352px] ">
           <ul>
 
-            {
-              skills && skills.map((skill, key) => {
-                return (
-                  <li key={key} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {skill.skill}
-                  </li>
-                )
-              })
-            }
+          {skills &&
+              skills.map((skill) => (
+                <li
+                  key={skill._id}
+                  className="mb-2 py-1.5 text-[11px] font-bold text-sm flex items-center justify-between"
+                >
+                  <span>
+                    <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />
+                    {skill.skill}
+                  </span>
+                  <div>
+                  <FiEdit
+                      className="text-blue-500 cursor-pointer mr-3 inline text-[18px]"
+                      onClick={() => handleEdit(skill)}
+                    />
+                    <FiTrash2
+                      className="text-red-500 cursor-pointer inline text-[18px]"
+                      onClick={() => handleDelete(skill._id)}
+                    />
+                  </div>
+                </li>
+              ))}
           </ul>
         </div>
       </div>
@@ -85,11 +136,15 @@ function Skill() {
           <div className="modal-box bg-[#3F8CFF]">
             <button
               className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
-              onClick={() => skillModal.current.close()}
+              onClick={() => {skillModal.current.close();
+                setSelectedSkill(null); // Clear selection
+              }}
             >
               ✕
             </button>
-            <h3 className="text-white pl-3 text-lg pb-3">Upload Skill</h3>
+            <h3 className="text-white pl-3 text-lg pb-3">
+              {selectedSkill ? "Edit Skill" : "Upload Skill"}
+            </h3>
             <form onSubmit={handleSkillSubmit}>
 
             {skillList.map((skill, index) => (
