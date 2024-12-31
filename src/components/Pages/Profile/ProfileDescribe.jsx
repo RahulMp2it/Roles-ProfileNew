@@ -32,7 +32,6 @@ function ProfileDescribe({ heading, isSubPage, }) {
     department: '',
     designation: '',
   });
-  //console.log("id is ==>", profileId);
 
   // Fetch profile details based on profileId
   useEffect(() => {
