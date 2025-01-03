@@ -7,6 +7,8 @@ import { useSearchParams } from 'react-router-dom';
 function Skill() {
   const [skills, setSkills] = useState([]);
   const [skillList, setSkillList] = useState(['']); // Array of skills
+  const [currentSkill, setCurrentSkill] = useState(null); // Track skill being edited
+  const [isEditMode, setIsEditMode] = useState(false); // Track modal mode
   const [selectedSkill, setSelectedSkill] = useState(null); // For editing a skill
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
@@ -35,14 +37,14 @@ function Skill() {
   //   }
   // };
 
-   // Add or Update a Skill
-   const handleSkillSubmit = async (e) => {
+  // Add or Update a Skill
+  const handleSkillSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (selectedSkill) {
-        // Update skill
-        await axios.put(`http://localhost:8080/api/skill/${selectedSkill._id}`, {
-          skill: skillList[0],
+      if (isEditMode && currentSkill) {
+         // Edit existing skill
+        await axios.put(`http://localhost:8080/api/skill/${currentSkill._id}`, {
+          skill: skillList[0], // Only send the updated skill
         });
       } else {
         // Add new skills
@@ -51,14 +53,16 @@ function Skill() {
       skillModal.current.close();
       fetchSkills();
       setSkillList([""]);
-      setSelectedSkill(null); // Reset selected skill
+      setIsEditMode(false); // Reset to create mode
+      setCurrentSkill(null); // Clear current skill
     } catch (error) {
       console.error("Error saving skill:", error);
     }
   };
 
   const handleEdit = (skill) => {
-    setSelectedSkill(skill);
+    setIsEditMode(true); // Switch to edit mode
+    setCurrentSkill(skill); // Set current skill being edited
     setSkillList([skill.skill]); // Populate the modal input with the selected skill
     skillModal.current.showModal();
   };
@@ -96,7 +100,11 @@ function Skill() {
     <div>
       <button
         className="text-black text-[15px] font-bold p-[5px] px-3 rounded-lg mt-3 mb-2 bg-[#D9D9D9]"
-        onClick={() => skillModal.current.showModal()} >
+        onClick={() => {
+          setIsEditMode(false); // Switch to create mode
+          setSkillList([""]); // Reset input fields
+          skillModal.current.showModal()
+        }} >
         + Upload Skills
       </button>
 
@@ -104,7 +112,7 @@ function Skill() {
         <div className="w-[352px] ">
           <ul>
 
-          {skills &&
+            {skills &&
               skills.map((skill) => (
                 <li
                   key={skill._id}
@@ -115,7 +123,7 @@ function Skill() {
                     {skill.skill}
                   </span>
                   <div>
-                  <FiEdit
+                    <FiEdit
                       className="text-blue-500 cursor-pointer mr-3 inline text-[18px]"
                       onClick={() => handleEdit(skill)}
                     />
@@ -136,45 +144,49 @@ function Skill() {
           <div className="modal-box bg-[#3F8CFF]">
             <button
               className="btn btn-sm btn-circle btn-ghost text-white absolute right-2 top-2"
-              onClick={() => {skillModal.current.close();
-                setSelectedSkill(null); // Clear selection
+              onClick={() => {
+                skillModal.current.close();
               }}
             >
               ✕
             </button>
             <h3 className="text-white pl-3 text-lg pb-3">
-              {selectedSkill ? "Edit Skill" : "Upload Skill"}
+              {isEditMode ? "Edit Skill" : "Upload Skill"}
             </h3>
             <form onSubmit={handleSkillSubmit}>
 
-            {skillList.map((skill, index) => (
-              <div key={index} className="flex items-center mb-2 relative ">
-              <input
-                type="text"
-                value={skill}
-                onChange={(e) => handleSkillChange(index, e.target.value)}
-                className="w-full h-11 rounded-xl bg-white text-black pr-10"
-                placeholder={`Write Skill ${index + 1}`}
-                required
-              />
-              {index > 0 && (
+              {skillList.map((skill, index) => (
+                <div key={index} className="flex items-center mb-2 relative ">
+                  <input
+                    type="text"
+                    value={skill}
+                    onChange={(e) => handleSkillChange(index, e.target.value)}
+                    className="w-full h-11 rounded-xl bg-white text-black pr-10"
+                    placeholder={`Write Skill ${index + 1}`}
+                    required
+                  />
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 font-bold"
+                      onClick={() => removeSkillField(index)}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+ 
+               {/* Show "Add More" button only in create mode */}
+              {!isEditMode && (
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-600 font-bold"
-                  onClick={() => removeSkillField(index)}
+                  className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2 "
+                  onClick={() => setSkillList([...skillList, ""])}
                 >
-                  ✕
+                  + Add More
                 </button>
               )}
-            </div>
-          ))}
-          <button
-                type="button"
-                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2 "
-                onClick={addSkillField}
-              >
-                + Add More
-              </button>
 
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
