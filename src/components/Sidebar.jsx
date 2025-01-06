@@ -5,7 +5,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { RxDashboard } from "react-icons/rx";
 import { TbStack2Filled } from "react-icons/tb";
 import { PiChatsCircleFill } from "react-icons/pi";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdProductionQuantityLimits } from "react-icons/md";
 import "@fontsource/nunito-sans/500.css";
 import logo from '/logo.png';
 
@@ -57,6 +57,34 @@ function Sidebar() {
               />
               <span>Profile</span>
             </NavLink>
+            {/* <NavLink
+              to={"/product"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <MdProductionQuantityLimits
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={21}
+              />
+              <span>Product</span>
+            </NavLink>
+            <NavLink
+              to={"/process"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 bg-[#F4F9FD] text-[#3F8CFF]"
+                  : "flex py-3 px-2 rounded transition duration-200 items-center gap-x-4 text-[#7D8592]"
+              }
+            >
+              <VscServerProcess
+                className={`{({ isActive }) => (isActive ? "text-[#3F8CFF]" : "text-[#7D8592]")}`}
+                size={21}
+              />
+              <span>Process</span>
+            </NavLink> */}
             <NavLink
               to={"/"}
               className={({ isActive }) =>
