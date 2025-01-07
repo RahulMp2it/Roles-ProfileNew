@@ -37,13 +37,13 @@ function ProfileDescribe({ heading, isSubPage, }) {
   useEffect(() => {
     const fetchProfileDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/profile/${profileId}`);
-        console.log("Profile API Response:", response.data.data.designation);
+        const response = await axios.get(`http://localhost:8080/api/profile/ram/${profileId}`);
+        console.log("Profile API Response:", response.data.department );
 
         setProfileDetails({
-          profileName: response.data.data.Profile || '',
-          department: response.data.data.department || '',
-          designation: response.data.data.designation || '',
+          profileName: response.data.profileName || '',
+          department: response.data.department || '',
+          designation: response.data.designation || '',
         });
       } catch (error) {
         console.error("Error fetching profile details:", error);
@@ -267,11 +267,11 @@ function ProfileDescribe({ heading, isSubPage, }) {
                 </div>
                 <div className="px-6">
                   <p className="text-[#91929E] text-[12px]">Department</p>
-                  <p className="text-[14px] font-semibold">{profileDetails.department?.DepartmentName || 'Not Available'}</p>
+                  <p className="text-[14px] font-semibold">{profileDetails.department || 'Not Available'}</p>
                 </div>
                 <div className="px-11">
                   <p className="text-[#91929E] text-[12px]">Designation</p>
-                  <p className="text-[14px] font-semibold">{profileDetails.designation?.DesignationName || 'Not Available'}</p>
+                  <p className="text-[14px] font-semibold">{profileDetails.designation || 'Not Available'}</p>
                 </div>
 
               </div>
