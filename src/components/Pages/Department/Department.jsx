@@ -186,7 +186,7 @@ const Department = () => {
             </div>
           </div>
 
-          <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
+          <div className="max-w-[1400px] mt-3 px-24 py-8 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded-[20px] gap-24 bg-white">
             {departments.map((department, key) => (
               <Card
                 key={key}
