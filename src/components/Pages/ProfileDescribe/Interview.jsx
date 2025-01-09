@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PiArrowRightFill } from 'react-icons/pi';
 import { useSearchParams } from 'react-router-dom';
 import { WiTime5 } from "react-icons/wi";
-
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
 function Interview() {
   const [interviews, setInterviews] = useState([]);
@@ -11,48 +11,88 @@ function Interview() {
   const [searchParams] = useSearchParams();
   const profileId = searchParams.get("profile_id")
   const interviewModal = useRef(null);
+  const [currentStage, setCurrentStage] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const fetchInterviews = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/interview/${profileId}`);
-      //console.log('==>', response.data);
       setInterviews(response.data);
     } catch (error) {
       console.error("Error fetching Interview :", error);
     }
   };
 
-  //  // post a new Interview 
-  //  const handleInterviewSubmit = async (profileId, stage, time) => {  
+  // const handleInterviewSubmit = async (e) => {
   //   e.preventDefault();
   //   try {
-  //     const response = await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, { stage,
-  //       time,});
-  //     interviewModal.current.close(); //close the modal
-  //     fetchInterviews()
-  //     setStages([{ stage: '', time: '' }]); // Reset the input fields
+  //     for (const stageObj of stages) {
+  //       await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, {
+  //         stage: stageObj.stage,
+  //         time: stageObj.time,
+  //       });
+  //     }
+  //     interviewModal.current.close();
+  //     fetchInterviews(); // Refresh the list after posting
+  //     setStages([{ stage: '', time: '' }]); // Reset input fields
   //   } catch (error) {
-  //     console.error("Error creating new Interview:", error);
+  //     console.error("Error creating new Interview:", error.response?.data || error.message);
   //   }
   // };
-  
+
+  // Handle Submit
+
   const handleInterviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      for (const stageObj of stages) {
-        await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, {
-          stage: stageObj.stage,
-          time: stageObj.time,
+      if (isEditMode && currentStage) {
+        // Update stage
+        await axios.put(`http://localhost:8080/api/interview/stage/${currentStage._id}`, {
+          stage: stages[0].stage,
+          time: stages[0].time,
         });
+      } else {
+        // Add new stages
+        for (const stageObj of stages) {
+          await axios.post(`http://localhost:8080/api/interview/stage/${profileId}`, {
+            stage: stageObj.stage,
+            time: stageObj.time,
+          });
+        }
       }
+
       interviewModal.current.close();
-      fetchInterviews(); // Refresh the list after posting
-      setStages([{ stage: '', time: '' }]); // Reset input fields
+      fetchInterviews(); // Refresh the list
+      resetModal();
     } catch (error) {
-      console.error("Error creating new Interview:", error.response?.data || error.message);
+      console.error('Error saving stage:', error.response?.data || error.message);
     }
   };
 
+  const resetModal = () => {
+    setStages([{ stage: '', time: '' }]);
+    setIsEditMode(false);
+    setCurrentStage(null);
+  };
+
+  // Edit interview stage
+  const handleEdit = (stage) => {
+    setIsEditMode(true);
+    setCurrentStage(stage);
+    setStages([{ stage: stage.stage, time: stage.time }]);
+    interviewModal.current.showModal();
+  };
+
+  // Delete interview stage
+  const handleDelete = async (stageId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/interview/${stageId}`);
+      console.log('Delete response:', response.data);
+      fetchInterviews(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting stage:', error.response?.data || error.message);
+    }
+  };
 
   const handleInputChange = (index, field, value) => {
     const updatedStages = [...stages];
@@ -85,17 +125,30 @@ function Interview() {
       <div className="border-l-[10px] border-[#3F8CFF] mt-3 flex W-[340px]">
         <div className="w-[352px] ">
           <ul>
-            {
-              interviews && interviews.map((interview, key) => {
-                return (
-                  interview.stages && interview.stages.map((item, index) =>
-                    <li key={index} className="mb-2 py-1.5 text-[11px] font-bold text-sm cursor-pointer ">
-                      <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" /> {item.stage} : {item.time} min
-                    </li>
-                  )
-                )
-              })
-            }
+            {interviews &&
+              interviews.map((interview) =>
+                interview.stages.map((item) => (
+                  <li
+                    key={item._id}
+                    className="mb-2 py-1.5 text-[11px] font-bold text-sm flex items-center justify-between"
+                  >
+                    <span>
+                      <PiArrowRightFill className="inline text-[#3F8CFf] text-[22px] me-2" />
+                      {item.stage} : {item.time} min
+                    </span>
+                    <div>
+                      <FiEdit
+                        className="text-blue-500 cursor-pointer mr-3 inline text-[18px]"
+                        onClick={() => handleEdit(item)}
+                      />
+                      <FiTrash2
+                        className="text-red-500 cursor-pointer inline text-[18px]"
+                        onClick={() => handleDelete(item._id)}
+                      />
+                    </div>
+                  </li>
+                ))
+              )}
           </ul>
         </div>
       </div>
@@ -110,10 +163,12 @@ function Interview() {
             >
               ✕
             </button>
-            <h3 className="text-white pl-3 text-lg pb-3">Upload Stage</h3>
+
+            <h3 className="text-white pl-3 text-lg pb-3">
+              {isEditMode ? 'Edit Stage' : 'Upload Stage'}
+            </h3>
 
             <form onSubmit={handleInterviewSubmit}>
-
               {stages.map((stageObj, index) => (
                 <div key={index} className="flex items-center mb-3">
                   <input
@@ -151,14 +206,15 @@ function Interview() {
                 </div>
               ))}
 
-              {/* Add More Button */}
-              <button
-                type="button"
-                className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
-                onClick={addStageField}
-              >
-                + Add one More
-              </button>
+              {!isEditMode && (
+                <button
+                  type="button"
+                  className="text-sm text-white bg-blue-500 px-3 py-1 rounded-lg mb-2"
+                  onClick={addStageField}
+                >
+                  + Add More
+                </button>
+              )}
 
               <div className="modal-action">
                 <button className="btn w-[150px] h-3 rounded-2xl bg-white text-[#3F8CFF]" type="submit">
