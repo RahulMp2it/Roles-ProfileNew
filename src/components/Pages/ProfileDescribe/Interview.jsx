@@ -18,6 +18,7 @@ function Interview() {
     try {
       const response = await axios.get(`http://localhost:8080/api/interview/${profileId}`);
       setInterviews(response.data);
+      //console.log("data is ", response.data);
     } catch (error) {
       console.error("Error fetching Interview :", error);
     }
@@ -46,8 +47,10 @@ function Interview() {
     e.preventDefault();
     try {
       if (isEditMode && currentStage) {
+        console.log("Stage ID:", currentStage._id); // Debug log
+        console.log("Interview ID:", profileId); // Debug log
         // Update stage
-        await axios.put(`http://localhost:8080/api/interview/stage/${currentStage._id}`, {
+        await axios.put(`http://localhost:8080/api/interview/stage/${profileId}/${currentStage._id}`, {
           stage: stages[0].stage,
           time: stages[0].time,
         });
@@ -76,19 +79,20 @@ function Interview() {
   };
 
   // Edit interview stage
-  const handleEdit = (stage) => {
+  const handleEdit = (interviewId,stage) => {
+    console.log("Edit Interview ID:", interviewId); // Debug log
+    console.log("Edit Stage is:", stage); // Debug log
     setIsEditMode(true);
-    setCurrentStage(stage);
+    setCurrentStage({ interviewId, ...stage });
     setStages([{ stage: stage.stage, time: stage.time }]);
     interviewModal.current.showModal();
   };
 
   // Delete interview stage
-  const handleDelete = async (stageId) => {
+  const handleDelete = async (profileId, stageId) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/interview/${stageId}`);
-      console.log('Delete response:', response.data);
-      fetchInterviews(); // Refresh the list
+      const response = await axios.delete(`http://localhost:8080/api/interview/stage/${profileId}/${stageId}`);
+      fetchInterviews(); // Refresh the interview list after deletion
     } catch (error) {
       console.error('Error deleting stage:', error.response?.data || error.message);
     }
@@ -138,12 +142,12 @@ function Interview() {
                     </span>
                     <div>
                       <FiEdit
-                        className="text-blue-500 cursor-pointer mr-3 inline text-[18px]"
-                        onClick={() => handleEdit(item)}
+                        className="text-blue-500 cursor-pointer mr-2 inline text-[18px]"
+                        onClick={() => handleEdit(interview._id, item)}
                       />
                       <FiTrash2
                         className="text-red-500 cursor-pointer inline text-[18px]"
-                        onClick={() => handleDelete(item._id)}
+                        onClick={() => handleDelete(interview._id, item._id)}
                       />
                     </div>
                   </li>
