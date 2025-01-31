@@ -14,10 +14,7 @@ import TrainingDocCard from '../../../utils/TrainingDocCard';
 import TrainingPdfCard from '../../../utils/TrainingPdfCard';
 
 function ProfileDescribe({ heading, isSubPage, }) {
-
-
   const navigate = useNavigate();
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState('Skills'); // State to track the active tab
   const uploadModal = useRef(null); // Reference for the modal
   const fileInputRef = useRef(null);  // Create a ref for the file input
@@ -50,11 +47,8 @@ function ProfileDescribe({ heading, isSubPage, }) {
       }
     };
 
-    if (profileId) {
-      fetchProfileDetails();
-    } else {
-      console.error("Profile ID is undefined");
-    }
+    fetchProfileDetails();
+   
   }, [profileId]);
 
   // Fetch training materials
@@ -68,10 +62,9 @@ function ProfileDescribe({ heading, isSubPage, }) {
       }
     };
 
-    if (profileId) {
-      fetchTrainingMaterials();
-    }
-  }, [profileId,trainingMaterials]);
+    fetchTrainingMaterials();
+
+  }, [profileId]);
 
   const handleFileIconClick = (fileType) => {
     setSelectedFileType(fileType); // Set the file type (PDF, MP4, Word) based on the clicked image
