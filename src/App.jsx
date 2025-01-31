@@ -35,6 +35,8 @@ import Demo from "./components/Demo";
 import TrainingVideoView from "./utils/TrainingVideoView";
 import TrainingDocView from "./utils/TrainingDocView";
 import TrainingPdfView from "./utils/TrainingPdfView";
+import Product from "./components/Pages/Product/Product";
+import Process from "./components/Pages/Process/Process";
 
 function App() {
   const [heading, setHeading] = useState("Department");
@@ -161,6 +163,8 @@ function App() {
           <Route path="/Employees" element={<Employees />} />
           <Route path="/department" element={<Department />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/process" element={<Process />} />
           <Route path="/profileDescribe" element={<ProfileDescribe heading={heading} isSubPage={isSubPage} />} />
           <Route path="/Designation" element={<Designation heading={heading} isSubPage={isSubPage} />} />
           <Route path="/ProfileAssign" element={<ProfileAssign />} />
