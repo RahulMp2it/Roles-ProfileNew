@@ -76,10 +76,6 @@
       }
     };
 
-    const addSkillField = () => {
-      setSkillList([...skillList, ""]);
-    };
-
     const removeSkillField = (index) => {
       const updatedList = skillList.filter((_, i) => i !== index);
       setSkillList(updatedList);
