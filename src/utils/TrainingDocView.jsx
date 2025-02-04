@@ -5,7 +5,7 @@ function TrainingDocView() {
 
     const [searchParams] = useSearchParams();
     const docPath = searchParams.get('docPath'); // Extract docPath from the query string
-    console.log('docPath', docPath);
+
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
